@@ -6,6 +6,7 @@ package BUS;
 
 import DAO.AccountDAO;
 import DTO.AccountDTO;
+import java.util.ArrayList;
 
 /**
  *
@@ -29,6 +30,10 @@ public class AccountBUS {
     
     public AccountDTO getAccountByUsername(String username) {
         return accountDAO.getByUsername(username); 
+    }
+    
+    public ArrayList<AccountDTO> getAllAccount() {
+        return accountDAO.getAll();
     }
     
     public boolean searchAccount(String username) { 
