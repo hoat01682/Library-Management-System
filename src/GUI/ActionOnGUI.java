@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import DTO.AccountDTO;
 import DTO.StaffDTO;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -52,6 +53,21 @@ public class ActionOnGUI {
                     staff.getStatus(),
                 };
 
+                model.addRow(rowData);
+            }
+        } else if (firstObject instanceof AccountDTO) {
+            for (T item : list) {
+                
+                AccountDTO account = (AccountDTO) item;
+                
+                Object[] rowData = new Object[] {
+                    account.getId(),
+                    account.getUsername(),
+                    account.getPassword(),
+                    account.getPermission_id(),
+                    account.getStatus()
+                };
+                
                 model.addRow(rowData);
             }
         }
