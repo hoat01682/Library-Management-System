@@ -7,7 +7,10 @@ package GUI;
 import BUS.AccountBUS;
 import DTO.AccountDTO;
 import DTO.SessionManager;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -138,7 +141,8 @@ public class Login_Frame extends javax.swing.JFrame {
             AccountDTO account = accountBUS.getAccountByUsername(username);
             SessionManager.getInstance().setLoggedInAccount(account);
 
-            new Home_Frame().setVisible(true);
+            new Main_Frame().setVisible(true);
+//            new Home_Frame().setVisible(true);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Mật khẩu hoặc tài khoản không chính xác!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -174,10 +178,12 @@ public class Login_Frame extends javax.swing.JFrame {
         //</editor-fold>
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
+//            FlatLaf.registerCustomDefaultsSource("GUI.theme");
             Color focusColor = new Color(24, 144, 255);
             UIManager.put("Component.focusColor", focusColor);  
             UIManager.put("TextComponent.arc", 10);
             UIManager.put("PasswordField.showRevealButton", true);
+            FlatMacLightLaf.setup();
         } catch (UnsupportedLookAndFeelException e) {
             System.out.println(e);
         }

@@ -3,9 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/hieun/Desktop/LibraryManagementSystem/src/GUI/ReturnTicket/AddReturnTicket_Frame.java</file>
-            <file>file:/C:/Users/hieun/Desktop/LibraryManagementSystem/src/GUI/Home_Frame.java</file>
-            <file>file:/C:/Users/hieun/Desktop/LibraryManagementSystem/src/GUI/ReturnTicket/ReturnTicket_Frame.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Main_Frame.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Component/MenuBar.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Panel/ProductPanel.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/BUS/PermissionBUS.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/DAO/PermissionDAO.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/DAO/FunctionDAO.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Component/ManagementTable.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Panel/PermissionPanel.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/BUS/PermissionDetailBUS.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Component/SideNav_Button.java</file>
         </group>
     </open-files>
 </project-private>
