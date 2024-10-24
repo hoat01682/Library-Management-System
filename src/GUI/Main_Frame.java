@@ -55,8 +55,6 @@ public class Main_Frame extends javax.swing.JFrame {
       
     public void customInit() {
         setTitle("Quản lý thư viện");
-//        Image appIcon = getClass().getResource(name).ge
-//        setIconImage(appIcon);
         setLocationRelativeTo(null);
         this.setLayout(new BorderLayout(0, 0));
         sideNav = new SideNav(this);
