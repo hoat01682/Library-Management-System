@@ -26,4 +26,12 @@ public class PenaltyBUS {
     public ArrayList<PenaltyDTO> sortPenaltyOrderByDesc() {
         return penaltyDAO.sortDecrease();
     }
+
+    public ArrayList<PenaltyDTO> getAll() {
+        return penaltyDAO.getAll();
+    }
+
+    public PenaltyDTO getById(int id) {
+        return penaltyDAO.getById(id);
+    }
 }

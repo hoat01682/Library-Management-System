@@ -145,4 +145,62 @@ public class PenaltyDAO {
 
         return list;
     }
+
+    /// Get All Penalty
+    public ArrayList<PenaltyDTO> getAll() {
+        ArrayList<PenaltyDTO> list = new ArrayList<>();
+
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "SELECT * FROM penalty";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("penalty_id");
+                String penalty_name = rs.getString("penalty_name");
+                Double amount = rs.getDouble("amount");
+
+                PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
+
+                list.add(penalty);
+            }
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return list;
+    }
+
+    /// Get Penalty by ID
+    public PenaltyDTO getById(int id) {
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "SELECT * FROM penalty WHERE penalty_id = ?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            int id = rs.getInt("penalty_id");
+            String penalty_name = rs.getString("penalty_name");
+            Double amount = rs.getDouble("amount");
+
+            PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
+
+            return penalty;
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

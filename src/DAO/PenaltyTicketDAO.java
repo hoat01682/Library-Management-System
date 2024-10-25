@@ -100,7 +100,7 @@ public class PenaltyTicketDAO {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                int id = rs.getInt("penalty_ticket_id");
+                String id = rs.getString("penalty_ticket_id");
                 int member_id = rs.getInt("member_id");
                 int staff_id = rs.getInt("staff_id");
                 int penalty_id = rs.getInt("penalty_id");
@@ -137,7 +137,7 @@ public class PenaltyTicketDAO {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                int id = rs.getInt("penalty_ticket_id");
+                String id = rs.getString("penalty_ticket_id");
                 int member_id = rs.getInt("member_id");
                 int staff_id = rs.getInt("staff_id");
                 int penalty_id = rs.getInt("penalty_id");
@@ -159,7 +159,7 @@ public class PenaltyTicketDAO {
     }
 
     // Filter by dynamic properties
-    public ArrayList<PenaltyTicketDTO> fitlerDynamic(String type, int id) {
+    public ArrayList<PenaltyTicketDTO> fitlerDynamic(String type, String id) {
         ArrayList<PenaltyTicketDTO> list = new ArrayList<>();
 
         try {
@@ -169,12 +169,12 @@ public class PenaltyTicketDAO {
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, type);
-            ps.setInt(2, id);
+            ps.setString(2, id);
 
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                int id = rs.getInt("penalty_ticket_id");
+                String id = rs.getString("penalty_ticket_id");
                 int member_id = rs.getInt("member_id");
                 int staff_id = rs.getInt("staff_id");
                 int penalty_id = rs.getInt("penalty_id");
