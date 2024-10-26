@@ -4,9 +4,16 @@
  */
 package GUI.PurchaseTicket;
 
+import BUS.SupplierBUS;
+import DAO.SupplierDAO;
+import DTO.SupplierDTO;
 import GUI.ActionOnGUI;
 import GUI.Home_Frame;
-import GUI.PurchaseTicket.AddPurchaseTicket_Frame;
+import GUI.Style;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -17,9 +24,14 @@ public class PurchaseTicket_Frame extends javax.swing.JFrame {
     /**
      * Creates new form PurchaseTicket_Frame1
      */
+    SupplierBUS supplierBUS = new SupplierBUS();
+
     public PurchaseTicket_Frame() {
         initComponents();
-        
+        Style.tableStyle(supplier_Table);
+        DefaultTableModel table = (DefaultTableModel) supplier_Table.getModel();
+        ActionOnGUI.showDataOnTable(table, supplierBUS.getAllsupplier());
+
         ActionOnGUI.disposeAndOpenNewFrame(PurchaseTicket_Frame.this, new Home_Frame());
     }
 
@@ -240,6 +252,11 @@ public class PurchaseTicket_Frame extends javax.swing.JFrame {
         });
 
         searchSupplier_TextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        searchSupplier_TextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchSupplier_TextFieldActionPerformed(evt);
+            }
+        });
 
         Separator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -327,7 +344,7 @@ public class PurchaseTicket_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addPurchaseTicket_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPurchaseTicket_ButtonActionPerformed
-        new AddPurchaseTicket_Frame().setVisible(true); 
+        new AddPurchaseTicket_Frame().setVisible(true);
     }//GEN-LAST:event_addPurchaseTicket_ButtonActionPerformed
 
     private void cancelPuchaseTicket_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelPuchaseTicket_ButtonActionPerformed
@@ -343,41 +360,97 @@ public class PurchaseTicket_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_addSupplier_ButtonActionPerformed
 
     private void editSupplier_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSupplier_ButtonActionPerformed
-        //        int index = staff_Table.getSelectedRow();
-        //        TableModel model = staff_Table.getModel();
-        //
-        //        if (index == -1) {
-            //            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để chỉnh sửa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-            //            return;
-            //        }
-        //
-        //        String id = model.getValueAt(index, 0).toString();
-        //        String fullName = model.getValueAt(index, 1).toString();
-        //        String email = model.getValueAt(index, 2).toString();
-        //        String phone = model.getValueAt(index, 3).toString();
-        //        String address = model.getValueAt(index, 4).toString();
-        //        String hireDate = model.getValueAt(index, 5).toString();
-        //        int status = ("Đang làm việc".equals(model.getValueAt(index, 6).toString())) ? 0 : 1;
-        //
+        int index = supplier_Table.getSelectedRow();
+        TableModel model = supplier_Table.getModel();
+
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để chỉnh sửa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String id = model.getValueAt(index, 0).toString();
+        String name = model.getValueAt(index, 1).toString();
+        String address = model.getValueAt(index, 2).toString();
+        String phone = model.getValueAt(index, 3).toString();
+
         EditSupplier_Frame editSupplier_Frame = new EditSupplier_Frame();
-        editSupplier_Frame.setVisible(true); 
-        //
-        //        editStaff_Frame.id_TextField.setText(id);
-        //        editStaff_Frame.fullname_TextField.setText(fullName);
-        //        editStaff_Frame.email_TextField.setText(email);
-        //        editStaff_Frame.phone_TextField.setText(phone);
-        //        editStaff_Frame.address_TextField.setText(address);
-        //        editStaff_Frame.hireDate_TextField.setText(hireDate);
-        //        editStaff_Frame.status_ComboBox.setSelectedIndex(status);
+        editSupplier_Frame.setVisible(true);
+
+        editSupplier_Frame.id_TextField.setText(id);
+        editSupplier_Frame.name_TextField.setText(name);
+        editSupplier_Frame.address_TextField.setText(address);
+        editSupplier_Frame.phone_TextField.setText(phone);
+
+
     }//GEN-LAST:event_editSupplier_ButtonActionPerformed
 
     private void refreshSupplier_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshSupplier_ButtonActionPerformed
-        // TODO add your handling code here:
+        DefaultTableModel tableModel = (DefaultTableModel) supplier_Table.getModel();
+        ActionOnGUI.showDataOnTable(tableModel, supplierBUS.getAllsupplier());
+        searchSupplier_TextField.setText("");
+
     }//GEN-LAST:event_refreshSupplier_ButtonActionPerformed
 
     private void editSupplier_Button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSupplier_Button1ActionPerformed
-        // TODO add your handling code here:
+        int index = supplier_Table.getSelectedRow();
+    TableModel model = supplier_Table.getModel();
+
+    if (index == -1) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để xóa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Lấy supplier_id từ dòng đã chọn
+    int supplier_id = Integer.parseInt(model.getValueAt(index, 0).toString()); // Giả sử supplier_id nằm ở cột đầu tiên (cột 0)
+    
+    SupplierDAO supplierDAO = new SupplierDAO();
+    
+    // Hiển thị hộp thoại xác nhận trước khi xóa
+    int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa Supplier ID " + supplier_id + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Thực hiện xóa
+        int result = supplierDAO.delete(supplier_id);  // Gọi hàm delete bạn đã viết
+        
+        // Kiểm tra kết quả và hiển thị thông báo
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this, "Đã xóa Supplier thành công!");
+            // Xóa dòng khỏi bảng
+            ((DefaultTableModel) supplier_Table.getModel()).removeRow(index);
+        } else {
+            JOptionPane.showMessageDialog(this, "Không thể xóa Supplier. Có thể nó đang được sử dụng hoặc không tồn tại.");
+        }
+    }
+
     }//GEN-LAST:event_editSupplier_Button1ActionPerformed
+
+    private void searchSupplier_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchSupplier_TextFieldActionPerformed
+        String keyword = searchSupplier_TextField.getText().trim(); // Lấy giá trị từ trường tìm kiếm
+
+        // Kiểm tra xem trường tìm kiếm không rỗng
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Gọi phương thức tìm kiếm từ SupplierBUS
+        SupplierBUS supplierBUS = new SupplierBUS();
+        ArrayList<SupplierDTO> resultList = supplierBUS.searchSupplier(keyword);
+
+        // Làm mới bảng trước khi hiển thị kết quả
+        DefaultTableModel model = (DefaultTableModel) supplier_Table.getModel(); // Thay supplier_Table bằng tên bảng của bạn
+        model.setRowCount(0); // Xóa tất cả các hàng trong bảng
+
+        // Hiển thị kết quả tìm kiếm
+        if (resultList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy nhà cung cấp nào với từ khóa: " + keyword, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+
+            ActionOnGUI.showDataOnTable(model, supplierBUS.searchSupplier(keyword));
+
+        }
+
+    }//GEN-LAST:event_searchSupplier_TextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -423,8 +496,6 @@ public class PurchaseTicket_Frame extends javax.swing.JFrame {
     private javax.swing.JButton addPurchaseTicket_Button;
     private javax.swing.JButton addSupplier_Button;
     private javax.swing.JButton cancelPuchaseTicket_Button;
-    private javax.swing.JButton deletePublisher_Button;
-    private javax.swing.JButton deletePublisher_Button1;
     private javax.swing.JButton editSupplier_Button;
     private javax.swing.JButton editSupplier_Button1;
     private com.toedter.calendar.JDateChooser fromDate_DateChooser;

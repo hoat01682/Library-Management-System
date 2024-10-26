@@ -4,6 +4,13 @@
  */
 package GUI.PurchaseTicket;
 
+import App.Static;
+
+import BUS.SupplierBUS;
+
+import DTO.SupplierDTO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author hieun
@@ -124,7 +131,26 @@ public class AddSupplier_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
-        
+        String fullname = name_TextField.getText();
+        String address = address_TextField.getText();
+        String phone = phone_TextField.getText();
+
+        SupplierBUS supplierBUS = new SupplierBUS();
+        if (fullname.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Thông tin không được để trống.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (!phone.matches(Static.PHONE_PATTERN)) {
+            JOptionPane.showMessageDialog(this, "Định dạng số điện thoại không chính xác", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        SupplierDTO supplierDTO = new SupplierDTO(fullname, address, phone);
+        if (supplierBUS.createsupplier(supplierDTO)) {
+            JOptionPane.showMessageDialog(this, "Tạo nhà cung cấp mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Tạo nhà cung cấp mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
 
         this.dispose();
     }//GEN-LAST:event_add_ButtonActionPerformed
