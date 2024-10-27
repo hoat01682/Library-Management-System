@@ -4,6 +4,7 @@
  */
 package GUI.Staff;
 
+import BUS.AccountBUS;
 import BUS.StaffBUS;
 import DTO.StaffDTO;
 import GUI.ActionOnGUI;
@@ -21,6 +22,7 @@ import javax.swing.table.TableModel;
 public class Staff_Frame extends javax.swing.JFrame {
 
     StaffBUS staffBUS = new StaffBUS();
+    AccountBUS accountBUS = new AccountBUS();
 
     /**
      * Creates new form Staff_Panel
@@ -30,8 +32,11 @@ public class Staff_Frame extends javax.swing.JFrame {
         Style.tableStyle(staff_Table);
                 
         // Xuất dữ liệu từ database lên table
-        DefaultTableModel tableModel = (DefaultTableModel) staff_Table.getModel();
-        ActionOnGUI.showDataOnTable(tableModel, staffBUS.getAllStaff());  
+        DefaultTableModel staffTableModel = (DefaultTableModel) staff_Table.getModel();
+        ActionOnGUI.showDataOnTable(staffTableModel, staffBUS.getAllStaff());  
+        
+        DefaultTableModel accountTableModel = (DefaultTableModel) account_Table.getModel();
+        ActionOnGUI.showDataOnTable(accountTableModel, accountBUS.getAllAccount()); 
         
         ActionOnGUI.disposeAndOpenNewFrame(Staff_Frame.this, new Home_Frame()); 
     }
@@ -319,7 +324,8 @@ public class Staff_Frame extends javax.swing.JFrame {
         editStaff_Frame.phone_TextField.setText(phone);
         editStaff_Frame.address_TextField.setText(address);
         editStaff_Frame.hireDate_TextField.setText(hireDate);
-        editStaff_Frame.status_ComboBox.setSelectedIndex(status); 
+        editStaff_Frame.status_ComboBox.setSelectedIndex(status);
+     
     }//GEN-LAST:event_editStaff_ButtonActionPerformed
 
     private void refreshStaffTable_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshStaffTable_ButtonActionPerformed

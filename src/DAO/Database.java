@@ -16,14 +16,14 @@ public class Database {
     private static final String URL = "jdbc:mysql://localhost:3306/library_management";
     private static final String USER = "root";
     private static final String PASSWORD = "123456";
-    
+
     public static Connection getConnection() throws SQLException {
         Connection connection;
-        connection = DriverManager.getConnection(URL, USER, PASSWORD); 
-        
+        connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
         return connection;
     }
-    
+
     public static void closeConnection(Connection connection) {
         try {
             if (connection != null) {

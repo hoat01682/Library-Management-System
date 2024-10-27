@@ -202,7 +202,7 @@ public class AddStaff_Frame extends javax.swing.JFrame {
         String username = username_TextField.getText();
         char[] password = password_TextField.getPassword();
         String passwordStr = new String(password);
-        String role = role_ComboBox.getSelectedItem().toString();
+        int permission_id = role_ComboBox.getSelectedIndex();
         
         StaffBUS staffBUS = new StaffBUS();
         AccountBUS accountBUS = new AccountBUS();
@@ -228,7 +228,7 @@ public class AddStaff_Frame extends javax.swing.JFrame {
         }
 
         StaffDTO staff = new StaffDTO(fullName, email, phone, address, hire_date);
-        AccountDTO account = new AccountDTO(username, passwordStr, role);
+        AccountDTO account = new AccountDTO(username, passwordStr, permission_id);
 
         if (staffBUS.createStaff(staff) && accountBUS.createAccount(account)) {
             JOptionPane.showMessageDialog(this, "Tạo nhân viên mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);

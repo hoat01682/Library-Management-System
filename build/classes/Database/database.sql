@@ -28,13 +28,14 @@ CREATE TABLE `account` (
   `account_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('Admin','Nhân viên thư viện','Nhân viên kho') NOT NULL,
+  `permission_id` int NOT NULL,
   `status` enum('Đang hoạt động','Ngừng hoạt động') NOT NULL,
   PRIMARY KEY (`account_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
-  UNIQUE KEY `account_id_UNIQUE` (`account_id`),
+  KEY `fk_permission_idx` (`permission_id`),
+  CONSTRAINT `fk_permission_id` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`permission_id`),
   CONSTRAINT `fk_staff_staff_id` FOREIGN KEY (`account_id`) REFERENCES `staff` (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +44,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'admin','12345','Admin','Đang hoạt động'),(2,'hieu2603','123','Nhân viên thư viện','Đang hoạt động');
+INSERT INTO `account` VALUES (1,'admin','12345',1,'Đang hoạt động');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,7 +339,7 @@ CREATE TABLE `permission` (
   `permission_id` int NOT NULL AUTO_INCREMENT,
   `permission_name` varchar(50) NOT NULL,
   PRIMARY KEY (`permission_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -347,6 +348,7 @@ CREATE TABLE `permission` (
 
 LOCK TABLES `permission` WRITE;
 /*!40000 ALTER TABLE `permission` DISABLE KEYS */;
+INSERT INTO `permission` VALUES (1,'Admin');
 /*!40000 ALTER TABLE `permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -535,7 +537,7 @@ CREATE TABLE `staff` (
   `hire_date` date NOT NULL,
   `status` enum('Đang làm việc','Đã nghỉ việc') NOT NULL,
   PRIMARY KEY (`staff_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -544,7 +546,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,'ADMIN','admin@gmail.com','0123456789','SGU','2024-09-12','Đang làm việc'),(2,'Nguyễn Văn Hiếu','nguyenvanhieu2603@gmail.com','0777011640','SGU','2024-09-14','Đang làm việc');
+INSERT INTO `staff` VALUES (1,'Admin','admin@gmail.com','0777011640','SGU','2024-10-06','Đang làm việc');
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -582,4 +584,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 13:05:55
+-- Dump completed on 2024-10-06 22:14:11

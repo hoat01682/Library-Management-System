@@ -4,6 +4,11 @@
  */
 package GUI.PurchaseTicket;
 
+import App.Static;
+import BUS.SupplierBUS;
+import DTO.SupplierDTO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author hieun
@@ -143,7 +148,32 @@ public class EditSupplier_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
-        
+
+        int id = Integer.parseInt(id_TextField.getText());
+        String Name = name_TextField.getText();
+        String address = address_TextField.getText();
+        String phone = phone_TextField.getText();
+
+        if (Name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Thông tin không được để trống.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!phone.matches(Static.PHONE_PATTERN)) {
+            JOptionPane.showMessageDialog(this, "Định dạng số điện thoại không chính xác", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        SupplierDTO supplier = new SupplierDTO(id, Name, address, phone);
+
+        SupplierBUS supplierBUS = new SupplierBUS();
+
+        if (supplierBUS.updateSupplier(supplier)) {
+
+            JOptionPane.showMessageDialog(this, "Chỉnh sửa thông tin nhà cung cấp thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Chỉnh sửa thông tin nhà cung cấp thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
 
         this.dispose();
     }//GEN-LAST:event_edit_ButtonActionPerformed
@@ -247,16 +277,16 @@ public class EditSupplier_Frame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField address_TextField;
+    javax.swing.JTextField address_TextField;
     private javax.swing.JButton edit_Button;
     private javax.swing.JLabel header_Label;
     private javax.swing.JPanel header_Panel;
-    private javax.swing.JTextField id_TextField;
+    javax.swing.JTextField id_TextField;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField name_TextField;
-    private javax.swing.JTextField phone_TextField;
+    javax.swing.JTextField name_TextField;
+    javax.swing.JTextField phone_TextField;
     // End of variables declaration//GEN-END:variables
 }

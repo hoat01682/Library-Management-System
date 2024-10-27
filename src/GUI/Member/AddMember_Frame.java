@@ -4,6 +4,16 @@
  */
 package GUI.Member;
 
+import App.Static;
+import BUS.MemberBUS;
+import DTO.MemberDTO;
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author hieun
@@ -129,10 +139,32 @@ public class AddMember_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
-        
+        String fullname = fullname_TextField.getText();
+        String address = address_TextField.getText();
+        String phone = phone_TextField.getText();
+        String membershipDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); // Định dạng ngày tháng phù hợp với cơ sở dữ liệu
+
+        MemberBUS memberBUS = new MemberBUS();
+        if (fullname.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Thông tin không được để trống.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (!phone.matches(Static.PHONE_PATTERN)) {
+            JOptionPane.showMessageDialog(this, "Định dạng số điện thoại không chính xác", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        MemberDTO memberDTO = new MemberDTO(fullname, phone, address);
+        memberDTO.setMembership_date(membershipDate);
+        if (memberBUS.createMember(memberDTO)) {
+            JOptionPane.showMessageDialog(this, "Tạo thành viên mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Tạo thành viên mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
 
         this.dispose();
     }//GEN-LAST:event_add_ButtonActionPerformed
+
 
     private void fullname_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fullname_TextFieldActionPerformed
         // TODO add your handling code here:
