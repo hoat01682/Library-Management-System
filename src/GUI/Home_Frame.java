@@ -13,6 +13,7 @@ import GUI.Book.Book_Frame;
 import GUI.Staff.Staff_Frame;
 import DTO.AccountDTO;
 import DTO.SessionManager;
+import GUI.Permission.PermissionDialog;
 import GUI.Permission.Permission_Frame;
 
 /**
@@ -268,7 +269,10 @@ public class Home_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_openPenaltyTicketFrame_ButtonActionPerformed
 
     private void openPermissionFrame_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openPermissionFrame_ButtonActionPerformed
-        new Permission_Frame().setVisible(true);
+//        new Permission_Frame().setVisible(true);
+//        PermissionDialog permissionDialog = new PermissionDialog(null, true);
+//        permissionDialog.setVisible(true);
+        new PermissionDialog(this, true).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_openPermissionFrame_ButtonActionPerformed
 
