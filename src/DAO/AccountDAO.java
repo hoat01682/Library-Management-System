@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -22,12 +23,12 @@ public class AccountDAO {
         try {
             Connection connection = Database.getConnection();
 
-            String query = "INSERT INTO account (username, password, role, status) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO account (username, password, permission_id, status) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
-            ps.setString(3, account.getRole());
+            ps.setInt(3, account.getPermission_id());
             ps.setInt(4, 1);  
 
             result = ps.executeUpdate();
@@ -117,6 +118,37 @@ public class AccountDAO {
         return result;
     }
     
+    public ArrayList<AccountDTO> getAll() {
+        ArrayList<AccountDTO> list = new ArrayList<>();
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM account";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {                
+                int id = rs.getInt("account_id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                int permission_id = rs.getInt("permission_id");
+                String status = rs.getString("status");
+                
+                AccountDTO account = new AccountDTO(id, username, password, permission_id, status);
+                
+                list.add(account);
+            }
+            
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return list;
+    }
+    
     public AccountDTO getByUsername(String username) {
         AccountDTO account = null;
         
@@ -134,10 +166,10 @@ public class AccountDAO {
             if (rs.next()) {
                 int id = rs.getInt("account_id");
                 String password = rs.getString("password");
-                String role = rs.getString("role");
+                int permission_id = rs.getInt("permission_id");
                 String status = rs.getString("status");
                 
-                account = new AccountDTO(id, username, password, role, status);
+                account = new AccountDTO(id, username, password, permission_id, status);
             }
             
             Database.closeConnection(connection);

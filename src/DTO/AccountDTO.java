@@ -12,20 +12,20 @@ public class AccountDTO {
     private int id;
     private String username;
     private String password;
-    private String role;
+    private int permission_id;
     private String status;
 
-    public AccountDTO(String username, String password, String role) {
+    public AccountDTO(String username, String password, int permission_id) {
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.permission_id = permission_id;
     }
 
-    public AccountDTO(int id, String username, String password, String role, String status) {
+    public AccountDTO(int id, String username, String password, int permission_id, String status) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.permission_id = permission_id;
         this.status = status;
     }
 
@@ -53,12 +53,12 @@ public class AccountDTO {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public int getPermission_id() {
+        return permission_id;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPermission_id(int permission_id) {
+        this.permission_id = permission_id;
     }
 
     public String getStatus() {
