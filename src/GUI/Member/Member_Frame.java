@@ -4,9 +4,16 @@
  */
 package GUI.Member;
 
+import BUS.MemberBUS;
+import DTO.MemberDTO;
+
 import GUI.ActionOnGUI;
 import GUI.Home_Frame;
-import GUI.Member.AddMember_Frame;
+import GUI.Style;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -14,13 +21,18 @@ import GUI.Member.AddMember_Frame;
  */
 public class Member_Frame extends javax.swing.JFrame {
 
+    MemberBUS memberBUS = new MemberBUS();
+
     /**
      * Creates new form Supplier_Frame
      */
     public Member_Frame() {
         initComponents();
-        
-        ActionOnGUI.disposeAndOpenNewFrame(Member_Frame.this, new Home_Frame()); 
+        Style.tableStyle(member_Table);
+        DefaultTableModel table = (DefaultTableModel) member_Table.getModel();
+        ActionOnGUI.showDataOnTable(table, memberBUS.getAllMember());
+
+        ActionOnGUI.disposeAndOpenNewFrame(Member_Frame.this, new Home_Frame());
     }
 
     /**
@@ -72,6 +84,11 @@ public class Member_Frame extends javax.swing.JFrame {
         Separator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         search_TextField.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        search_TextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                search_TextFieldActionPerformed(evt);
+            }
+        });
 
         refresh_Button.setBackground(new java.awt.Color(24, 144, 255));
         refresh_Button.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -158,26 +175,88 @@ public class Member_Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_add_ButtonActionPerformed
 
     private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
+        int index = member_Table.getSelectedRow();
+        TableModel model = member_Table.getModel();
+
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để chỉnh sửa", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String id = model.getValueAt(index, 0).toString();
+        String fullName = model.getValueAt(index, 1).toString();
+        String phone = model.getValueAt(index, 2).toString();
+        String address = model.getValueAt(index, 3).toString();
+        String membershipDate = model.getValueAt(index, 4).toString();
+        int status = ("Đang hoạt động".equals(model.getValueAt(index, 5).toString())) ? 0 : 1;
+        String violationCount = model.getValueAt(index, 6).toString();
         EditMember_Frame editMember_Frame = new EditMember_Frame();
-        editMember_Frame.setVisible(true);  
+        editMember_Frame.setVisible(true);
+
+        editMember_Frame.id_TextField.setText(id);
+        editMember_Frame.fullname_TextField.setText(fullName);
+        editMember_Frame.phone_TextField.setText(phone);
+        editMember_Frame.address_TextField.setText(address);
+        editMember_Frame.membershipDate_TextField.setText(membershipDate);
+        editMember_Frame.status_ComboBox.setSelectedIndex(status);
+        editMember_Frame.violationCount_TextField.setText(violationCount);
     }//GEN-LAST:event_edit_ButtonActionPerformed
 
     private void refresh_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_ButtonActionPerformed
-        
+        DefaultTableModel tableModel = (DefaultTableModel) member_Table.getModel();
+        ActionOnGUI.showDataOnTable(tableModel, memberBUS.getAllMember());
+        search_TextField.setText("");
+        status_ComboBox.setSelectedIndex(-1);
+
+
     }//GEN-LAST:event_refresh_ButtonActionPerformed
 
     private void status_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_status_ComboBoxActionPerformed
-//        int selectedIndex = status_ComboBox.getSelectedIndex();
-//        DefaultTableModel model = (DefaultTableModel) member_Table.getModel();
-//        ArrayList<StaffDTO> list = staffBUS.getByStatus(selectedIndex + 1);
-//
-//        // Nếu selected index = -1 thì load lại tất cả dữ liệu của table
-//        if (selectedIndex == -1) {
-//            ActionOnGUI.showDataOnTable(model, staffBUS.getAllStaff());
-//        } else {
-//            ActionOnGUI.showDataOnTable(model, list);
-//        }
+        int selectedIndex = status_ComboBox.getSelectedIndex();
+        DefaultTableModel model = (DefaultTableModel) member_Table.getModel();
+        ArrayList<MemberDTO> list = memberBUS.getByStatus(selectedIndex + 1);
+
+        // Nếu selected index = -1 thì load lại tất cả dữ liệu của table
+        if (selectedIndex == -1) {
+            ActionOnGUI.showDataOnTable(model, memberBUS.getAllMember());
+        } else {
+            ActionOnGUI.showDataOnTable(model, list);
+        }
     }//GEN-LAST:event_status_ComboBoxActionPerformed
+
+    private void search_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_TextFieldActionPerformed
+        String keyword = search_TextField.getText().trim(); // Lấy giá trị từ trường tìm kiếm
+
+        // Kiểm tra xem trường tìm kiếm không rỗng
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin tìm kiếm", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Tạo đối tượng MemberBUS để thực hiện tìm kiếm
+        MemberBUS memberBUS = new MemberBUS();
+        ArrayList<MemberDTO> resultList = memberBUS.searchMember(keyword); // Gọi phương thức tìm kiếm
+
+        // Làm mới bảng trước khi hiển thị kết quả
+        DefaultTableModel model = (DefaultTableModel) member_Table.getModel(); 
+
+        // Hiển thị kết quả tìm kiếm
+        if (resultList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên nào với từ khóa: " + keyword, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            int selectedIndex = status_ComboBox.getSelectedIndex();
+
+            ArrayList<MemberDTO> list = memberBUS.getByStatus(selectedIndex + 1);
+
+            // Nếu selected index = -1 thì load lại tất cả dữ liệu của table
+            if (selectedIndex == -1) {
+                ActionOnGUI.showDataOnTable(model, memberBUS.searchMember(keyword));
+            } else {
+                ActionOnGUI.showDataOnTable(model, list);
+            }
+        }
+
+    }//GEN-LAST:event_search_TextFieldActionPerformed
 
     /**
      * @param args the command line arguments

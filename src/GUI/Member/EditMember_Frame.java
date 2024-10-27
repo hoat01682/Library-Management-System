@@ -4,6 +4,11 @@
  */
 package GUI.Member;
 
+import App.Static;
+import BUS.MemberBUS;
+import DTO.MemberDTO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author hieun
@@ -11,7 +16,7 @@ package GUI.Member;
 public class EditMember_Frame extends javax.swing.JFrame {
 
     /**
-     * Creates new form AddStaff
+     * Creates new form AddMember
      */
     public EditMember_Frame() {
         initComponents();
@@ -190,7 +195,42 @@ public class EditMember_Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
-        
+        // Lấy thông tin nhân viên
+        int id = Integer.parseInt(id_TextField.getText());
+        String fullName = fullname_TextField.getText();
+
+        String phone = phone_TextField.getText();
+        String address = address_TextField.getText();
+        String hire_date = membershipDate_TextField.getText();
+        String status = status_ComboBox.getSelectedItem().toString();
+        int violationCount;
+        try {
+            violationCount = Integer.parseInt(violationCount_TextField.getText());  // Chuyển đổi từ chuỗi sang số nguyên
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Số lần vi phạm không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (fullName.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Thông tin không được để trống.", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!phone.matches(Static.PHONE_PATTERN)) {
+            JOptionPane.showMessageDialog(this, "Định dạng số điện thoại không chính xác", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        MemberDTO member = new MemberDTO(id, fullName, phone, address, hire_date, status, violationCount);
+
+        MemberBUS memberBUS = new MemberBUS();
+
+        if (memberBUS.updateMember(member)) {
+
+            JOptionPane.showMessageDialog(this, "Chỉnh sửa thông tin nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Chỉnh sửa thông tin nhân viên thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
 
         this.dispose();
     }//GEN-LAST:event_edit_ButtonActionPerformed
@@ -198,14 +238,14 @@ public class EditMember_Frame extends javax.swing.JFrame {
     private void status_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_status_ComboBoxActionPerformed
         //        int selectedIndex = status_ComboBox.getSelectedIndex();
         //        DefaultTableModel model = (DefaultTableModel) member_Table.getModel();
-        //        ArrayList<StaffDTO> list = staffBUS.getByStatus(selectedIndex + 1);
+        //        ArrayList<MemberDTO> list = memberBUS.getByStatus(selectedIndex + 1);
         //
         //        // Nếu selected index = -1 thì load lại tất cả dữ liệu của table
         //        if (selectedIndex == -1) {
-            //            ActionOnGUI.showDataOnTable(model, staffBUS.getAllStaff());
-            //        } else {
-            //            ActionOnGUI.showDataOnTable(model, list);
-            //        }
+        //            ActionOnGUI.showDataOnTable(model, memberBUS.getAllMember());
+        //        } else {
+        //            ActionOnGUI.showDataOnTable(model, list);
+        //        }
     }//GEN-LAST:event_status_ComboBoxActionPerformed
 
     /**
@@ -307,12 +347,12 @@ public class EditMember_Frame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField address_TextField;
+    javax.swing.JTextField address_TextField;
     private javax.swing.JButton edit_Button;
-    private javax.swing.JTextField fullname_TextField;
+    javax.swing.JTextField fullname_TextField;
     private javax.swing.JLabel header_Label;
     private javax.swing.JPanel header_Panel;
-    private javax.swing.JTextField id_TextField;
+    javax.swing.JTextField id_TextField;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -320,9 +360,9 @@ public class EditMember_Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField membershipDate_TextField;
-    private javax.swing.JTextField phone_TextField;
-    private javax.swing.JComboBox<String> status_ComboBox;
-    private javax.swing.JTextField violationCount_TextField;
+    javax.swing.JTextField membershipDate_TextField;
+    javax.swing.JTextField phone_TextField;
+    javax.swing.JComboBox<String> status_ComboBox;
+    javax.swing.JTextField violationCount_TextField;
     // End of variables declaration//GEN-END:variables
 }

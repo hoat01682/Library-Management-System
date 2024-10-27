@@ -324,7 +324,8 @@ public class Staff_Frame extends javax.swing.JFrame {
         editStaff_Frame.phone_TextField.setText(phone);
         editStaff_Frame.address_TextField.setText(address);
         editStaff_Frame.hireDate_TextField.setText(hireDate);
-        editStaff_Frame.status_ComboBox.setSelectedIndex(status); 
+        editStaff_Frame.status_ComboBox.setSelectedIndex(status);
+     
     }//GEN-LAST:event_editStaff_ButtonActionPerformed
 
     private void refreshStaffTable_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshStaffTable_ButtonActionPerformed
