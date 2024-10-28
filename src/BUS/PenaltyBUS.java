@@ -31,7 +31,7 @@ public class PenaltyBUS {
         return penaltyDAO.getAll();
     }
 
-    public PenaltyDTO getById(int id) {
+    public ArrayList<PenaltyDTO> getById(int id) {
         return penaltyDAO.getById(id);
     }
 }

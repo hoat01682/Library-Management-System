@@ -27,7 +27,7 @@ public class PenaltyTicketBUS {
         return penaltyTicketDAO.filterDate(startDate, endDate);
     }
 
-    public ArrayList<PenaltyTicketDTO> filterPenaltyTicketDynamicType(String type, int id) {
-        return penaltyTicketDAO.fitlerDynamic(type, id);
+    public ArrayList<PenaltyTicketDTO> filterPenaltyTicketDynamicType(int type, int id) {
+        return penaltyTicketDAO.filterDynamic(type, id);
     }
 }

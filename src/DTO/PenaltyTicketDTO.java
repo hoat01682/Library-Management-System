@@ -1,14 +1,14 @@
 package DTO;
 
 public class PenaltyTicketDTO {
-    private String id;
+    private int id;
     private int member_id;
     private int staff_id;
     private int penalty_id;
     private String penalty_date;
     private String note;
 
-    public PenaltyTicketDTO(String id, int member_id, int staff_id, int penalty_id, String penalty_date, String note) {
+    public PenaltyTicketDTO(int id, int member_id, int staff_id, int penalty_id, String penalty_date, String note) {
         this.id = id;
         this.member_id = member_id;
         this.staff_id = staff_id;
@@ -17,7 +17,7 @@ public class PenaltyTicketDTO {
         this.note = note;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
