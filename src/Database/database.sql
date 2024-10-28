@@ -56,15 +56,14 @@ DROP TABLE IF EXISTS `book`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `book` (
-  `isbn` varchar(20) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL,
   `publisher_id` int NOT NULL,
   `year_publish` int NOT NULL,
   `category_id` int NOT NULL,
   `quantity` int NOT NULL,
-  PRIMARY KEY (`isbn`),
-  UNIQUE KEY `isbn_UNIQUE` (`isbn`),
+  PRIMARY KEY (`id`),
   KEY `fk_publisher_publisher_id_idx` (`publisher_id`),
   KEY `fk_category_category_id_idx` (`category_id`),
   CONSTRAINT `fk_category_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
@@ -89,18 +88,18 @@ DROP TABLE IF EXISTS `bookitem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bookitem` (
-  `bookitem_id` varchar(20) NOT NULL,
   `isbn` varchar(20) NOT NULL,
+  `id` int NOT NULL,
   `purchaseticket_id` varchar(20) NOT NULL,
   `bookshelf_id` int DEFAULT NULL,
   `status` enum('Có sẵn','Đang mượn','Hư hỏng','Mất') NOT NULL,
   `add_date` date NOT NULL,
-  PRIMARY KEY (`bookitem_id`),
+  PRIMARY KEY (`isbn`),
   KEY `fk_bookshelf_id_idx` (`bookshelf_id`),
-  KEY `fk_isbn_idx` (`isbn`),
   KEY `fk_purchaseticket_bookitem_id_idx` (`purchaseticket_id`),
+  KEY `fk_book_id_idx` (`id`),
+  CONSTRAINT `fk_book_id` FOREIGN KEY (`id`) REFERENCES `book` (`id`),
   CONSTRAINT `fk_bookshelf_id` FOREIGN KEY (`bookshelf_id`) REFERENCES `bookshelf` (`bookshelf_id`),
-  CONSTRAINT `fk_isbn_book` FOREIGN KEY (`isbn`) REFERENCES `book` (`isbn`),
   CONSTRAINT `fk_purchaseticket_bookitem_id` FOREIGN KEY (`purchaseticket_id`) REFERENCES `purchaseticket` (`purchase_ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -179,12 +178,13 @@ DROP TABLE IF EXISTS `borrowticket_details`;
 CREATE TABLE `borrowticket_details` (
   `borrow_ticket_details_id` int NOT NULL AUTO_INCREMENT,
   `borrow_ticket_id` varchar(20) NOT NULL,
-  `book_item_id` varchar(20) NOT NULL,
+  `isbn` varchar(20) NOT NULL,
   PRIMARY KEY (`borrow_ticket_details_id`),
   KEY `fk_borrowticket_id_idx` (`borrow_ticket_id`),
-  KEY `fk_borrowticket_bookitem_id_idx` (`book_item_id`),
+  KEY `fk_borrowticket_bookitem_id_idx` (`isbn`),
+  CONSTRAINT `fk_bookitem_isbn` FOREIGN KEY (`isbn`) REFERENCES `bookitem` (`isbn`),
   CONSTRAINT `fk_borrowticket` FOREIGN KEY (`borrow_ticket_id`) REFERENCES `borrowticket` (`borrow_ticket_id`),
-  CONSTRAINT `fk_borrowticket_bookitem_id` FOREIGN KEY (`book_item_id`) REFERENCES `bookitem` (`bookitem_id`)
+  CONSTRAINT `fk_borrowticket_bookitem_id` FOREIGN KEY (`isbn`) REFERENCES `bookitem` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -208,7 +208,7 @@ CREATE TABLE `category` (
   `category_id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,6 +217,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (1,'Văn học Việt Nam'),(2,'Sách khoa học'),(3,'Sách thiếu nhi'),(4,'Sách nước ngoài');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,7 +393,7 @@ CREATE TABLE `publisher` (
   `address` varchar(255) NOT NULL,
   `phone` varchar(10) NOT NULL,
   PRIMARY KEY (`publisher_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,6 +402,7 @@ CREATE TABLE `publisher` (
 
 LOCK TABLES `publisher` WRITE;
 /*!40000 ALTER TABLE `publisher` DISABLE KEYS */;
+INSERT INTO `publisher` VALUES (1,'Nhà xuất bản XYZ','SGU','0777011640'),(2,'Nhà xuất bản ABC','Tân Phú','0777011640'),(3,'Nhà xuất bản trẻ','TP.HCM','0777011640');
 /*!40000 ALTER TABLE `publisher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -447,9 +449,9 @@ CREATE TABLE `purchaseticket_details` (
   `isbn` varchar(20) NOT NULL,
   `quantity` int NOT NULL,
   PRIMARY KEY (`purchase_ticket_details_id`),
-  KEY `fk_isbn_idx` (`isbn`),
   KEY `fk_purchaseticket_idx` (`purchase_ticket_id`),
-  CONSTRAINT `fk_isbn` FOREIGN KEY (`isbn`) REFERENCES `book` (`isbn`),
+  KEY `fk_isbn_bookitem_idx` (`isbn`),
+  CONSTRAINT `fk_isbn_bookitem` FOREIGN KEY (`isbn`) REFERENCES `bookitem` (`isbn`),
   CONSTRAINT `fk_purchaseticket` FOREIGN KEY (`purchase_ticket_id`) REFERENCES `purchaseticket` (`purchase_ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -503,12 +505,11 @@ DROP TABLE IF EXISTS `returnticket_details`;
 CREATE TABLE `returnticket_details` (
   `return_ticket_details_id` int NOT NULL AUTO_INCREMENT,
   `return_ticket_id` varchar(20) NOT NULL,
-  `book_item_id` varchar(20) NOT NULL,
+  `isbn` varchar(20) NOT NULL,
   PRIMARY KEY (`return_ticket_details_id`),
   KEY `fk_return_idx` (`return_ticket_id`),
-  KEY `fk_returnticket_bookitem_id_idx` (`book_item_id`),
-  CONSTRAINT `fk_return` FOREIGN KEY (`return_ticket_id`) REFERENCES `returnticket` (`return_ticket_id`),
-  CONSTRAINT `fk_returnticket_bookitem_id` FOREIGN KEY (`book_item_id`) REFERENCES `bookitem` (`bookitem_id`)
+  KEY `fk_returnticket_bookitem_id_idx` (`isbn`),
+  CONSTRAINT `fk_return` FOREIGN KEY (`return_ticket_id`) REFERENCES `returnticket` (`return_ticket_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -584,4 +585,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-06 22:14:11
+-- Dump completed on 2024-10-28 23:11:24
