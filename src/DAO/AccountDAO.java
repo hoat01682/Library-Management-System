@@ -133,9 +133,8 @@ public class AccountDAO {
                 int id = rs.getInt("account_id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                int permission_id = rs.getInt("permission_id");
                 String status = rs.getString("status");
-                
+                int permission_id = rs.getInt("permission_id");
                 AccountDTO account = new AccountDTO(id, username, password, permission_id, status);
                 
                 list.add(account);

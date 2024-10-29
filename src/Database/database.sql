@@ -509,7 +509,8 @@ CREATE TABLE `returnticket_details` (
   PRIMARY KEY (`return_ticket_details_id`),
   KEY `fk_return_idx` (`return_ticket_id`),
   KEY `fk_returnticket_bookitem_id_idx` (`isbn`),
-  CONSTRAINT `fk_return` FOREIGN KEY (`return_ticket_id`) REFERENCES `returnticket` (`return_ticket_id`)
+  CONSTRAINT `fk_return` FOREIGN KEY (`return_ticket_id`) REFERENCES `returnticket` (`return_ticket_id`),
+  CONSTRAINT `fk_returnticket_isbn` FOREIGN KEY (`isbn`) REFERENCES `bookitem` (`isbn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -585,4 +586,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-28 23:11:24
+-- Dump completed on 2024-10-29 21:00:11

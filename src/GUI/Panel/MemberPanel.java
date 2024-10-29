@@ -8,12 +8,12 @@ package GUI.Panel;
  *
  * @author Duc3m
  */
-public class BatchPanel extends javax.swing.JPanel {
+public class MemberPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form Batch
+     * Creates new form Customer
      */
-    public BatchPanel() {
+    public MemberPanel() {
         initComponents();
     }
 
@@ -28,23 +28,23 @@ public class BatchPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setText("BATCH");
+        jLabel1.setText("CUSTOMER");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(232, 232, 232)
+                .addGap(385, 385, 385)
                 .addComponent(jLabel1)
-                .addContainerGap(710, Short.MAX_VALUE))
+                .addContainerGap(534, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(250, 250, 250)
+                .addGap(237, 237, 237)
                 .addComponent(jLabel1)
-                .addContainerGap(564, Short.MAX_VALUE))
+                .addContainerGap(577, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -8,12 +8,12 @@ package GUI.Panel;
  *
  * @author Duc3m
  */
-public class AreaPanel extends javax.swing.JPanel {
+public class PenaltyPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form Area
+     * Creates new form Receipt
      */
-    public AreaPanel() {
+    public PenaltyPanel() {
         initComponents();
     }
 
@@ -26,19 +26,30 @@ public class AreaPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
+        jLabel1.setText("RECEIPT");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(353, 353, 353)
+                .addComponent(jLabel1)
+                .addContainerGap(584, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 830, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(298, 298, 298)
+                .addComponent(jLabel1)
+                .addContainerGap(516, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,15 +7,15 @@ package GUI;
 import DTO.AccountDTO;
 import GUI.Component.SideNav;
 import GUI.Panel.AccountPanel;
-import GUI.Panel.AreaPanel;
-import GUI.Panel.BatchPanel;
-import GUI.Panel.CustomerPanel;
+import GUI.Panel.BorrowPanel;
+import GUI.Panel.ReturnPanel;
+import GUI.Panel.MemberPanel;
 import GUI.Panel.EmployeePanel;
 import GUI.Panel.HomePanel;
 import GUI.Panel.PermissionPanel;
 import GUI.Panel.ProductPanel;
-import GUI.Panel.PublisherPanel;
-import GUI.Panel.ReceiptPanel;
+import GUI.Panel.ImportPanel;
+import GUI.Panel.PenaltyPanel;
 import GUI.Panel.StatisticPanel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -38,13 +38,13 @@ public class Main_Frame extends javax.swing.JFrame {
     
     public HomePanel homePanel = new HomePanel();
     public ProductPanel productPanel = new ProductPanel();
-    public AreaPanel areaPanel = new AreaPanel();
-    public BatchPanel batchPanel = new BatchPanel();
+    public BorrowPanel borrowPanel = new BorrowPanel();
+    public ReturnPanel returnPanel = new ReturnPanel();
     public EmployeePanel employeePanel = new EmployeePanel();
-    public CustomerPanel customerPanel = new CustomerPanel();
+    public MemberPanel memberPanel = new MemberPanel();
     public StatisticPanel statisticPanel = new StatisticPanel();
-    public PublisherPanel publisherPanel = new PublisherPanel();
-    public ReceiptPanel receiptPanel = new ReceiptPanel();
+    public ImportPanel importPanel = new ImportPanel();
+    public PenaltyPanel penaltyPanel = new PenaltyPanel();
     public AccountPanel accountPanel = new AccountPanel();
     public PermissionPanel permissionPanel = new PermissionPanel();
     
@@ -66,16 +66,16 @@ public class Main_Frame extends javax.swing.JFrame {
         
         cardLayout = (CardLayout) content.getLayout();
         content.add(homePanel, "home");
-        content.add(productPanel, "product");
-        content.add(areaPanel, "area");
-        content.add(batchPanel, "batch");
+        content.add(productPanel, "book");
+        content.add(borrowPanel, "borrow");
+        content.add(returnPanel, "return");
+        content.add(importPanel, "import");
         content.add(employeePanel, "employee");
-        content.add(customerPanel, "customer");
-        content.add(statisticPanel, "statistic");
-        content.add(publisherPanel, "publisher");
-        content.add(receiptPanel, "receipt");
+        content.add(memberPanel, "member");
         content.add(accountPanel, "account");
+        content.add(penaltyPanel, "penalty");
         content.add(permissionPanel, "permission");
+        content.add(statisticPanel, "statistic");
     }
 
     public void switchCard(String panelName) {
