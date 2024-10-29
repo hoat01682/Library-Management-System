@@ -24,16 +24,16 @@ public class SideNav extends javax.swing.JPanel {
     Main_Frame main;
     String[][] menuNames = {
         {"Trang chủ", "home", "home.svg"},
-        {"Sản phẩm", "product", "book.svg"},
-        {"Khu vực sách", "area", "bed.svg"},
-        {"Lô", "batch", "bag.svg"},
+        {"Quản lý sách", "book", "book.svg"},
+        {"Mượn sách", "borrow", "borrow.svg"},
+        {"Trả sách", "return", "return.svg"},
+        {"Nhập sách", "import", "receipt.svg"},
         {"Nhân viên", "employee", "employee.svg"},
-        {"Khách hàng", "customer", "customer.svg"},
-        {"Thống kê", "statistic", "statistic.svg"},
-        {"Nhà xuất bản", "publisher", "namecard.svg"},
-        {"Phiếu nhập", "receipt", "receipt.svg"},
+        {"Thành viên", "member", "customer.svg"},
         {"Tài khoản", "account", "account.svg"},
+        {"Vi phạm", "penalty", "namecard.svg"},
         {"Phân quyền", "permission", "permission.svg"},
+        {"Thống kê", "statistic", "statistic.svg"},
         {"Đăng xuất", "logout", "door.svg"}
     };
     public SideNav_Button menuButtons[];
