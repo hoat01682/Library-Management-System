@@ -1,7 +1,7 @@
 
 package DAO;
 
-import DTO.Penalty;
+import DTO.PenaltyDTO;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -179,28 +179,34 @@ public class PenaltyDAO {
     }
 
     /// Get Penalty by ID
-    public PenaltyDTO getById(int id) {
+    public ArrayList<PenaltyDTO> getById(int id) {
+        ArrayList<PenaltyDTO> list = new ArrayList<>();
         try {
             Connection connection = Database.getConnection();
 
             String query = "SELECT * FROM penalty WHERE penalty_id = ?";
-
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
 
-            int id = rs.getInt("penalty_id");
-            String penalty_name = rs.getString("penalty_name");
-            Double amount = rs.getDouble("amount");
+            
+            while (rs.next()) {
+                int penaltyId = rs.getInt("penalty_id"); 
+                String penaltyName = rs.getString("penalty_name");
+                double amount = rs.getDouble("amount");
 
-            PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
+                PenaltyDTO penalty = new PenaltyDTO(penaltyId, penaltyName, amount);
+                list.add(penalty);
+            }
 
-            return penalty;
+            Database.closeConnection(connection);
 
         } catch (SQLException e) {
             System.out.println(e);
         }
+
+        return list; 
     }
 }

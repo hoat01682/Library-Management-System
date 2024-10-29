@@ -17,7 +17,7 @@ public class PenaltyTicketDAO {
         try {
             Connection connection = Database.getConnection();
 
-            String query = "INSET INTO penaltyticket (member_id, staff_id, penalty_id, penalty_date, note) VALUES (?, ?, ?, ?, ?)"
+            String query = "INSET INTO penaltyticket (member_id, staff_id, penalty_id, penalty_date, note) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setInt(1, penaltyTicket.getMemberId());
@@ -100,7 +100,7 @@ public class PenaltyTicketDAO {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                String id = rs.getString("penalty_ticket_id");
+                int id = rs.getInt("penalty_ticket_id");
                 int member_id = rs.getInt("member_id");
                 int staff_id = rs.getInt("staff_id");
                 int penalty_id = rs.getInt("penalty_id");
@@ -109,7 +109,7 @@ public class PenaltyTicketDAO {
 
                 PenaltyTicketDTO penaltyTicket = new PenaltyTicketDTO(id, member_id, staff_id, penalty_id, penalty_date, note);
 
-                list.add(penalty);
+                list.add(penaltyTicket);
             }
 
             Database.closeConnection(connection);
@@ -137,7 +137,7 @@ public class PenaltyTicketDAO {
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                String id = rs.getString("penalty_ticket_id");
+                int id = rs.getInt("penalty_ticket_id");
                 int member_id = rs.getInt("member_id");
                 int staff_id = rs.getInt("staff_id");
                 int penalty_id = rs.getInt("penalty_id");
@@ -146,7 +146,7 @@ public class PenaltyTicketDAO {
 
                 PenaltyTicketDTO penaltyTicket = new PenaltyTicketDTO(id, member_id, staff_id, penalty_id, penalty_date, note);
                 
-                list.add(penalty);
+                list.add(penaltyTicket);
             }
 
             Database.closeConnection(connection);
@@ -159,39 +159,41 @@ public class PenaltyTicketDAO {
     }
 
     // Filter by dynamic properties
-    public ArrayList<PenaltyTicketDTO> fitlerDynamic(String type, String id) {
-        ArrayList<PenaltyTicketDTO> list = new ArrayList<>();
+    public ArrayList<PenaltyTicketDTO> filterDynamic(int type, int id) {
+    ArrayList<PenaltyTicketDTO> list = new ArrayList<>();
 
-        try {
-            Connection connection = Database.getConnection();
+    try {
+        Connection connection = Database.getConnection();
 
-            String query = "SELECT * FROM penaltyticket WHERE ? = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
+        String query = "SELECT * FROM penaltyticket WHERE ? = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
 
-            ps.setString(1, type);
-            ps.setString(2, id);
+        ps.setInt(1, type);
+        ps.setInt(2, id);
 
-            ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-            while(rs.next()) {
-                String id = rs.getString("penalty_ticket_id");
-                int member_id = rs.getInt("member_id");
-                int staff_id = rs.getInt("staff_id");
-                int penalty_id = rs.getInt("penalty_id");
-                String penalty_date = rs.getString("penalty_date");
-                String note = rs.getString("note");
+        while (rs.next()) {
+            int penaltyTicketId = rs.getInt("penalty_ticket_id"); // Using int for penalty_ticket_id
+            int memberId = rs.getInt("member_id");
+            int staffId = rs.getInt("staff_id");
+            int penaltyId = rs.getInt("penalty_id");
+            String penaltyDate = rs.getString("penalty_date");
+            String note = rs.getString("note");
 
-                PenaltyTicketDTO penaltyTicket = new PenaltyTicketDTO(id, member_id, staff_id, penalty_id, penalty_date, note);
-                
-                list.add(penalty);
-            }
+            PenaltyTicketDTO penaltyTicket = new PenaltyTicketDTO(
+                penaltyTicketId, memberId, staffId, penaltyId, penaltyDate, note
+            );
 
-            Database.closeConnection(connection);
-
-        } catch (SQLException e) {
-            System.out.println(e);
+            list.add(penaltyTicket); // Correct the variable name to penaltyTicket
         }
 
-        return list;
+        Database.closeConnection(connection);
+
+    } catch (SQLException e) {
+        System.out.println(e);
     }
+
+    return list;
+}
 }
