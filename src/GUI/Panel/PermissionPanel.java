@@ -7,6 +7,10 @@ package GUI.Panel;
 import BUS.PermissionBUS;
 import DTO.PermissionDTO;
 import GUI.Component.ManagementTable;
+import GUI.Component.MenuBar;
+import GUI.Permission.PermissionDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,22 +21,33 @@ import javax.swing.table.DefaultTableModel;
 public class PermissionPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
+    MenuBar menuBar = new MenuBar();
     PermissionBUS permissionBUS = new PermissionBUS();
     ArrayList<PermissionDTO> permissionList = permissionBUS.getAll();
     
     public PermissionPanel() {
         initComponents();
-        
-        tablePanel.setBounds(14, 180, 940, 600);
-        jLayeredPane1.add(tablePanel, Integer.valueOf(100));
-        
         customInit();
     }
 
     public void customInit() {
+        //Đặt menuBar và table lên layer 100
+        menuBar.setBounds(14, 20, 940, 150);
+        jLayeredPane1.add(menuBar, Integer.valueOf(100));
+        tablePanel.setBounds(14, 180, 940, 600);
+        jLayeredPane1.add(tablePanel, Integer.valueOf(100));
+        
+        //Quy định các cột
         String[] columnNames = {"Mã nhóm quyền", "Tên nhóm quyền"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(permissionList);
+        
+        tablePanel.viewOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewEvent();
+            }
+        });
     }
     
     public void loadDataToTable(ArrayList<PermissionDTO> permissionList) {
@@ -45,12 +60,19 @@ public class PermissionPanel extends javax.swing.JPanel {
             });
         }
     }
+    
+    public void viewEvent() {
+        PermissionDialog pmD = new PermissionDialog(null, true);
+        pmD.setVisible(true);
+    }
         
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+
+        setBackground(new java.awt.Color(0, 153, 204));
 
         jLayeredPane1.setPreferredSize(new java.awt.Dimension(980, 830));
 

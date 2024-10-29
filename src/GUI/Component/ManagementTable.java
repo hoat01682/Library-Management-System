@@ -31,14 +31,6 @@ public class ManagementTable extends javax.swing.JPanel {
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         table.getTableHeader().setBackground(new Color(105, 110, 118));
         table.getTableHeader().setForeground(Color.white);
-//        String[] columnNames = {"Column 1", "Column 2", "Column 3"};
-//        Object[][] data = {
-//            {"Data 1", "Data 2", "Data 3"},
-//            {"Data 4", "Data 5", "Data 6"},
-//            {"Data 7", "Data 8", "Data 9"},
-//            {"Data 1", "Data 2", "Data 3"},          
-//        };
-//        table.setModel(new DefaultTableModel(data, columnNames));
     }
 
     
@@ -126,11 +118,11 @@ public class ManagementTable extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem deleteOption;
-    private javax.swing.JMenuItem editOption;
+    public javax.swing.JMenuItem deleteOption;
+    public javax.swing.JMenuItem editOption;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTable table;
-    private javax.swing.JMenuItem viewOption;
+    public javax.swing.JMenuItem viewOption;
     // End of variables declaration//GEN-END:variables
 }

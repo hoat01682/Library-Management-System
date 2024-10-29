@@ -5,6 +5,10 @@
 package GUI.Panel;
 
 import GUI.Component.ManagementTable;
+import GUI.Component.MenuBar;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -12,14 +16,32 @@ import GUI.Component.ManagementTable;
  */
 public class ProductPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Product
-     */
+   ManagementTable tablePanel = new ManagementTable();
+    MenuBar menuBar = new MenuBar();
+    
     public ProductPanel() {
         initComponents();
-        ManagementTable table = new ManagementTable();
-        table.setBounds(14, 180, 940, 600);
-        jLayeredPane1.add(table, Integer.valueOf(100));
+        customInit();
+    }
+    
+    public void customInit() {
+        //Đặt menuBar và table lên layer 100
+        menuBar.setBounds(14, 20, 940, 150);
+        jLayeredPane1.add(menuBar, Integer.valueOf(100));
+        tablePanel.setBounds(14, 180, 940, 600);
+        jLayeredPane1.add(tablePanel, Integer.valueOf(100));
+        
+        //Quy định các cột
+        String[] columnNames = {"Mã sách", "Tên sách", "Tác giả", "Nhà xuất bản", "Năm xuất bản", "Thể loại", "Số lượng"};
+        tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
+//        loadDataToTable(permissionList);
+        
+        tablePanel.viewOption.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                viewEvent();
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")

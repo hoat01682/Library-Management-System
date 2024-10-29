@@ -14,12 +14,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Duc3m
  */
-public class PenaltyPanel extends javax.swing.JPanel {
+public class StaffPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
     
-    public PenaltyPanel() {
+    public StaffPanel() {
         initComponents();
         customInit();
     }
@@ -32,7 +32,7 @@ public class PenaltyPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã phiếu phạt", "Thành viên", "Nhân viên", "Ngày phạt"};
+        String[] columnNames = {"Mã nhân viên", "Họ tên", "Email", "Số điện thoại", "Địa chỉ", "Ngày tham gia", "Trạng thái"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
 //        loadDataToTable(permissionList);
         
