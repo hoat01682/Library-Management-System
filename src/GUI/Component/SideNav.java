@@ -28,7 +28,7 @@ public class SideNav extends javax.swing.JPanel {
         {"Mượn sách", "borrow", "borrow.svg"},
         {"Trả sách", "return", "return.svg"},
         {"Nhập sách", "import", "receipt.svg"},
-        {"Nhân viên", "employee", "employee.svg"},
+        {"Nhân viên", "staff", "employee.svg"},
         {"Thành viên", "member", "customer.svg"},
         {"Tài khoản", "account", "account.svg"},
         {"Vi phạm", "penalty", "namecard.svg"},

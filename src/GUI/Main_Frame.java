@@ -10,7 +10,7 @@ import GUI.Panel.AccountPanel;
 import GUI.Panel.BorrowPanel;
 import GUI.Panel.ReturnPanel;
 import GUI.Panel.MemberPanel;
-import GUI.Panel.EmployeePanel;
+import GUI.Panel.StaffPanel;
 import GUI.Panel.HomePanel;
 import GUI.Panel.PermissionPanel;
 import GUI.Panel.ProductPanel;
@@ -40,7 +40,7 @@ public class Main_Frame extends javax.swing.JFrame {
     public ProductPanel productPanel = new ProductPanel();
     public BorrowPanel borrowPanel = new BorrowPanel();
     public ReturnPanel returnPanel = new ReturnPanel();
-    public EmployeePanel employeePanel = new EmployeePanel();
+    public StaffPanel staffPanel = new StaffPanel();
     public MemberPanel memberPanel = new MemberPanel();
     public StatisticPanel statisticPanel = new StatisticPanel();
     public ImportPanel importPanel = new ImportPanel();
@@ -70,7 +70,7 @@ public class Main_Frame extends javax.swing.JFrame {
         content.add(borrowPanel, "borrow");
         content.add(returnPanel, "return");
         content.add(importPanel, "import");
-        content.add(employeePanel, "employee");
+        content.add(staffPanel, "staff");
         content.add(memberPanel, "member");
         content.add(accountPanel, "account");
         content.add(penaltyPanel, "penalty");
