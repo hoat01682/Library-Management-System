@@ -53,7 +53,7 @@ public class PermissionDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "SELECT * FROM permission WHERE permission_id = ?";
+            String query = "SELECT * FROM `permission` WHERE permission_id = ?";
             
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, id); 
@@ -61,8 +61,8 @@ public class PermissionDAO {
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                int permission_id = rs.getInt("staff_id");
-                String permission_name = rs.getString("full_name");
+                int permission_id = rs.getInt("permission_id");
+                String permission_name = rs.getString("permission_name");
 
                 permission = new PermissionDTO(permission_id, permission_name);
             }

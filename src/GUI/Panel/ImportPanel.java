@@ -8,12 +8,12 @@ package GUI.Panel;
  *
  * @author Duc3m
  */
-public class ReceiptPanel extends javax.swing.JPanel {
+public class ImportPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form Receipt
+     * Creates new form Publisher
      */
-    public ReceiptPanel() {
+    public ImportPanel() {
         initComponents();
     }
 
@@ -28,23 +28,23 @@ public class ReceiptPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setText("RECEIPT");
+        jLabel1.setText("PUBLISHER");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(353, 353, 353)
+                .addGap(456, 456, 456)
                 .addComponent(jLabel1)
-                .addContainerGap(584, Short.MAX_VALUE))
+                .addContainerGap(465, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(298, 298, 298)
+                .addGap(254, 254, 254)
                 .addComponent(jLabel1)
-                .addContainerGap(516, Short.MAX_VALUE))
+                .addContainerGap(560, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
