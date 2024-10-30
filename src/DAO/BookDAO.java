@@ -24,7 +24,7 @@ public class BookDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "INSERT INTO book (id, title, author, publisher_id, year_publish, category_id, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO book (id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setInt(1, book.getId());
@@ -34,6 +34,7 @@ public class BookDAO {
             ps.setInt(5, book.getYearPublish());
             ps.setInt(6, book.getCategoryId());
             ps.setInt(7, book.getQuantity());
+            ps.setString(8, book.getBookImage());
             
             result = ps.executeUpdate();
             
@@ -60,7 +61,8 @@ public class BookDAO {
             ps.setInt(4, book.getYearPublish());
             ps.setInt(5, book.getCategoryId());
             ps.setInt(6, book.getQuantity());
-            ps.setInt(7, book.getId());
+            ps.setString(7, book.getBookImage());
+            ps.setInt(8, book.getId());
             
             result = ps.executeUpdate();
             
@@ -91,8 +93,9 @@ public class BookDAO {
                 int year = rs.getInt("year_publish");
                 int category_id = rs.getInt("category_id");
                 int quantity = rs.getInt("quantity");
+                String book_image = rs.getString("book_image");
                 
-                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity);
+                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, book_image);
                 list.add(book);
             }
             

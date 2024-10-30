@@ -16,19 +16,21 @@ public class BookDTO {
     private int yearPublish;
     private int categoryId;
     private int quantity;
+    private String bookImage;
 
     // Constructor này dùng để add book vào database
-    public BookDTO(String title, String author, int publisherId, int yearPublish, int categoryId) {
+    public BookDTO(String title, String author, int publisherId, int yearPublish, int categoryId, String bookImage) {
         this.title = title;
         this.author = author;
         this.publisherId = publisherId;
         this.yearPublish = yearPublish;
         this.categoryId = categoryId;
         this.quantity = 0;
+        this.bookImage = bookImage;
     }
 
     // Constructor này dùng để get book trong database
-    public BookDTO(int id, String title, String author, int publisherId, int yearPublish, int categoryId, int quantity) {
+    public BookDTO(int id, String title, String author, int publisherId, int yearPublish, int categoryId, int quantity, String bookImage) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -36,6 +38,7 @@ public class BookDTO {
         this.yearPublish = yearPublish;
         this.categoryId = categoryId;
         this.quantity = quantity;
+        this.bookImage = bookImage;
     }
 
     public int getId() {
@@ -94,5 +97,12 @@ public class BookDTO {
         this.quantity = quantity;
     }
     
+    public String getBookImage() {
+        return bookImage;
+    }
+
+    public void setBookImage(String bookImage) {
+        this.bookImage = bookImage;
+    }
     
 }
