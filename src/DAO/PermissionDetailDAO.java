@@ -98,4 +98,10 @@ public class PermissionDetailDAO {
         return result;
     }
     
+    public int update(ArrayList<PermissionDetailDTO> pdList, int pId) {
+        int result = this.deleteByPermissionId(pId);
+        if(result >= 0) result = this.add(pdList);
+        return result;
+    }
+    
 }

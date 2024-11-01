@@ -13,8 +13,8 @@ public class PermissionDTO {
     private int id;
     private String name;
 
-    public PermissionDTO() {
-        
+    public PermissionDTO(String name) {
+        this.name = name;
     }
     
     public PermissionDTO(int id, String name) {

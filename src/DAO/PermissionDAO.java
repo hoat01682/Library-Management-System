@@ -75,4 +75,98 @@ public class PermissionDAO {
         return permission;
     }
     
+    public int update(PermissionDTO permission) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE `permission` SET permission_name = ? WHERE permission_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, permission.getName());
+            ps.setInt(2, permission.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+            
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return result;
+    }
+    
+    public int getAutoIncrement(){
+        int result = -1;
+        try {
+            Connection con = (Connection) Database.getConnection();
+            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'library_management' AND TABLE_NAME = 'permission";
+            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery(sql);
+            if (!rs.isBeforeFirst()) {
+                System.out.println("No data");
+            } else {
+                while (rs.next()) {
+                    result = rs.getInt("AUTO_INCREMENT");
+                }
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return result;
+    }
+    
+    public int add(PermissionDTO permission) {
+        int result = 0;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "INSERT INTO `permission` (permission_name) VALUES (?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, permission.getName());
+
+            result = ps.executeUpdate();
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+    
+    public int addReturnId(PermissionDTO permission) {
+        int result = 0;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "INSERT INTO `permission` (`permission_name`) VALUES (?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, permission.getName());
+
+            ps.executeUpdate();
+
+            query = "SELECT * FROM `permission` WHERE `permission_id` = LAST_INSERT_ID();";
+            ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                result = rs.getInt("permission_id");
+            }
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+    
 }

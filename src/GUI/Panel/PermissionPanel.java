@@ -8,10 +8,15 @@ import BUS.PermissionBUS;
 import DTO.PermissionDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
 import GUI.Permission.PermissionDialog;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +27,8 @@ public class PermissionPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
     PermissionBUS permissionBUS = new PermissionBUS();
     ArrayList<PermissionDTO> permissionList = permissionBUS.getAll();
     
@@ -42,9 +49,21 @@ public class PermissionPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(permissionList);
         
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
+        
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn quyền nào");
+                    return;
+                }
                 viewEvent();
             }
         });
@@ -61,9 +80,21 @@ public class PermissionPanel extends javax.swing.JPanel {
         }
     }
     
-    public void viewEvent() {
-        PermissionDialog pmD = new PermissionDialog(null, true);
+    public void addEvent() {
+        PermissionDialog pmD = new PermissionDialog(null, null, true);
         pmD.setVisible(true);
+        permissionList = permissionBUS.getAll();
+        loadDataToTable(permissionList);
+    }
+    
+    public void viewEvent() {
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        PermissionDTO p = permissionBUS.getById(id);
+        PermissionDialog pmD = new PermissionDialog(null, p, true);
+        pmD.setVisible(true);
+        permissionList = permissionBUS.getAll();
+        loadDataToTable(permissionList);
     }
         
     @SuppressWarnings("unchecked")
@@ -71,20 +102,29 @@ public class PermissionPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+        jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 153, 204));
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLayeredPane1.setPreferredSize(new java.awt.Dimension(980, 830));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/product_background1.jpg"))); // NOI18N
+
+        jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 830, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -105,6 +145,7 @@ public class PermissionPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     // End of variables declaration//GEN-END:variables
 }

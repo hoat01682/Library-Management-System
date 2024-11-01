@@ -23,19 +23,18 @@ public class BookDAO {
         
         try {
             Connection connection = Database.getConnection();
-            
-            String query = "INSERT INTO book (id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+           
+            String query = "INSERT INTO book (book_id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             
-            ps.setInt(1, book.getId());
+            ps.setString(1, book.getId());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getAuthor());
             ps.setInt(4, book.getPublisherId());
             ps.setInt(5, book.getYearPublish());
             ps.setInt(6, book.getCategoryId());
             ps.setInt(7, book.getQuantity());
-            ps.setString(8, book.getBookImage());
-            
+            ps.setString(8, book.getImage());
             result = ps.executeUpdate();
             
             Database.closeConnection(connection);
@@ -61,8 +60,7 @@ public class BookDAO {
             ps.setInt(4, book.getYearPublish());
             ps.setInt(5, book.getCategoryId());
             ps.setInt(6, book.getQuantity());
-            ps.setString(7, book.getBookImage());
-            ps.setInt(8, book.getId());
+            ps.setString(7, book.getId());
             
             result = ps.executeUpdate();
             
@@ -86,16 +84,15 @@ public class BookDAO {
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {                
-                int id = rs.getInt("id");
+                String id = rs.getString("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");
                 int year = rs.getInt("year_publish");
                 int category_id = rs.getInt("category_id");
                 int quantity = rs.getInt("quantity");
-                String book_image = rs.getString("book_image");
-                
-                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, book_image);
+                String image = rs.getString("book_image");
+                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, image);
                 list.add(book);
             }
             

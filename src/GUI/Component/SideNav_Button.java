@@ -33,8 +33,6 @@ public class SideNav_Button extends javax.swing.JPanel implements MouseListener{
     
     public SideNav_Button() {
         initComponents();
-        
-        putClientProperty(FlatClientProperties.STYLE, "arc: 10");
         addMouseListener(this);
     }
 
