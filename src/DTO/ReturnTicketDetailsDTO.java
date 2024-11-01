@@ -6,7 +6,7 @@ public class ReturnTicketDetailsDTO {
     //Thuộc tính bảng
     private int returnTicketdetailsId;//mã chi tiết phiếu trả
     private String returnTicketId;//mã phiếu trả
-    private String bookItemId;//mã bản sách
+    private String isbn;//mã bản sách
 
 
     // Getters and setters
@@ -26,11 +26,11 @@ public class ReturnTicketDetailsDTO {
         this.returnTicketId = returnTicketId;
     }
 
-    public String getbookItemId() {
-        return bookItemId;
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setbookItemId(String bookItemId) {
-        this.bookItemId = bookItemId;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }
