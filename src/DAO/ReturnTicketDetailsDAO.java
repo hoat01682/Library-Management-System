@@ -35,7 +35,7 @@ public class ReturnTicketDetailsDAO {
                 ReturnTicketDetailsDTO detail = new ReturnTicketDetailsDTO();
                 detail.setreturnTicketdetailsId(rs.getInt("return_ticket_details_id"));
                 detail.setreturnTicketId(rs.getString("return_ticket_id"));
-                detail.setbookItemId(rs.getString("book_item_id"));
+                detail.setbookItemId(rs.getString("isbn"));
                 returnTicketDetails.add(detail);
             }
         }
@@ -53,7 +53,7 @@ public class ReturnTicketDetailsDAO {
                 ReturnTicketDetailsDTO detail = new ReturnTicketDetailsDTO();
                 detail.setreturnTicketdetailsId(rs.getInt("return_ticket_details_id"));
                 detail.setreturnTicketId(rs.getString("return_ticket_id"));
-                detail.setbookItemId(rs.getString("book_item_id"));
+                detail.setbookItemId(rs.getString("isbn"));
                 returnTicketDetails.add(detail);
             }
         }
@@ -63,7 +63,7 @@ public class ReturnTicketDetailsDAO {
     //Thêm chi tiết phiếu trả
     public boolean addReturnDetails(ReturnTicketDetailsDTO detail) {
         boolean result = false;
-        String query = "INSERT INTO returnticket_details (return_ticket_id, book_item_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO returnticket_details (return_ticket_id, isbn) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()) {
                 stmt.setString(1, detail.getreturnTicketId());
