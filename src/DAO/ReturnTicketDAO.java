@@ -60,7 +60,7 @@ public class ReturnTicketDAO {
             stmt.setString(2, ticket.getBorrowTicketId());
             stmt.setInt(3, ticket.getStaffId());
             stmt.setString(4, ticket.getReturnDate());
-            stmt.setString(5, ticket.getStatus());
+            stmt.setString(5, "Hoàn thành"); //Chuyển trạng thái thành "Hoàn thành"
             stmt.executeUpdate();
         }
     }
