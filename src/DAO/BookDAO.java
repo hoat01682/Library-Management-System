@@ -23,7 +23,7 @@ public class BookDAO {
         
         try {
             Connection connection = Database.getConnection();
-            
+           
             String query = "INSERT INTO book (book_id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             
