@@ -31,6 +31,7 @@ public class ManagementTable extends javax.swing.JPanel {
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         table.getTableHeader().setBackground(new Color(105, 110, 118));
         table.getTableHeader().setForeground(Color.white);
+        table.setDefaultEditor(Object.class, null);
     }
 
     
@@ -83,13 +84,22 @@ public class ManagementTable extends javax.swing.JPanel {
             new String [] {
                 "Mã SP", "Tên sản phẩm", "Số lượng tồn", "Tên tác giả", "Danh mục", "Năm xuất bản", "Nhà xuất bản", "Khu vực sách"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         table.setComponentPopupMenu(jPopupMenu1);
         table.setFocusable(false);
         table.setGridColor(new java.awt.Color(0, 0, 0));
         table.setRowHeight(24);
         table.setSelectionBackground(new java.awt.Color(0, 153, 204));
         table.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         table.getTableHeader().setResizingAllowed(false);
         table.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(table);

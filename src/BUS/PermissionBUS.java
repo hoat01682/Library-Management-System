@@ -5,7 +5,9 @@
 package BUS;
 
 import DAO.PermissionDAO;
+import DAO.PermissionDetailDAO;
 import DTO.PermissionDTO;
+import DTO.PermissionDetailDTO;
 import java.util.ArrayList;
 
 /**
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 public class PermissionBUS {
     
     private final PermissionDAO permissionDAO = new PermissionDAO();
+    private final PermissionDetailDAO permissionDetailDAO = new PermissionDetailDAO();
     
     public ArrayList<PermissionDTO> getAll() {
         return permissionDAO.getAll();
@@ -22,6 +25,26 @@ public class PermissionBUS {
     
     public PermissionDTO getById(int id) {
         return permissionDAO.getById(id);
+    }
+    
+    public boolean add(PermissionDTO permission, ArrayList<PermissionDetailDTO> pdList) {
+        if(permissionDAO.add(permission) != 0) {
+            permissionDetailDAO.add(pdList);
+            return true;
+        }
+        return false;
+    }
+    
+    public int addReturnId(PermissionDTO permission) {
+        return permissionDAO.addReturnId(permission);
+    }
+    
+    public boolean update(PermissionDTO permission, ArrayList<PermissionDetailDTO> pdList) {
+        if(permissionDAO.update(permission) != 0) {
+            permissionDetailDAO.update(pdList, permission.getId());
+            return true;
+        }
+        return false;
     }
     
 }

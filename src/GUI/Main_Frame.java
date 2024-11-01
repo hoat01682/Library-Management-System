@@ -13,7 +13,7 @@ import GUI.Panel.MemberPanel;
 import GUI.Panel.StaffPanel;
 import GUI.Panel.HomePanel;
 import GUI.Panel.PermissionPanel;
-import GUI.Panel.ProductPanel;
+import GUI.Panel.BookPanel;
 import GUI.Panel.ImportPanel;
 import GUI.Panel.PenaltyPanel;
 import GUI.Panel.StatisticPanel;
@@ -37,7 +37,7 @@ public class Main_Frame extends javax.swing.JFrame {
     public CardLayout cardLayout;
     
     public HomePanel homePanel = new HomePanel();
-    public ProductPanel productPanel = new ProductPanel();
+    public BookPanel bookPanel = new BookPanel();
     public BorrowPanel borrowPanel = new BorrowPanel();
     public ReturnPanel returnPanel = new ReturnPanel();
     public StaffPanel staffPanel = new StaffPanel();
@@ -66,7 +66,7 @@ public class Main_Frame extends javax.swing.JFrame {
         
         cardLayout = (CardLayout) content.getLayout();
         content.add(homePanel, "home");
-        content.add(productPanel, "book");
+        content.add(bookPanel, "book");
         content.add(borrowPanel, "borrow");
         content.add(returnPanel, "return");
         content.add(importPanel, "import");

@@ -4,10 +4,13 @@
  */
 package GUI.Panel;
 
+import BUS.PenaltyTicketBUS;
+import DTO.PenaltyTicketDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,6 +21,8 @@ public class PenaltyPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    PenaltyTicketBUS penaltyTicketBUS = new PenaltyTicketBUS();
+    ArrayList<PenaltyTicketDTO> penaltyTicketList;
     
     public PenaltyPanel() {
         initComponents();
@@ -32,7 +37,7 @@ public class PenaltyPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã phiếu phạt", "Thành viên", "Nhân viên", "Ngày phạt"};
+        String[] columnNames = {"Mã phiếu phạt", "Thành viên", "Nhân viên", "Lý do", "Ngày phạt", "Ghi chú"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
 //        loadDataToTable(permissionList);
         
@@ -44,23 +49,47 @@ public class PenaltyPanel extends javax.swing.JPanel {
         });
     }
     
+    public void loadDataToTable(ArrayList<PenaltyTicketDTO> penaltyTicketList) {
+        DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
+        tableModel.setRowCount(0);
+        for (PenaltyTicketDTO i : penaltyTicketList) {
+            tableModel.addRow(new Object[] {
+                    i.getId(),
+                    i.getMemberId(),
+                    i.getStaffId(),
+                    i.getPenaltyId(),
+                    i.getPenaltyDate(),
+                    i.getNote()
+            });
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
+        jLabel1 = new javax.swing.JLabel();
 
         jLayeredPane1.setPreferredSize(new java.awt.Dimension(980, 830));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/product_background1.jpg"))); // NOI18N
+
+        jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 980, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 830, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -81,6 +110,7 @@ public class PenaltyPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     // End of variables declaration//GEN-END:variables
 }

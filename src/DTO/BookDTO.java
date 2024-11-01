@@ -9,26 +9,28 @@ package DTO;
  * @author hieun
  */
 public class BookDTO {
-    private int id;
+    private String id;
     private String title;
     private String author;
     private int publisherId;
     private int yearPublish;
     private int categoryId;
     private int quantity;
+    private String image;
 
     // Constructor này dùng để add book vào database
-    public BookDTO(String title, String author, int publisherId, int yearPublish, int categoryId) {
+    public BookDTO(String title, String author, int publisherId, int yearPublish, int categoryId, String image) {
         this.title = title;
         this.author = author;
         this.publisherId = publisherId;
         this.yearPublish = yearPublish;
         this.categoryId = categoryId;
         this.quantity = 0;
+        this.image = image;
     }
 
     // Constructor này dùng để get book trong database
-    public BookDTO(int id, String title, String author, int publisherId, int yearPublish, int categoryId, int quantity) {
+    public BookDTO(String id, String title, String author, int publisherId, int yearPublish, int categoryId, int quantity, String image) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -36,13 +38,14 @@ public class BookDTO {
         this.yearPublish = yearPublish;
         this.categoryId = categoryId;
         this.quantity = quantity;
+        this.image = image;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -93,6 +96,13 @@ public class BookDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
     
 }

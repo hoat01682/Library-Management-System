@@ -4,22 +4,27 @@
  */
 package GUI.Panel;
 
+import BUS.BookBUS;
+import DTO.BookDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Duc3m
  */
-public class ProductPanel extends javax.swing.JPanel {
+public class BookPanel extends javax.swing.JPanel {
 
-   ManagementTable tablePanel = new ManagementTable();
+    ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    BookBUS bookBUS = new BookBUS();
+    ArrayList<BookDTO> bookList = new BookBUS().getAllBook();
     
-    public ProductPanel() {
+    public BookPanel() {
         initComponents();
         customInit();
     }
@@ -34,7 +39,7 @@ public class ProductPanel extends javax.swing.JPanel {
         //Quy định các cột
         String[] columnNames = {"Mã sách", "Tên sách", "Tác giả", "Nhà xuất bản", "Năm xuất bản", "Thể loại", "Số lượng"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-//        loadDataToTable(permissionList);
+        loadDataToTable(bookList);
         
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
@@ -42,6 +47,22 @@ public class ProductPanel extends javax.swing.JPanel {
 //                viewEvent();
             }
         });
+    }
+    
+    public void loadDataToTable(ArrayList<BookDTO> bookList) {
+        DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
+        tableModel.setRowCount(0);
+        for (BookDTO i : bookList) {
+            tableModel.addRow(new Object[] {
+                    i.getId(),
+                    i.getTitle(),
+                    i.getAuthor(),
+                    i.getPublisherId(),
+                    i.getYearPublish(),
+                    i.getCategoryId(),
+                    i.getQuantity()
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
