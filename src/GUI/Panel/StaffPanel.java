@@ -8,6 +8,7 @@ import BUS.StaffBUS;
 import DTO.StaffDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Staff.StaffDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class StaffPanel extends javax.swing.JPanel {
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                viewEvent();
             }
         });
     }
@@ -63,6 +64,11 @@ public class StaffPanel extends javax.swing.JPanel {
                     i.getStatus()
             });
         }
+    }
+    
+    public void viewEvent() {
+        StaffDialog sD = new StaffDialog(null, true);
+        sD.setVisible(true);
     }
     
     @SuppressWarnings("unchecked")

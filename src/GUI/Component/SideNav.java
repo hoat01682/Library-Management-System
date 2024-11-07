@@ -4,8 +4,14 @@
  */
 package GUI.Component;
 
+import BUS.PermissionBUS;
+import BUS.PermissionDetailBUS;
+import BUS.StaffBUS;
 import DTO.AccountDTO;
+import DTO.PermissionDTO;
+import DTO.PermissionDetailDTO;
 import DTO.SessionManager;
+import DTO.StaffDTO;
 import GUI.Main_Frame;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -13,6 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 /**
@@ -37,7 +44,13 @@ public class SideNav extends javax.swing.JPanel {
         {"Đăng xuất", "logout", "door.svg"}
     };
     public SideNav_Button menuButtons[];
-    AccountDTO account = SessionManager.getInstance().getLoggedInAccount();
+    AccountDTO account;
+    StaffBUS staffBUS = new StaffBUS();
+    StaffDTO staff;
+    PermissionBUS pBUS = new PermissionBUS();
+    PermissionDTO permission;
+    PermissionDetailBUS pdBUS = new PermissionDetailBUS();
+    ArrayList<PermissionDetailDTO> pdList;
     
     public SideNav() {
         initComponents();
@@ -52,7 +65,20 @@ public class SideNav extends javax.swing.JPanel {
     public SideNav(Main_Frame main) {
         initComponents();     
         this.main = main;
+        this.account = SessionManager.getInstance().getLoggedInAccount();
+        this.staff = staffBUS.getById(account.getStaff_id());
+        this.permission = pBUS.getById(account.getPermission_id());
+        customInit();
+    }
+    
+    public void customInit() {
+        lbl_staffName.setText(this.staff.getFullName());
+        lbl_permissionName.setText(this.permission.getName());
+        
+        pdList = pdBUS.getByPermissionId(account.getPermission_id());
+        
         menuButtons = new SideNav_Button[menuNames.length];
+        
         //Tao cac nut cho menu
         for(int i = 0; i < menuNames.length; i++) {
             menuButtons[i] = new SideNav_Button(main, menuNames[i][0], menuNames[i][1], menuNames[i][2]);
@@ -73,8 +99,14 @@ public class SideNav extends javax.swing.JPanel {
                 menuButtons[i].setBackground(menuButtons[i].logoutButtonColor);
                 menuButtons[i].text.setForeground(Color.white);
             }
-            centerPanel.add(menuButtons[i]);
         }
+        
+        //Them cac nut vao menu
+        centerPanel.add(menuButtons[0]);
+        for(int i = 1; i < menuNames.length - 1; i++)
+            if(pBUS.functionCheck(pdList, i))
+                centerPanel.add(menuButtons[i]);
+        bottomPanel.add(menuButtons[menuNames.length - 1]);
         
         //Doi mau cho nut dau tien
         menuButtons[0].isSelected = true;
@@ -105,10 +137,11 @@ public class SideNav extends javax.swing.JPanel {
     private void initComponents() {
 
         topPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lbl_staffName = new javax.swing.JLabel();
+        lbl_permissionName = new javax.swing.JLabel();
         user_icon = new javax.swing.JLabel();
         centerPanel = new javax.swing.JPanel();
+        bottomPanel = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(0, 0, 0)));
@@ -121,11 +154,11 @@ public class SideNav extends javax.swing.JPanel {
         topPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(108, 107, 116)));
         topPanel.setPreferredSize(new java.awt.Dimension(300, 90));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel1.setText("Nguyễn Thùy Trang");
+        lbl_staffName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lbl_staffName.setText("Tên nhân viên");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Quản lý cửa hàng");
+        lbl_permissionName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl_permissionName.setText("Tên nhóm quyền");
 
         user_icon.setPreferredSize(new java.awt.Dimension(50, 50));
 
@@ -138,8 +171,8 @@ public class SideNav extends javax.swing.JPanel {
                 .addComponent(user_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lbl_staffName, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                    .addComponent(lbl_permissionName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         topPanelLayout.setVerticalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,9 +181,9 @@ public class SideNav extends javax.swing.JPanel {
                 .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(user_icon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(topPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(lbl_staffName)
                         .addGap(0, 0, 0)
-                        .addComponent(jLabel2)))
+                        .addComponent(lbl_permissionName)))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -161,13 +194,18 @@ public class SideNav extends javax.swing.JPanel {
         centerPanel.setPreferredSize(new java.awt.Dimension(300, 740));
         centerPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 8));
         add(centerPanel, java.awt.BorderLayout.CENTER);
+
+        bottomPanel.setBackground(new java.awt.Color(255, 255, 255));
+        bottomPanel.setPreferredSize(new java.awt.Dimension(300, 60));
+        add(bottomPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JPanel centerPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lbl_permissionName;
+    private javax.swing.JLabel lbl_staffName;
     private javax.swing.JPanel topPanel;
     private javax.swing.JLabel user_icon;
     // End of variables declaration//GEN-END:variables

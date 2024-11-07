@@ -8,6 +8,7 @@ import BUS.MemberBUS;
 import DTO.MemberDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Member.MemberDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class MemberPanel extends javax.swing.JPanel {
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                viewEvent();
             }
         });
     }
@@ -62,6 +63,11 @@ public class MemberPanel extends javax.swing.JPanel {
                     i.getStatus()
             });
         }
+    }
+    
+    public void viewEvent() {
+        MemberDialog mD = new MemberDialog(null, true);
+        mD.setVisible(true);
     }
     
     @SuppressWarnings("unchecked")

@@ -104,4 +104,38 @@ public class BookDAO {
         return list;
     }
     
+    public BookDTO getById(String id) {
+        BookDTO book = null;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM `book` WHERE book_id LIKE ?";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, id); 
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                String book_id = rs.getString("book_id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int publisher_id = rs.getInt("publisher_id");
+                int year_publish = rs.getInt("year_publish");
+                int category_id = rs.getInt("category_id");
+                int quantity = rs.getInt("quantity");
+                String image = rs.getString("book_image");
+
+                book = new BookDTO(book_id, title, author, publisher_id, year_publish, category_id, quantity, image);
+            }
+            
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return book;
+    }
+    
 }

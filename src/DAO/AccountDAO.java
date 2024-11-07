@@ -23,13 +23,14 @@ public class AccountDAO {
         try {
             Connection connection = Database.getConnection();
 
-            String query = "INSERT INTO account (username, password, permission_id, status) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO account (username, password, permission_id, status, staff_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
             ps.setInt(3, account.getPermission_id());
             ps.setInt(4, 1);  
+            ps.setInt(5, account.getStaff_id());
 
             result = ps.executeUpdate();
 
@@ -135,7 +136,8 @@ public class AccountDAO {
                 String password = rs.getString("password");
                 String status = rs.getString("status");
                 int permission_id = rs.getInt("permission_id");
-                AccountDTO account = new AccountDTO(id, username, password, permission_id, status);
+                int staff_id = rs.getInt("staff_id");
+                AccountDTO account = new AccountDTO(id, username, password, permission_id, status, staff_id);
                 
                 list.add(account);
             }
@@ -167,8 +169,9 @@ public class AccountDAO {
                 String password = rs.getString("password");
                 int permission_id = rs.getInt("permission_id");
                 String status = rs.getString("status");
+                int staff_id = rs.getInt("staff_id");
                 
-                account = new AccountDTO(id, username, password, permission_id, status);
+                account = new AccountDTO(id, username, password, permission_id, status, staff_id);
             }
             
             Database.closeConnection(connection);

@@ -47,4 +47,19 @@ public class PermissionBUS {
         return false;
     }
     
+    public boolean functionCheck(ArrayList<PermissionDetailDTO> pdList, int functionID) {
+        for(PermissionDetailDTO i : pdList)
+            if(i.getFunction_id() == functionID)
+                return true;
+        return false;
+    }
+    
+    public boolean actionCheck(ArrayList<PermissionDetailDTO> pdList, int functionId, String action) {
+        for(PermissionDetailDTO i : pdList)
+            if(i.getFunction_id()== functionId)
+                if(i.getAction().equals(action))
+                    return true;
+        return false;
+    }
+    
 }

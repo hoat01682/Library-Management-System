@@ -35,7 +35,7 @@ public class ReturnTicketDetailsDAO {
                 ReturnTicketDetailsDTO detail = new ReturnTicketDetailsDTO();
                 detail.setreturnTicketdetailsId(rs.getInt("return_ticket_details_id"));
                 detail.setreturnTicketId(rs.getString("return_ticket_id"));
-                detail.setbookItemId(rs.getString("isbn"));
+                detail.setIsbn(rs.getString("isbn"));
                 returnTicketDetails.add(detail);
             }
         }
@@ -53,7 +53,7 @@ public class ReturnTicketDetailsDAO {
                 ReturnTicketDetailsDTO detail = new ReturnTicketDetailsDTO();
                 detail.setreturnTicketdetailsId(rs.getInt("return_ticket_details_id"));
                 detail.setreturnTicketId(rs.getString("return_ticket_id"));
-                detail.setbookItemId(rs.getString("isbn"));
+                detail.setIsbn(rs.getString("isbn"));
                 returnTicketDetails.add(detail);
             }
         }
@@ -67,7 +67,7 @@ public class ReturnTicketDetailsDAO {
         try (PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()) {
                 stmt.setString(1, detail.getreturnTicketId());
-                stmt.setString(2, detail.getbookItemId());
+                stmt.setString(2, detail.getIsbn());
                 if(stmt.executeUpdate()>0) {
                     result=true;
                 }

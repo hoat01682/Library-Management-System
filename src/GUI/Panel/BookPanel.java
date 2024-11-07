@@ -6,11 +6,17 @@ package GUI.Panel;
 
 import BUS.BookBUS;
 import DTO.BookDTO;
+import GUI.Book.BookDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,6 +27,8 @@ public class BookPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
     BookBUS bookBUS = new BookBUS();
     ArrayList<BookDTO> bookList = new BookBUS().getAllBook();
     
@@ -41,10 +49,22 @@ public class BookPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(bookList);
         
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+//                addEvent();
+            }
+        });
+        
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn sách nào");
+                    return;
+                }
+                viewEvent();
             }
         });
     }
@@ -63,6 +83,14 @@ public class BookPanel extends javax.swing.JPanel {
                     i.getQuantity()
             });
         }
+    }
+    
+    public void viewEvent() {
+        int index = tablePanel.table.getSelectedRow();
+        String id = (String) tablePanel.table.getValueAt(index, 0);
+        BookDTO book = bookBUS.getById(id);
+        BookDialog bDialog = new BookDialog(null, true, book);
+        bDialog.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
