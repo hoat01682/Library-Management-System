@@ -28,4 +28,8 @@ public class BookBUS {
         return bookDAO.getAll();
     }
     
+    public BookDTO getById(String id) {
+        return bookDAO.getById(id);
+    }
+    
 }

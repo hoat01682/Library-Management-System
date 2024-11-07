@@ -91,6 +91,7 @@ public final class PermissionDialog extends javax.swing.JDialog {
             }
         }
         
+        enablingForm(false);
     }
     
     public void initData() {
@@ -124,18 +125,48 @@ public final class PermissionDialog extends javax.swing.JDialog {
         return result;
     }
     
+    public void enablingForm(boolean enabled) {
+        txtName.setFocusable(enabled);
+        for(JCheckBox[] i : checkBoxList)
+            for(JCheckBox j : i)
+                j.setEnabled(enabled);
+    }
+    
+    public boolean validation() {
+        ArrayList<PermissionDTO> permissionList = permissionBUS.getAll();
+        for(PermissionDTO i : permissionList) {
+            if(this.permission != null)
+                if(this.permission.getId() == i.getId())
+                    continue;
+            if(txtName.getText().equals(i.getName()))
+               return false;
+        }
+        return true;
+    }
+    
     public void addEvent() {
+        if(!validation()) {
+            JOptionPane.showMessageDialog(this, "Nhóm quyền đã tồn tại");
+            return;
+        }
+        
         String name = txtName.getText();
         PermissionDTO newPermission = new PermissionDTO(name);
         int id = permissionBUS.addReturnId(newPermission);
         ArrayList<PermissionDetailDTO> pdList = getPermissionDetailList(id);
+        
         if(permissionDetailBUS.add(pdList) == true) {
-            JOptionPane.showMessageDialog(this, "Thêm quyền mới thành công");
+            JOptionPane.showMessageDialog(this, "Thêm nhóm quyền mới thành công");
             dispose();
         }
     }
     
     public void editEvent() {
+        if(!validation()) {
+            JOptionPane.showMessageDialog(this, "Nhóm quyền đã tồn tại");
+            return;
+        }
+        
         this.permission.setName(txtName.getText());
         ArrayList<PermissionDetailDTO> pdList = getPermissionDetailList(this.permission.getId());
         
@@ -228,8 +259,8 @@ public final class PermissionDialog extends javax.swing.JDialog {
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Lưu");
-        jButton1.setBorder(null);
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.setFocusPainted(false);
         jButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jButton1.setPreferredSize(new java.awt.Dimension(80, 30));
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -242,8 +273,8 @@ public final class PermissionDialog extends javax.swing.JDialog {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Hủy");
-        jButton2.setBorder(null);
         jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton2.setFocusPainted(false);
         jButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jButton2.setPreferredSize(new java.awt.Dimension(80, 30));
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -256,8 +287,8 @@ public final class PermissionDialog extends javax.swing.JDialog {
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Sửa");
-        jButton3.setBorder(null);
         jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton3.setFocusPainted(false);
         jButton3.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jButton3.setPreferredSize(new java.awt.Dimension(80, 30));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -309,7 +340,8 @@ public final class PermissionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2MousePressed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        enablingForm(true);
+        jButton3.setEnabled(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     

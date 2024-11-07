@@ -14,6 +14,7 @@ public class AccountDTO {
     private String password;
     private int permission_id;
     private String status;
+    private int staff_id;
 
     public AccountDTO(String username, String password, int permission_id) {
         this.username = username;
@@ -21,12 +22,13 @@ public class AccountDTO {
         this.permission_id = permission_id;
     }
 
-    public AccountDTO(int id, String username, String password, int permission_id, String status) {
+    public AccountDTO(int id, String username, String password, int permission_id, String status, int staff_id) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.permission_id = permission_id;
         this.status = status;
+        this.staff_id = staff_id;
     }
 
     public int getId() {
@@ -68,4 +70,13 @@ public class AccountDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public int getStaff_id() {
+        return staff_id;
+    }
+
+    public void setStaff_id(int staff_id) {
+        this.staff_id = staff_id;
+    }
+    
 }

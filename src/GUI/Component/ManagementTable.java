@@ -49,7 +49,7 @@ public class ManagementTable extends javax.swing.JPanel {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         viewOption = new javax.swing.JMenuItem();
-        editOption = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         deleteOption = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
@@ -57,18 +57,18 @@ public class ManagementTable extends javax.swing.JPanel {
         jPopupMenu1.setBackground(new java.awt.Color(255, 255, 255));
 
         viewOption.setText("Xem chi tiết");
+        viewOption.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         viewOption.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewOptionActionPerformed(evt);
             }
         });
         jPopupMenu1.add(viewOption);
-
-        editOption.setText("Sửa");
-        jPopupMenu1.add(editOption);
+        jPopupMenu1.add(jSeparator1);
 
         deleteOption.setForeground(new java.awt.Color(255, 51, 51));
         deleteOption.setText("Xóa");
+        deleteOption.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPopupMenu1.add(deleteOption);
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -94,6 +94,7 @@ public class ManagementTable extends javax.swing.JPanel {
             }
         });
         table.setComponentPopupMenu(jPopupMenu1);
+        table.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         table.setFocusable(false);
         table.setGridColor(new java.awt.Color(0, 0, 0));
         table.setRowHeight(24);
@@ -111,7 +112,7 @@ public class ManagementTable extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGap(69, 69, 69))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,15 +124,15 @@ public class ManagementTable extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void viewOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewOptionActionPerformed
-        System.out.println(table.getSelectedRow());
+
     }//GEN-LAST:event_viewOptionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JMenuItem deleteOption;
-    public javax.swing.JMenuItem editOption;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     public javax.swing.JTable table;
     public javax.swing.JMenuItem viewOption;
     // End of variables declaration//GEN-END:variables
