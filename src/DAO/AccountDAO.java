@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import config.Database;
 import DTO.AccountDTO;
 import java.sql.SQLException;
 import java.sql.Connection;

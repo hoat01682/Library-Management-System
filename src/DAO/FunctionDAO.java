@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import config.Database;
 import DTO.FunctionDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import config.Database;
 import DTO.PermissionDTO;
 import java.util.ArrayList;
 import java.sql.SQLException;

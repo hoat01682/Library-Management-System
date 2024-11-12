@@ -1,6 +1,7 @@
 
 package DAO;
 
+import config.Database;
 import DTO.PenaltyDTO;
 import java.sql.SQLException;
 import java.sql.Connection;

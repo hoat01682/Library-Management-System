@@ -73,6 +73,7 @@ public class Login_Frame extends javax.swing.JFrame {
         login_Button.setForeground(new java.awt.Color(255, 255, 255));
         login_Button.setText("Đăng Nhập");
         login_Button.setBorderPainted(false);
+        login_Button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         login_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 login_ButtonActionPerformed(evt);

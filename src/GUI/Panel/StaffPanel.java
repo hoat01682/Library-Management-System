@@ -8,10 +8,16 @@ import BUS.StaffBUS;
 import DTO.StaffDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
 import GUI.Staff.StaffDialog;
+import helper.Formatter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +28,8 @@ public class StaffPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
     StaffBUS staffBUS = new StaffBUS();
     ArrayList<StaffDTO> staffList = staffBUS.getAllStaff();
     
@@ -42,9 +50,21 @@ public class StaffPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(staffList);
         
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
+        
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn nhân viên nào");
+                    return;
+                }
                 viewEvent();
             }
         });
@@ -60,15 +80,27 @@ public class StaffPanel extends javax.swing.JPanel {
                     i.getEmail(),
                     i.getPhone(),
                     i.getAddress(),
-                    i.getHireDate(),
+                    Formatter.getDate(i.getHireDate()),
                     i.getStatus()
             });
         }
     }
     
     public void viewEvent() {
-        StaffDialog sD = new StaffDialog(null, true);
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        StaffDTO staff = staffBUS.getById(id);
+        StaffDialog sD = new StaffDialog(null, true, staff, "view");
         sD.setVisible(true);
+        staffList = staffBUS.getAllStaff();
+        loadDataToTable(staffList);
+    }
+    
+    public void addEvent() {
+        StaffDialog sD = new StaffDialog(null, true, null, "add");
+        sD.setVisible(true);
+        staffList = staffBUS.getAllStaff();
+        loadDataToTable(staffList);
     }
     
     @SuppressWarnings("unchecked")
