@@ -4,10 +4,12 @@
  */
 package GUI.Panel;
 
+import GUI.BorrowTicket.BorrowTicketDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -34,14 +36,35 @@ public class BorrowPanel extends javax.swing.JPanel {
         //Quy định các cột
         String[] columnNames = {"Mã phiếu mượn", "Nhân viên", "Thành viên", "Ngày mượn", "Ngày hết hạn", "Trạng thái"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-//        loadDataToTable(permissionList);
+        loadDataToTable();
         
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                viewEvent();
             }
         });
+    }
+    
+    public void loadDataToTable() {
+        DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
+        tableModel.setRowCount(0);
+//        for (BookDTO i : bookList) {
+            tableModel.addRow(new Object[] {
+                    "",
+                    "abc",
+                    "abc",
+                    "abc",
+                    "abc",
+                    "abc",
+                    "abc",
+            });
+//        }
+    }
+    
+    public void viewEvent() {
+        BorrowTicketDialog bD = new BorrowTicketDialog(null, true);
+        bD.setVisible(true);
     }
     
     @SuppressWarnings("unchecked")

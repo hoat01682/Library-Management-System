@@ -8,10 +8,16 @@ import BUS.MemberBUS;
 import DTO.MemberDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
 import GUI.Member.MemberDialog;
+import helper.Formatter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +28,8 @@ public class MemberPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
     MemberBUS memberBUS = new MemberBUS();
     ArrayList<MemberDTO> memberList = memberBUS.getAllMember();
     
@@ -42,9 +50,21 @@ public class MemberPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(memberList);
         
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
+        
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn thành viên nào");
+                    return;
+                }
                 viewEvent();
             }
         });
@@ -59,15 +79,27 @@ public class MemberPanel extends javax.swing.JPanel {
                     i.getFull_name(),
                     i.getPhone(),
                     i.getAddress(),
-                    i.getMembership_date(),
+                    Formatter.getDate(i.getMembership_date()),
                     i.getStatus()
             });
         }
     }
     
     public void viewEvent() {
-        MemberDialog mD = new MemberDialog(null, true);
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        MemberDTO member = memberBUS.getById(id);
+        MemberDialog mD = new MemberDialog(null, true, member, "view");
         mD.setVisible(true);
+        memberList = memberBUS.getAllMember();
+        loadDataToTable(memberList);
+    }
+    
+    public void addEvent() {
+        MemberDialog mD = new MemberDialog(null, true, null, "add");
+        mD.setVisible(true);
+        memberList = memberBUS.getAllMember();
+        loadDataToTable(memberList);
     }
     
     @SuppressWarnings("unchecked")

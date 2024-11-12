@@ -1,10 +1,12 @@
 package DAO;
 
+import config.Database;
 import DTO.MemberDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class MemberDAO {
@@ -14,14 +16,15 @@ public class MemberDAO {
         try {
             Connection conn = Database.getConnection();
 
-            String query = "INSERT INTO member(full_name, phone, address, membership_date,status, violationCount) VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO member(full_name, phone, email, address, membership_date, status, violationCount) VALUES (?,?,?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, member.getFull_name());
             ps.setString(2, member.getPhone());
-            ps.setString(3, member.getAddress());
-            ps.setString(4, member.getMembership_date());
-            ps.setInt(5, 1);
-            ps.setInt(6, 0);
+            ps.setString(3, member.getEmail());
+            ps.setString(4, member.getAddress());
+            ps.setTimestamp(5, member.getMembership_date());
+            ps.setInt(6, 1);
+            ps.setInt(7, 0);
 
             result = ps.executeUpdate();
 
@@ -37,17 +40,18 @@ public class MemberDAO {
         int result = 0;
         try {
             Connection conn = Database.getConnection();
-            String query = "UPDATE member SET full_name = ?, phone = ?,address = ?,membership_date = ?, status = ?, violationCount = ? WHERE member_id = ?  ";
+            String query = "UPDATE member SET full_name = ?, phone = ?, email = ?, address = ?, membership_date = ?, status = ?, violationCount = ? WHERE member_id = ?  ";
 
             PreparedStatement ps = conn.prepareStatement(query);
 
             ps.setString(1, member.getFull_name());
             ps.setString(2, member.getPhone());
-            ps.setString(3, member.getAddress());
-            ps.setString(4, member.getMembership_date());
-            ps.setString(5, member.getStatus());
-            ps.setInt(6, member.getViolationCount());
-            ps.setInt(7, member.getMember_id());
+            ps.setString(3, member.getEmail());
+            ps.setString(4, member.getAddress());
+            ps.setTimestamp(5, member.getMembership_date());
+            ps.setString(6, member.getStatus());
+            ps.setInt(7, member.getViolationCount());
+            ps.setInt(8, member.getMember_id());
 
             result = ps.executeUpdate();
             Database.closeConnection(conn);
@@ -80,12 +84,13 @@ public class MemberDAO {
                 int member_id = rs.getInt("member_id");
                 String full_name = rs.getString("full_name");
                 String phone = rs.getString("phone");
+                String email = rs.getString("email");
                 String address = rs.getString("address");
-                String membership_date = rs.getString("membership_date");
-                String status = rs.getString("status");
+                Timestamp membership_date = rs.getTimestamp("membership_date");
+                String member_status = rs.getString("status");
                 int violationCount = rs.getInt("violationCount");
 
-                member = new MemberDTO(member_id, full_name, phone, address, membership_date, status, violationCount);
+                member = new MemberDTO(member_id, full_name, phone, email, address, membership_date, member_status, violationCount);
 
             }
             Database.closeConnection(conn);
@@ -111,12 +116,13 @@ public class MemberDAO {
                 int member_id = rs.getInt("member_id");
                 String full_name = rs.getString("full_name");
                 String phone = rs.getString("phone");
+                String email = rs.getString("email");
                 String address = rs.getString("address");
-                String membership_date = rs.getString("membership_date");
+                Timestamp membership_date = rs.getTimestamp("membership_date");
                 String member_status = rs.getString("status");
                 int violationCount = rs.getInt("violationCount");
 
-                member = new MemberDTO(member_id, full_name, phone, address, membership_date, member_status, violationCount);
+                member = new MemberDTO(member_id, full_name, phone, email, address, membership_date, member_status, violationCount);
                 list.add(member);
 
             }
@@ -141,12 +147,13 @@ public class MemberDAO {
                 int member_id = rs.getInt("member_id");
                 String full_name = rs.getString("full_name");
                 String phone = rs.getString("phone");
+                String email = rs.getString("email");
                 String address = rs.getString("address");
-                String membership_date = rs.getString("membership_date");
+                Timestamp membership_date = rs.getTimestamp("membership_date");
                 String member_status = rs.getString("status");
                 int violationCount = rs.getInt("violationCount");
 
-                MemberDTO member = new MemberDTO(member_id, full_name, phone, address, membership_date, member_status, violationCount);
+                MemberDTO member = new MemberDTO(member_id, full_name, phone, email, address, membership_date, member_status, violationCount);
                 list.add(member);
             }
             Database.closeConnection(conn);
@@ -186,12 +193,13 @@ public class MemberDAO {
                 int id = rs.getInt("member_id"); 
                 String fullName = rs.getString("full_name");
                 String phone = rs.getString("phone");
+                String email = rs.getString("email");
                 String address = rs.getString("address");
-                String membershipDate = rs.getString("membership_date");
+                Timestamp membershipDate = rs.getTimestamp("membership_date");
                 String status = rs.getString("status");
                 int violationCount = rs.getInt("violationCount");
 
-                MemberDTO member = new MemberDTO(id, fullName, phone, address, membershipDate, status, violationCount);
+                MemberDTO member = new MemberDTO(id, fullName, phone, email, address, membershipDate, status, violationCount);
                 list.add(member);
             }
 

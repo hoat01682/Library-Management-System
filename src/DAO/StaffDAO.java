@@ -4,12 +4,14 @@
  */
 package DAO;
 
+import config.Database;
 import DTO.StaffDTO;
 import java.util.ArrayList;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 /**
  *
@@ -23,15 +25,17 @@ public class StaffDAO {
         try {
             Connection connection = Database.getConnection();
 
-            String query = "INSERT INTO staff (full_name, email, phone, address, hire_date, status) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO staff (full_name, email, phone, gender, birthday, address, hire_date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
 
             ps.setString(1, staff.getFullName());
             ps.setString(2, staff.getEmail());
             ps.setString(3, staff.getPhone());
-            ps.setString(4, staff.getAddress());
-            ps.setString(5, staff.getHireDate());
-            ps.setInt(6, 1); 
+            ps.setString(4, staff.getGender());
+            ps.setTimestamp(5, staff.getBirthday());
+            ps.setString(6, staff.getAddress());
+            ps.setTimestamp(7, staff.getHireDate());
+            ps.setInt(8, 1); 
 
             result = ps.executeUpdate();
 
@@ -50,16 +54,18 @@ public class StaffDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "UPDATE staff SET full_name = ?, email = ?, phone = ?, address = ?, status = ? WHERE staff_id = ?";
+            String query = "UPDATE staff SET full_name = ?, email = ?, phone = ?, gender = ?, birthday = ?, address = ?, status = ? WHERE staff_id = ?";
         
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setString(1, staff.getFullName());
             ps.setString(2, staff.getEmail());
             ps.setString(3, staff.getPhone());
-            ps.setString(4, staff.getAddress());
-            ps.setString(5, staff.getStatus());
-            ps.setInt(6, staff.getId());
+            ps.setString(4, staff.getGender());
+            ps.setTimestamp(5, staff.getBirthday());
+            ps.setString(6, staff.getAddress());
+            ps.setString(7, staff.getStatus());
+            ps.setInt(8, staff.getId());
             
             result = ps.executeUpdate();
             
@@ -94,11 +100,13 @@ public class StaffDAO {
                 String fullName = rs.getString("full_name");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
+                String gender = rs.getString("gender");
+                Timestamp birthday = rs.getTimestamp("birthday");
                 String address = rs.getString("address");
-                String hire_date = rs.getString("hire_date");
+                Timestamp hire_date = rs.getTimestamp("hire_date");
                 String status = rs.getString("status");
                 
-                staff = new StaffDTO(staff_id, fullName, email, phone, address, hire_date, status); 
+                staff = new StaffDTO(staff_id, fullName, email, phone, gender, birthday, address, hire_date, status);
             }
             
             Database.closeConnection(connection); 
@@ -127,11 +135,13 @@ public class StaffDAO {
                 String fullName = rs.getString("full_name");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
+                String gender = rs.getString("gender");
+                Timestamp birthday = rs.getTimestamp("birthday");
                 String address = rs.getString("address");
-                String hire_date = rs.getString("hire_date");
-                String staff_status = rs.getString("status");
-
-                StaffDTO staff = new StaffDTO(staff_id, fullName, email, phone, address, hire_date, staff_status);
+                Timestamp hire_date = rs.getTimestamp("hire_date");
+                String status1 = rs.getString("status");
+                
+                StaffDTO staff = new StaffDTO(staff_id, fullName, email, phone, gender, birthday, address, hire_date, status1);
                 
                 list.add(staff);
             }
@@ -157,15 +167,17 @@ public class StaffDAO {
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
-                int id = rs.getInt("staff_id");
+                int staff_id = rs.getInt("staff_id");
                 String fullName = rs.getString("full_name");
                 String email = rs.getString("email");
                 String phone = rs.getString("phone");
+                String gender = rs.getString("gender");
+                Timestamp birthday = rs.getTimestamp("birthday");
                 String address = rs.getString("address");
-                String hireDate = rs.getString("hire_date");
-                String status = rs.getString("status"); 
+                Timestamp hire_date = rs.getTimestamp("hire_date");
+                String status = rs.getString("status");
                 
-                StaffDTO staff = new StaffDTO(id, fullName, email, phone, address, hireDate, status);
+                StaffDTO staff = new StaffDTO(staff_id, fullName, email, phone, gender, birthday, address, hire_date, status);
                 
                 list.add(staff);
             }

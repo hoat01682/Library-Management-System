@@ -1,5 +1,6 @@
 package DAO;
 
+import config.Database;
 import DTO.SupplierDTO;
 import java.util.ArrayList;
 import java.sql.SQLException;

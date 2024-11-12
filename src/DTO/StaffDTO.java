@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DTO;
+import java.sql.Timestamp;
 
 /**
  *
@@ -14,28 +15,35 @@ public class StaffDTO {
     private String fullName;
     private String email;
     private String phone;
+    private String gender;
+    private Timestamp birthday;
     private String address;
-    private String hireDate;
+    private Timestamp hireDate;
     private String status;
-
-    public StaffDTO(String fullName, String email, String phone, String address, String hireDate) {
+    
+    public StaffDTO(String fullName, String email, String phone, String gender, Timestamp birthday, String address, Timestamp hireDate, String status) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.address = address;
-        this.hireDate = hireDate;
-    }
-
-    public StaffDTO(int id, String fullName, String email, String phone, String address, String hireDate, String status) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
+        this.gender = gender;
+        this.birthday = birthday;
         this.address = address;
         this.hireDate = hireDate;
         this.status = status;
     }
 
+    public StaffDTO(int id, String fullName, String email, String phone, String gender, Timestamp birthday, String address, Timestamp hireDate, String status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.address = address;
+        this.hireDate = hireDate;
+        this.status = status;
+    }
+    
     public int getId() {
         return id;
     }
@@ -68,6 +76,22 @@ public class StaffDTO {
         this.phone = phone;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Timestamp getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Timestamp birthday) {
+        this.birthday = birthday;
+    }
+
     public String getAddress() {
         return address;
     }
@@ -76,11 +100,11 @@ public class StaffDTO {
         this.address = address;
     }
 
-    public String getHireDate() {
+    public Timestamp getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(String hireDate) {
+    public void setHireDate(Timestamp hireDate) {
         this.hireDate = hireDate;
     }
 
@@ -91,5 +115,5 @@ public class StaffDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    
 }

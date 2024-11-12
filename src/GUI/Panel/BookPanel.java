@@ -53,7 +53,7 @@ public class BookPanel extends javax.swing.JPanel {
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-//                addEvent();
+                addEvent();
             }
         });
         
@@ -89,7 +89,12 @@ public class BookPanel extends javax.swing.JPanel {
         int index = tablePanel.table.getSelectedRow();
         String id = (String) tablePanel.table.getValueAt(index, 0);
         BookDTO book = bookBUS.getById(id);
-        BookDialog bDialog = new BookDialog(null, true, book);
+        BookDialog bDialog = new BookDialog(null, true, book, "view");
+        bDialog.setVisible(true);
+    }
+    
+    public void addEvent() {
+        BookDialog bDialog = new BookDialog(null, true, null, "add");
         bDialog.setVisible(true);
     }
 

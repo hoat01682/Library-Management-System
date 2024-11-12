@@ -4,56 +4,42 @@
  */
 package DTO;
 
+import java.sql.Timestamp;
+
 /**
  *
  * @author Dương
  */
 public class MemberDTO {
+
     private int member_id;
     private String full_name;
     private String phone;
-    private String address; 
-    private String membership_date;  
+    private String email;
+    private String address;
+    private Timestamp membership_date;
     private String status;
     private int violationCount;
-
-    public MemberDTO() {
-        this.violationCount=0;
-    }
-
-    public MemberDTO(String full_name, String phone, String address) {
+    
+    public MemberDTO(String full_name, String phone, String email, String address, Timestamp membership_date, String status, int violationCount) {
         this.full_name = full_name;
         this.phone = phone;
-        this.address = address;
-    }
-
-    public MemberDTO(int member_id, String full_name, String phone, String address, String membership_date, String status, int violationCount) {
-        this.member_id = member_id;
-        this.full_name = full_name;
-        this.phone = phone;
+        this.email = email;
         this.address = address;
         this.membership_date = membership_date;
         this.status = status;
         this.violationCount = violationCount;
     }
-    
 
-
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getFull_name() {
-        return full_name;
-    }
-
-    public void setFull_name(String full_name) {
+    public MemberDTO(int member_id, String full_name, String phone, String email, String address, Timestamp membership_date, String status, int violationCount) {
+        this.member_id = member_id;
         this.full_name = full_name;
+        this.phone = phone;
+        this.email = email;
+        this.address = address;
+        this.membership_date = membership_date;
+        this.status = status;
+        this.violationCount = violationCount;
     }
 
     public int getMember_id() {
@@ -64,12 +50,12 @@ public class MemberDTO {
         this.member_id = member_id;
     }
 
-    public String getMembership_date() {
-        return membership_date;
+    public String getFull_name() {
+        return full_name;
     }
 
-    public void setMembership_date(String membership_date) {
-        this.membership_date = membership_date;
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getPhone() {
@@ -80,6 +66,30 @@ public class MemberDTO {
         this.phone = phone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Timestamp getMembership_date() {
+        return membership_date;
+    }
+
+    public void setMembership_date(Timestamp membership_date) {
+        this.membership_date = membership_date;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -88,7 +98,7 @@ public class MemberDTO {
         this.status = status;
     }
 
-  public int getViolationCount() {
+    public int getViolationCount() {
         return violationCount;
     }
 
@@ -96,14 +106,4 @@ public class MemberDTO {
         this.violationCount = violationCount;
     }
 
-    
-    
-    
-    
-
-
-    
-    
-            
-    
 }
