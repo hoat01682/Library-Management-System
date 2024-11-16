@@ -5,12 +5,19 @@
 package GUI.Panel;
 
 import BUS.AccountBUS;
+import BUS.PermissionBUS;
 import DTO.AccountDTO;
+import GUI.Account.AccountDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -21,7 +28,10 @@ public class AccountPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
     AccountBUS accountBUS = new AccountBUS();
+    PermissionBUS permissionBUS = new PermissionBUS();
     ArrayList<AccountDTO> accountList = accountBUS.getAllAccount();
     
     public AccountPanel() {
@@ -41,10 +51,22 @@ public class AccountPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(columnNames, 0));
         loadDataToTable(accountList);
         
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
+        
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn tài khoản nào");
+                    return;
+                }
+                viewEvent();
             }
         });
     }
@@ -56,10 +78,27 @@ public class AccountPanel extends javax.swing.JPanel {
             tableModel.addRow(new Object[] {
                     i.getId(),
                     i.getUsername(),
-                    i.getPermission_id(),
+                    permissionBUS.getById(i.getPermission_id()).getName(),
                     i.getStatus()
             });
         }
+    }
+    
+    public void viewEvent() {
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        AccountDTO account = accountBUS.getById(id);
+        AccountDialog aD = new AccountDialog(null, true, account, "view");
+        aD.setVisible(true);
+        accountList = accountBUS.getAllAccount();
+        loadDataToTable(accountList);
+    }
+    
+    public void addEvent() {
+        AccountDialog aD = new AccountDialog(null, true, null, "add");
+        aD.setVisible(true);
+        accountList = accountBUS.getAllAccount();
+        loadDataToTable(accountList);
     }
     
     @SuppressWarnings("unchecked")

@@ -50,6 +50,13 @@ public class StaffPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(staffList);
         
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+        
         menuBar.jToolBar1.add(addBtn);
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -86,21 +93,24 @@ public class StaffPanel extends javax.swing.JPanel {
         }
     }
     
+    public void refreshTable() {
+        staffList = staffBUS.getAllStaff();
+        loadDataToTable(staffList);
+    }
+    
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
         int id = (int) tablePanel.table.getValueAt(index, 0);
         StaffDTO staff = staffBUS.getById(id);
         StaffDialog sD = new StaffDialog(null, true, staff, "view");
         sD.setVisible(true);
-        staffList = staffBUS.getAllStaff();
-        loadDataToTable(staffList);
+        refreshTable();
     }
     
     public void addEvent() {
         StaffDialog sD = new StaffDialog(null, true, null, "add");
         sD.setVisible(true);
-        staffList = staffBUS.getAllStaff();
-        loadDataToTable(staffList);
+        refreshTable();
     }
     
     @SuppressWarnings("unchecked")

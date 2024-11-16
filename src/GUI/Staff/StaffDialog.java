@@ -6,6 +6,7 @@ package GUI.Staff;
 
 import BUS.StaffBUS;
 import DTO.StaffDTO;
+import config.Constants;
 import helper.Formatter;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -27,10 +28,6 @@ public class StaffDialog extends javax.swing.JDialog {
 
     StaffDTO staff;
     String mode;
-    String[] statusList = new String[] {
-        "Đang làm việc",
-        "Đã nghỉ việc"
-    };
     
     StaffBUS staffBUS = new StaffBUS();
     
@@ -45,10 +42,11 @@ public class StaffDialog extends javax.swing.JDialog {
     public void customInit() {
         setLocationRelativeTo(null);
         
-        for(String item : statusList) {
-            cbx_status.addItem(item);
-        }
-         
+        cbx_status.addItem(Constants.staff_status[0]);
+        if(!mode.equals("add"))
+            for(int i=1; i<Constants.staff_status.length; i++)
+                cbx_status.addItem(Constants.staff_status[i]);
+        
         btn_save.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -82,9 +80,7 @@ public class StaffDialog extends javax.swing.JDialog {
     public void initViewMode() {
         txt_id.setText(staff.getId() + "");
         txt_name.setText(staff.getFullName());
-        txt_name.setFocusable(false);
         jDateChooser1.setDate(new Date(staff.getBirthday().getTime()));
-        jDateChooser1.setEnabled(false);
         if(staff.getGender().equals("Nam")) {
             radio_male.setSelected(true);
             radio_female.setEnabled(false);
@@ -94,13 +90,16 @@ public class StaffDialog extends javax.swing.JDialog {
             radio_male.setEnabled(false);
         }
         txt_address.setText(staff.getAddress());
-        txt_address.setFocusable(false);
         txt_date.setText(Formatter.getDate(staff.getHireDate()));
         txt_phone.setText(staff.getPhone());
-        txt_phone.setFocusable(false);
         txt_email.setText(staff.getEmail());
-        txt_email.setFocusable(false);
         cbx_status.setSelectedItem(staff.getStatus());
+        
+        txt_name.setFocusable(false);
+        jDateChooser1.setEnabled(false);
+        txt_address.setFocusable(false);
+        txt_phone.setFocusable(false);
+        txt_email.setFocusable(false);
         cbx_status.setEnabled(false);
     }
     
@@ -164,6 +163,7 @@ public class StaffDialog extends javax.swing.JDialog {
     
     public void addEvent() {
         staff = getNewStaff();
+        System.out.println(staff);
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
             dispose();
@@ -208,6 +208,7 @@ public class StaffDialog extends javax.swing.JDialog {
 
         lbl_id.setText("Mã nhân viên");
 
+        txt_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txt_id.setFocusable(false);
 
         lbl_name.setText("Họ tên");

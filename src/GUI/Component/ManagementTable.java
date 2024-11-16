@@ -75,6 +75,7 @@ public class ManagementTable extends javax.swing.JPanel {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(900, 560));
 
+        table.setAutoCreateRowSorter(true);
         table.setBackground(new java.awt.Color(212, 209, 216));
         table.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -132,7 +133,7 @@ public class ManagementTable extends javax.swing.JPanel {
     public javax.swing.JMenuItem deleteOption;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     public javax.swing.JTable table;
     public javax.swing.JMenuItem viewOption;
     // End of variables declaration//GEN-END:variables
