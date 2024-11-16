@@ -20,12 +20,20 @@ public class AccountBUS {
         return accountDAO.add(account) > 0; 
     }
     
+    public boolean update(AccountDTO account) {
+        return accountDAO.update(account) > 0;
+    }
+    
     public boolean updateStatusOfAccount(int id, String status) {
         return accountDAO.editStatus(id, status) > 0;
     }
     
     public boolean checkLogIn(String username, String password) {
         return accountDAO.checkLogIn(username, password);
+    }
+    
+    public AccountDTO getById(int id) {
+        return accountDAO.getById(id);
     }
     
     public AccountDTO getAccountByUsername(String username) {

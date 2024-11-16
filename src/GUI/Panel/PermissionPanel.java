@@ -49,6 +49,13 @@ public class PermissionPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(permissionList);
         
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+        
         menuBar.jToolBar1.add(addBtn);
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -80,11 +87,15 @@ public class PermissionPanel extends javax.swing.JPanel {
         }
     }
     
+    public void refreshTable() {
+        permissionList = permissionBUS.getAll();
+        loadDataToTable(permissionList);
+    }
+    
     public void addEvent() {
         PermissionDialog pmD = new PermissionDialog(null, null, true);
         pmD.setVisible(true);
-        permissionList = permissionBUS.getAll();
-        loadDataToTable(permissionList);
+        refreshTable();
     }
     
     public void viewEvent() {
@@ -93,8 +104,7 @@ public class PermissionPanel extends javax.swing.JPanel {
         PermissionDTO p = permissionBUS.getById(id);
         PermissionDialog pmD = new PermissionDialog(null, p, true);
         pmD.setVisible(true);
-        permissionList = permissionBUS.getAll();
-        loadDataToTable(permissionList);
+        refreshTable();
     }
         
     @SuppressWarnings("unchecked")

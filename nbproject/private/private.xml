@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Panel/StaffPanel.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Panel/BorrowPanel.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/BorrowTicket/BorrowTicketDialog.java</file>
             <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Staff/StaffDialog.java</file>
-            <file>file:/D:/Workspace/Projects/Library-Management-System/src/DTO/StaffDTO.java</file>
-            <file>file:/D:/Workspace/Projects/Library-Management-System/src/DAO/StaffDAO.java</file>
-            <file>file:/D:/Workspace/Projects/Library-Management-System/src/BUS/StaffBUS.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Account/AccountDialog.java</file>
+            <file>file:/D:/Workspace/Projects/Library-Management-System/src/GUI/Permission/PermissionDialog.java</file>
         </group>
     </open-files>
 </project-private>

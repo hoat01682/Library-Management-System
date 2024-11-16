@@ -50,6 +50,13 @@ public class MemberPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(memberList);
         
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+        
         menuBar.jToolBar1.add(addBtn);
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -85,21 +92,24 @@ public class MemberPanel extends javax.swing.JPanel {
         }
     }
     
+    public void refreshTable() {
+        memberList = memberBUS.getAllMember();
+        loadDataToTable(memberList);
+    }
+    
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
         int id = (int) tablePanel.table.getValueAt(index, 0);
         MemberDTO member = memberBUS.getById(id);
         MemberDialog mD = new MemberDialog(null, true, member, "view");
         mD.setVisible(true);
-        memberList = memberBUS.getAllMember();
-        loadDataToTable(memberList);
+        refreshTable();
     }
     
     public void addEvent() {
         MemberDialog mD = new MemberDialog(null, true, null, "add");
         mD.setVisible(true);
-        memberList = memberBUS.getAllMember();
-        loadDataToTable(memberList);
+        refreshTable();
     }
     
     @SuppressWarnings("unchecked")

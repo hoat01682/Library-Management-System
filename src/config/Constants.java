@@ -10,4 +10,19 @@ package config;
  */
 public class Constants {
     public static final double PROFIT = 1.1;
+    
+    public static final String[] staff_status = new String[] {
+        "Đang làm việc",
+        "Đã nghỉ việc"
+    };
+    
+    public static final String[] member_status = new String[] {
+        "Đang hoạt động",
+        "Ngừng hoạt động"
+    };
+    
+    public static final String[] account_status = new String[] {
+        "Đang hoạt động",
+        "Ngừng hoạt động"
+    };
 }

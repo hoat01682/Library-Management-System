@@ -16,10 +16,12 @@ public class AccountDTO {
     private String status;
     private int staff_id;
 
-    public AccountDTO(String username, String password, int permission_id) {
+    public AccountDTO(String username, String password, int permission_id, String status, int staff_id) {
         this.username = username;
         this.password = password;
         this.permission_id = permission_id;
+        this.status = status;
+        this.staff_id = staff_id;
     }
 
     public AccountDTO(int id, String username, String password, int permission_id, String status, int staff_id) {
@@ -77,6 +79,11 @@ public class AccountDTO {
 
     public void setStaff_id(int staff_id) {
         this.staff_id = staff_id;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountDTO{" + "id=" + id + ", username=" + username + ", password=" + password + ", permission_id=" + permission_id + ", status=" + status + ", staff_id=" + staff_id + '}';
     }
     
 }

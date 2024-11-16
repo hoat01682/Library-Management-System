@@ -6,6 +6,7 @@ package GUI.Member;
 
 import BUS.MemberBUS;
 import DTO.MemberDTO;
+import config.Constants;
 import helper.Formatter;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -21,10 +22,6 @@ public class MemberDialog extends javax.swing.JDialog {
 
     MemberDTO member;
     String mode;
-    String[] statusList = new String[] {
-        "Đang hoạt động",
-        "Ngừng hoạt động"
-    };
     
     MemberBUS memberBUS = new MemberBUS();
     
@@ -40,9 +37,10 @@ public class MemberDialog extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         
         
-        cbx_status.addItem(statusList[0]);
+        cbx_status.addItem(Constants.member_status[0]);
         if(!mode.equals("add"))
-            cbx_status.addItem(statusList[1]);
+            for(int i=1; i<Constants.member_status.length; i++)
+                cbx_status.addItem(Constants.member_status[i]);
         
         btn_save.addMouseListener(new MouseAdapter() {
             @Override
@@ -77,17 +75,17 @@ public class MemberDialog extends javax.swing.JDialog {
     public void initViewMode() {
         txt_id.setText(member.getMember_id() + "");
         txt_name.setText(member.getFull_name());
-        txt_name.setFocusable(false);
         txt_address.setText(member.getAddress());
-        txt_address.setFocusable(false);
         txt_date.setText(Formatter.getDate(member.getMembership_date()));
         txt_violation.setText(member.getViolationCount() + "");
-        txt_violation.setFocusable(false);
         txt_phone.setText(member.getPhone());
-        txt_phone.setFocusable(false);
         txt_email.setText(member.getEmail());
-        txt_email.setFocusable(false);
         cbx_status.setSelectedItem(member.getStatus());
+        
+        txt_name.setFocusable(false);
+        txt_address.setFocusable(false);
+        txt_phone.setFocusable(false);
+        txt_email.setFocusable(false);
         cbx_status.setEnabled(false);
     }
     
@@ -225,6 +223,7 @@ public class MemberDialog extends javax.swing.JDialog {
 
         lbl_id.setText("Mã thành viên");
 
+        txt_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txt_id.setFocusable(false);
 
         lbl_name.setText("Họ tên");

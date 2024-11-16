@@ -5,8 +5,10 @@
 package GUI;
 
 import BUS.AccountBUS;
+import BUS.StaffBUS;
 import DTO.AccountDTO;
 import DTO.SessionManager;
+import DTO.StaffDTO;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -130,6 +132,7 @@ public class Login_Frame extends javax.swing.JFrame {
         String passwordStr = new String(password);
 
         AccountBUS accountBUS = new AccountBUS();
+        StaffBUS staffBUS = new StaffBUS();
 
         // Kiểm tra thông tin có để trống hay không
         if (username.isEmpty() || passwordStr.isEmpty()) {
@@ -141,6 +144,8 @@ public class Login_Frame extends javax.swing.JFrame {
             // Tạo session đăng nhập cho tài khoản
             AccountDTO account = accountBUS.getAccountByUsername(username);
             SessionManager.getInstance().setLoggedInAccount(account);
+            StaffDTO staff = staffBUS.getById(account.getStaff_id());
+            SessionManager.getInstance().setLoggedInStaff(staff);
 
             new Main_Frame().setVisible(true);
 //            new Home_Frame().setVisible(true);

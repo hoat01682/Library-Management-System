@@ -32,4 +32,8 @@ public class BookBUS {
         return bookDAO.getById(id);
     }
     
+    public BookDTO getByISBN(String isbn) {
+        return bookDAO.getByISBN(isbn);
+    }
+    
 }

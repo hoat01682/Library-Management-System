@@ -4,11 +4,18 @@
  */
 package GUI.Panel;
 
+import BUS.BorrowTicketBUS;
+import DTO.BorrowTicketDTO;
 import GUI.BorrowTicket.BorrowTicketDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
+import helper.Formatter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +27,10 @@ public class BorrowPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
+    BorrowTicketBUS borrowTicketBUS = new BorrowTicketBUS();
+    ArrayList<BorrowTicketDTO> borrowTicketList = borrowTicketBUS.getAll();
     
     public BorrowPanel() {
         initComponents();
@@ -36,7 +47,15 @@ public class BorrowPanel extends javax.swing.JPanel {
         //Quy định các cột
         String[] columnNames = {"Mã phiếu mượn", "Nhân viên", "Thành viên", "Ngày mượn", "Ngày hết hạn", "Trạng thái"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-        loadDataToTable();
+        loadDataToTable(borrowTicketList);
+        
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
         
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
@@ -46,25 +65,39 @@ public class BorrowPanel extends javax.swing.JPanel {
         });
     }
     
-    public void loadDataToTable() {
+    public void loadDataToTable(ArrayList<BorrowTicketDTO> borrowTicketList) {
         DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
         tableModel.setRowCount(0);
-//        for (BookDTO i : bookList) {
+        for (BorrowTicketDTO i : borrowTicketList) {
             tableModel.addRow(new Object[] {
-                    "",
-                    "abc",
-                    "abc",
-                    "abc",
-                    "abc",
-                    "abc",
-                    "abc",
+                    i.getId(),
+                    i.getStaff_id(),
+                    i.getMember_id(),
+                    Formatter.getDate(i.getBorrow_date()),
+                    Formatter.getDate(i.getDue_date()),
+                    i.getStatus()
             });
-//        }
+        }
+    }
+    
+    public void refreshTable() {
+        borrowTicketList = borrowTicketBUS.getAll();
+        loadDataToTable(borrowTicketList);
     }
     
     public void viewEvent() {
-        BorrowTicketDialog bD = new BorrowTicketDialog(null, true);
+        int index = tablePanel.table.getSelectedRow();
+        String id = (String) tablePanel.table.getValueAt(index, 0);
+        BorrowTicketDTO borrowTicket = borrowTicketBUS.getById(id);
+        BorrowTicketDialog bD = new BorrowTicketDialog(null, true, borrowTicket, "view");
         bD.setVisible(true);
+        refreshTable();
+    }
+    
+    public void addEvent() {
+        BorrowTicketDialog btD = new BorrowTicketDialog(null, true, null, "add");
+        btD.setVisible(true);
+        refreshTable();
     }
     
     @SuppressWarnings("unchecked")

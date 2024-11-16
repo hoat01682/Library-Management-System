@@ -44,6 +44,34 @@ public class AccountDAO {
         return result;
     }
     
+    public int update(AccountDTO account) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE account SET username = ?, password = ?, permission_id = ?, status = ?, staff_id = ? WHERE account_id = ?";
+        
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, account.getUsername());
+            ps.setString(2, account.getPassword());
+            ps.setInt(3, account.getPermission_id());
+            ps.setString(4, account.getStatus());
+            ps.setInt(5, account.getStaff_id());
+            ps.setInt(6, account.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+        
+        } catch (SQLException e) {
+            System.out.println(e); 
+        }
+        
+        return result;
+    }
+    
     public int editStatus(int id, String status) {
         int result = 0;
         
@@ -149,6 +177,38 @@ public class AccountDAO {
         }
         
         return list;
+    }
+    
+    public AccountDTO getById(int id) {
+        AccountDTO account = null;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM account WHERE account_id = ?";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id); 
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int account_id = rs.getInt("account_id");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                int permission_id = rs.getInt("permission_id");
+                String status = rs.getString("status");
+                int staff_id = rs.getInt("staff_id");
+                
+                account = new AccountDTO(account_id, username, password, permission_id, status, staff_id);
+            }
+            
+            Database.closeConnection(connection); 
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return account;
     }
     
     public AccountDTO getByUsername(String username) {
