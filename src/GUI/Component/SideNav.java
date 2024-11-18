@@ -12,6 +12,7 @@ import DTO.PermissionDTO;
 import DTO.PermissionDetailDTO;
 import DTO.SessionManager;
 import DTO.StaffDTO;
+import GUI.Login_Frame;
 import GUI.Main_Frame;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -20,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -41,6 +43,9 @@ public class SideNav extends javax.swing.JPanel {
         {"Vi phạm", "penalty", "namecard.svg"},
         {"Phân quyền", "permission", "permission.svg"},
         {"Thống kê", "statistic", "statistic.svg"},
+        {"Kệ sách", "shelf", "borrow.svg"},
+        {"Nhà xuất bản", "publisher", "receipt.svg"},
+        {"Nhà cung cấp", "supplier", "receipt.svg"},
         {"Đăng xuất", "logout", "door.svg"}
     };
     public SideNav_Button menuButtons[];
@@ -51,16 +56,6 @@ public class SideNav extends javax.swing.JPanel {
     PermissionDTO permission;
     PermissionDetailBUS pdBUS = new PermissionDetailBUS();
     ArrayList<PermissionDetailDTO> pdList;
-    
-    public SideNav() {
-        initComponents();
-        
-        JPanel blankSpace = new JPanel();
-        blankSpace.setPreferredSize(new Dimension(300, 30));
-        blankSpace.setBackground(Color.white);
-        centerPanel.add(blankSpace);
-
-    }
     
     public SideNav(Main_Frame main) {
         initComponents();     
@@ -98,20 +93,45 @@ public class SideNav extends javax.swing.JPanel {
                 menuButtons[i].isLogoutButton = true;
                 menuButtons[i].setBackground(menuButtons[i].logoutButtonColor);
                 menuButtons[i].text.setForeground(Color.white);
+                
+                menuButtons[i].addMouseListener(new MouseAdapter(){
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        int confirm = JOptionPane.showConfirmDialog(main, "Bạn có chắc muốn đăng xuất không?", "Đăng xuất", JOptionPane.YES_NO_OPTION);
+                        if (confirm == 0) {
+                            main.dispose();
+                            new Login_Frame().setVisible(true);
+                        }
+                    }
+                });
             }
         }
+        
+        //Chieu cao cua centerpanel de khong bi du thua scrollpane
+        int newHeigh = 82;
         
         //Them cac nut vao menu
         centerPanel.add(menuButtons[0]);
         for(int i = 1; i < menuNames.length - 1; i++)
-            if(pBUS.functionCheck(pdList, i))
+            if(pBUS.functionCheck(pdList, i)) {
                 centerPanel.add(menuButtons[i]);
+                newHeigh += 66;
+            }
         bottomPanel.add(menuButtons[menuNames.length - 1]);
         
         //Doi mau cho nut dau tien
         menuButtons[0].isSelected = true;
         menuButtons[0].setBackground(menuButtons[0].enteredColor);
         menuButtons[0].text.setForeground(menuButtons[0].enteredFontColor);
+        
+        //Tang toc cho cai scrollpane
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+        //Repaint panel moi khi scroll de sua anh bi hong
+        jScrollPane1.getViewport().addChangeListener(e -> {
+            centerPanel.repaint();
+        });
+        
+        centerPanel.setPreferredSize(new Dimension(300, newHeigh));
         
         user_icon.setIcon(new FlatSVGIcon("./svg/icon/user_female.svg"));
     }
@@ -140,6 +160,7 @@ public class SideNav extends javax.swing.JPanel {
         lbl_staffName = new javax.swing.JLabel();
         lbl_permissionName = new javax.swing.JLabel();
         user_icon = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         centerPanel = new javax.swing.JPanel();
         bottomPanel = new javax.swing.JPanel();
 
@@ -189,11 +210,17 @@ public class SideNav extends javax.swing.JPanel {
 
         add(topPanel, java.awt.BorderLayout.PAGE_START);
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
         centerPanel.setBackground(new java.awt.Color(255, 255, 255));
         centerPanel.setToolTipText("");
         centerPanel.setPreferredSize(new java.awt.Dimension(300, 740));
-        centerPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 8));
-        add(centerPanel, java.awt.BorderLayout.CENTER);
+        centerPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 16));
+        jScrollPane1.setViewportView(centerPanel);
+
+        add(jScrollPane1, java.awt.BorderLayout.LINE_END);
 
         bottomPanel.setBackground(new java.awt.Color(255, 255, 255));
         bottomPanel.setPreferredSize(new java.awt.Dimension(300, 60));
@@ -204,6 +231,7 @@ public class SideNav extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JPanel centerPanel;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_permissionName;
     private javax.swing.JLabel lbl_staffName;
     private javax.swing.JPanel topPanel;
