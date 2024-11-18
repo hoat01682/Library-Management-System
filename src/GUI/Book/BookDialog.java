@@ -4,7 +4,11 @@
  */
 package GUI.Book;
 
+import BUS.CategoryBUS;
+import BUS.PublisherBUS;
 import DTO.BookDTO;
+import DTO.CategoryDTO;
+import DTO.PublisherDTO;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,7 +21,12 @@ import javax.swing.ImageIcon;
 public class BookDialog extends javax.swing.JDialog {
     
     BookDTO book;
+    CategoryDTO category;
+    PublisherDTO publisher;
     String mode;
+    
+    CategoryBUS categoryBUS = new CategoryBUS();
+    PublisherBUS publisherBUS = new PublisherBUS();
 
     public BookDialog(java.awt.Frame parent, boolean modal, BookDTO book, String mode) {
         super(parent, modal);
@@ -61,13 +70,20 @@ public class BookDialog extends javax.swing.JDialog {
     }
     
     public void initViewMode() {
+        category = categoryBUS.getById(book.getCategoryId());
+        publisher = publisherBUS.getById(book.getPublisherId());
+        
         lbl_image.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book/" + book.getImage())).getImage().getScaledInstance(200, 267, Image.SCALE_SMOOTH)));
         txt_title.setText(book.getTitle());
         txt_author.setText(book.getAuthor());
         txt_year.setText(book.getYearPublish() + "");
         txt_quantity.setText(book.getQuantity() + "");
-        txt_publisher.setText(book.getPublisherId() + "");
-        txt_category.setText(book.getCategoryId() + "");
+        txt_publisher.setText(publisher.getName());
+        txt_category.setText(category.getName());
+        
+        txt_title.setFocusable(false);
+        txt_author.setFocusable(false);
+        txt_year.setFocusable(false);
     }
     
     public void initAddMode() {
@@ -79,7 +95,6 @@ public class BookDialog extends javax.swing.JDialog {
     public void enableForm() {
         txt_title.setFocusable(true);
         txt_author.setFocusable(true);
-        txt_publisher.setFocusable(true);
         txt_year.setFocusable(true);
         btn_edit.setEnabled(false);
     }
@@ -128,11 +143,7 @@ public class BookDialog extends javax.swing.JDialog {
 
         lbl_title.setText("Tên sách");
 
-        txt_title.setFocusable(false);
-
         lbl_author.setText("Tác giả");
-
-        txt_author.setFocusable(false);
 
         lbl_quantity.setText("Số lượng còn lại");
 
@@ -173,8 +184,6 @@ public class BookDialog extends javax.swing.JDialog {
         btn_img.setFocusPainted(false);
 
         lbl_year.setText("Năm xuất bản");
-
-        txt_year.setFocusable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

@@ -5,6 +5,8 @@
 package GUI.Panel;
 
 import BUS.BookBUS;
+import BUS.CategoryBUS;
+import BUS.PublisherBUS;
 import DTO.BookDTO;
 import GUI.Book.BookDialog;
 import GUI.Component.ManagementTable;
@@ -30,6 +32,8 @@ public class BookPanel extends javax.swing.JPanel {
     MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
     
     BookBUS bookBUS = new BookBUS();
+    CategoryBUS categoryBUS = new CategoryBUS();
+    PublisherBUS publisherBUS = new PublisherBUS();
     ArrayList<BookDTO> bookList = new BookBUS().getAllBook();
     
     public BookPanel() {
@@ -77,9 +81,9 @@ public class BookPanel extends javax.swing.JPanel {
                     i.getId(),
                     i.getTitle(),
                     i.getAuthor(),
-                    i.getPublisherId(),
+                    publisherBUS.getById(i.getPublisherId()).getName(),
                     i.getYearPublish(),
-                    i.getCategoryId(),
+                    categoryBUS.getById(i.getCategoryId()).getName(),
                     i.getQuantity()
             });
         }
