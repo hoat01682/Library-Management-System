@@ -1,8 +1,5 @@
 package DTO;
 
-import java.util.Date;
-
-
 public class ReturnTicketDTO {
     private String returnTicketId;//mã phiếu trả
     private String borrowTicketId;//mã phiếu mượn
