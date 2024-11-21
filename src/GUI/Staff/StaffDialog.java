@@ -6,17 +6,17 @@ package GUI.Staff;
 
 import BUS.StaffBUS;
 import DTO.StaffDTO;
+<<<<<<< Updated upstream
 import config.Constants;
 import helper.Formatter;
+=======
+import java.text.SimpleDateFormat;
+>>>>>>> Stashed changes
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Date;
-import javax.swing.JComboBox;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.sql.Timestamp;
 import javax.swing.JOptionPane;
 
@@ -26,8 +26,89 @@ import javax.swing.JOptionPane;
  */
 public class StaffDialog extends javax.swing.JDialog {
 
+    private static final String EMAIL_PATTERN = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+    private static final String PHONE_PATTERN = "^[0-9]{10}$";
+    private static final String NAME_PATTERN = "^[a-zA-ZÀ-ỹ\\s]+$";
+    private static final int MAX_NAME_LENGTH = 50;
+    private static final int MAX_EMAIL_LENGTH = 50;
+    private static final int MAX_ADDRESS_LENGTH = 100;
+    
     StaffDTO staff;
     String mode;
+<<<<<<< Updated upstream
+=======
+    String[] statusList = new String[] {
+        "Đang làm việc",
+        "Đã nghỉ việc"
+    };
+
+    private void showError(String message, Component component) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+        component.requestFocus();
+    }
+    
+    private boolean validateInput() {
+        // Name validation
+        String name = txt_name.getText().trim();
+        if (name.isEmpty()) {
+            showError("Vui lòng nhập họ tên", txt_name);
+            return false;
+        }
+        if (name.length() > MAX_NAME_LENGTH) {
+            showError("Họ tên không được vượt quá " + MAX_NAME_LENGTH + " ký tự", txt_name);
+            return false;
+        }
+        if (!name.matches(NAME_PATTERN)) {
+            showError("Họ tên chỉ được chứa chữ cái và khoảng trắng", txt_name);
+            return false;
+        }
+
+        // Email validation
+        String email = txt_email.getText().trim();
+        if (email.isEmpty()) {
+            showError("Vui lòng nhập email", txt_email);
+            return false;
+        }
+        if (email.length() > MAX_EMAIL_LENGTH) {
+            showError("Email không được vượt quá " + MAX_EMAIL_LENGTH + " ký tự", txt_email);
+            return false;
+        }
+        if (!email.matches(EMAIL_PATTERN)) {
+            showError("Email không hợp lệ", txt_email);
+            return false;
+        }
+
+        // Phone validation
+        String phone = txt_phone.getText().trim();
+        if (phone.isEmpty()) {
+            showError("Vui lòng nhập số điện thoại", txt_phone);
+            return false;
+        }
+        if (!phone.matches(PHONE_PATTERN)) {
+            showError("Số điện thoại phải có đúng 10 chữ số", txt_phone);
+            return false;
+        }
+
+        // Address validation
+        String address = txt_address.getText().trim();
+        if (address.isEmpty()) {
+            showError("Vui lòng nhập địa chỉ", txt_address);
+            return false;
+        }
+        if (address.length() > MAX_ADDRESS_LENGTH) {
+            showError("Địa chỉ không được vượt quá " + MAX_ADDRESS_LENGTH + " ký tự", txt_address);
+            return false;
+        }
+
+        // Birthday validation
+        if (jDateChooser1.getDate() == null) {
+            showError("Vui lòng chọn ngày sinh", jDateChooser1);
+            return false;
+        }
+
+        return true;
+    }  
+>>>>>>> Stashed changes
     
     StaffBUS staffBUS = new StaffBUS();
     
@@ -90,7 +171,13 @@ public class StaffDialog extends javax.swing.JDialog {
             radio_male.setEnabled(false);
         }
         txt_address.setText(staff.getAddress());
+<<<<<<< Updated upstream
         txt_date.setText(Formatter.getDate(staff.getHireDate()));
+=======
+        txt_address.setFocusable(false);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        txt_date.setText(sdf.format(staff.getHireDate()));
+>>>>>>> Stashed changes
         txt_phone.setText(staff.getPhone());
         txt_email.setText(staff.getEmail());
         cbx_status.setSelectedItem(staff.getStatus());
@@ -139,12 +226,16 @@ public class StaffDialog extends javax.swing.JDialog {
     }
     
     public void updateEvent() {
+        if (!validateInput()) {
+            return;
+        }
         editStaff();
-        if(staffBUS.updateStaff(staff)) {
-            JOptionPane.showMessageDialog(null, "Lưu thông tin nhân viên thành công");
+        if (staffBUS.updateStaff(staff)) {
+            JOptionPane.showMessageDialog(this, "Lưu thông tin nhân viên thành công");
             dispose();
         }
     }
+
     
     public StaffDTO getNewStaff() {
         String fullName = txt_name.getText();
@@ -162,10 +253,18 @@ public class StaffDialog extends javax.swing.JDialog {
     }
     
     public void addEvent() {
+        if (!validateInput()) {
+            return;
+        }
         staff = getNewStaff();
+<<<<<<< Updated upstream
         System.out.println(staff);
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
+=======
+        if (staffBUS.createStaff(staff)) {
+            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
+>>>>>>> Stashed changes
             dispose();
         }
     }

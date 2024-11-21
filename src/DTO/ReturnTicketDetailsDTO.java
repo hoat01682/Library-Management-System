@@ -1,6 +1,5 @@
 package DTO;
 
-import java.util.Date;
 
 public class ReturnTicketDetailsDTO {
     //Thuộc tính bảng
