@@ -10,14 +10,23 @@ package DTO;
  */
 public class PurchaseTicketDetailDTO {
     private int purchaseTicketDetail_id;
-    private String purchaseTicket_id;
+    private int purchaseTicket_id;
     private String isbn;
+    private int book_id;
     private int quantity;
 
-    public PurchaseTicketDetailDTO(int purchaseTicketDetail_id, String purchaseTicket_id, String isbn, int quantity) {
+    public PurchaseTicketDetailDTO(int purchaseTicket_id, String isbn, int book_id, int quantity) {
+        this.purchaseTicket_id = purchaseTicket_id;
+        this.isbn = isbn;
+        this.book_id = book_id;
+        this.quantity = quantity;
+    }
+
+    public PurchaseTicketDetailDTO(int purchaseTicketDetail_id, int purchaseTicket_id, String isbn, int book_id, int quantity) {
         this.purchaseTicketDetail_id = purchaseTicketDetail_id;
         this.purchaseTicket_id = purchaseTicket_id;
         this.isbn = isbn;
+        this.book_id = book_id;
         this.quantity = quantity;
     }
 
@@ -29,11 +38,11 @@ public class PurchaseTicketDetailDTO {
         this.purchaseTicketDetail_id = purchaseTicketDetail_id;
     }
 
-    public String getPurchaseTicket_id() {
+    public int getPurchaseTicket_id() {
         return purchaseTicket_id;
     }
 
-    public void setPurchaseTicket_id(String purchaseTicket_id) {
+    public void setPurchaseTicket_id(int purchaseTicket_id) {
         this.purchaseTicket_id = purchaseTicket_id;
     }
 
@@ -45,6 +54,14 @@ public class PurchaseTicketDetailDTO {
         this.isbn = isbn;
     }
 
+    public int getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(int book_id) {
+        this.book_id = book_id;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -52,4 +69,5 @@ public class PurchaseTicketDetailDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+    
 }

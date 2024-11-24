@@ -79,4 +79,49 @@ public class PublisherDAO {
         return publisher;
     }
     
+    public int add(PublisherDTO publisher) {
+        int result = 0;
+        try {
+            Connection conn = Database.getConnection();
+            String query = "INSERT INTO publisher (name, address, phone) VALUES (?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, publisher.getName());
+            ps.setString(2, publisher.getAddress());
+            ps.setString(3, publisher.getPhone());
+
+            result = ps.executeUpdate();
+            Database.closeConnection(conn);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+    
+    public int update(PublisherDTO publisher) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE publisher SET name = ?, address = ?, phone = ? WHERE publisher_id = ?";
+        
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, publisher.getName());
+            ps.setString(2, publisher.getAddress());
+            ps.setString(3, publisher.getPhone());
+            ps.setInt(4, publisher.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+        
+        } catch (SQLException e) {
+            System.out.println(e); 
+        }
+        
+        return result;
+    }
+    
 }

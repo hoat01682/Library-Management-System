@@ -1,21 +1,30 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DTO;
+
+import java.sql.Timestamp;
 
 /**
  *
  * @author hieun
  */
 public class PurchaseTicketDTO {
-    private String id;
+    private int id;
     private int supplier_id;
     private int staff_id;
-    private String purchase_date;
+    private Timestamp purchase_date;
     private String status;
+    
+    public PurchaseTicketDTO(int supplier_id, int staff_id, Timestamp purchase_date, String status) {
+        this.supplier_id = supplier_id;
+        this.staff_id = staff_id;
+        this.purchase_date = purchase_date;
+        this.status = status;
+    }
 
-    public PurchaseTicketDTO(String id, int supplier_id, int staff_id, String purchase_date, String status) {
+    public PurchaseTicketDTO(int id, int supplier_id, int staff_id, Timestamp purchase_date, String status) {
         this.id = id;
         this.supplier_id = supplier_id;
         this.staff_id = staff_id;
@@ -23,11 +32,11 @@ public class PurchaseTicketDTO {
         this.status = status;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -47,11 +56,11 @@ public class PurchaseTicketDTO {
         this.staff_id = staff_id;
     }
 
-    public String getPurchase_date() {
+    public Timestamp getPurchase_date() {
         return purchase_date;
     }
 
-    public void setPurchase_date(String purchase_date) {
+    public void setPurchase_date(Timestamp purchase_date) {
         this.purchase_date = purchase_date;
     }
 

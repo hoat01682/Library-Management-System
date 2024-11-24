@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class BookBUS {
     private final BookDAO bookDAO = new BookDAO();
     
+    public static BookBUS getInstance() {
+        return new BookBUS();
+    }
+    
     public boolean addBook(BookDTO book) {
         return bookDAO.add(book) > 0;
     }
@@ -28,7 +32,7 @@ public class BookBUS {
         return bookDAO.getAll();
     }
     
-    public BookDTO getById(String id) {
+    public BookDTO getById(int id) {
         return bookDAO.getById(id);
     }
     

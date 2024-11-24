@@ -24,12 +24,12 @@ public class PurchaseTicketDetailDAO {
         try {
             Connection connection = Database.getConnection();
 
-            String query = "INSERT INTO purchaseticket_details (purchase_ticket_details_id, purchase_ticket_id, isbn, quantity) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO purchaseticket_details (purchase_ticket_id, isbn, book_id, quantity) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
 
-            ps.setInt(1, purchaseTicketDetail.getPurchaseTicketDetail_id());
-            ps.setString(2, purchaseTicketDetail.getPurchaseTicket_id());
-            ps.setString(3, purchaseTicketDetail.getIsbn());
+            ps.setInt(1, purchaseTicketDetail.getPurchaseTicket_id());
+            ps.setString(2, purchaseTicketDetail.getIsbn());
+            ps.setInt(3, purchaseTicketDetail.getBook_id());
             ps.setInt(4, purchaseTicketDetail.getQuantity());
 
             result = ps.executeUpdate();
@@ -57,11 +57,12 @@ public class PurchaseTicketDetailDAO {
 
             while (rs.next()) {
                 int purchase_ticket_details_id = rs.getInt("purchase_ticket_details_id");
-                String purchase_ticket_id = rs.getString("purchase_ticket_id");
+                int purchase_ticket_id = rs.getInt("purchase_ticket_id");
                 String isbn = rs.getString("isbn");
+                int book_id = rs.getInt("book_id");
                 int quantity = rs.getInt("quantity");
 
-                PurchaseTicketDetailDTO purchaseTicketDetail = new PurchaseTicketDetailDTO(purchase_ticket_details_id, purchase_ticket_id, isbn, quantity);
+                PurchaseTicketDetailDTO purchaseTicketDetail = new PurchaseTicketDetailDTO(purchase_ticket_details_id, purchase_ticket_id, isbn, book_id, quantity);
 
                 list.add(purchaseTicketDetail);
             }

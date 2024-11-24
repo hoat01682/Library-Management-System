@@ -19,7 +19,7 @@ public class BorrowTicketBUS {
         return borrowTicketDAO.getAll();
     }
     
-    public BorrowTicketDTO getById(String id) {
+    public BorrowTicketDTO getById(int id) {
         return borrowTicketDAO.getById(id);
     }
     

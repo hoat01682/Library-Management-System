@@ -28,7 +28,7 @@ public class BookDAO {
             String query = "INSERT INTO book (book_id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             
-            ps.setString(1, book.getId());
+            ps.setInt(1, book.getId());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getAuthor());
             ps.setInt(4, book.getPublisherId());
@@ -52,7 +52,7 @@ public class BookDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "UPDATE book SET title = ?, author = ?, publisher_id = ?, year_publish = ?, category_id = ?, quantity = ? WHERE id = ?";
+            String query = "UPDATE `book` SET title = ?, author = ?, publisher_id = ?, year_publish = ?, category_id = ?, quantity = ? WHERE book_id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setString(1, book.getTitle()); 
@@ -61,7 +61,7 @@ public class BookDAO {
             ps.setInt(4, book.getYearPublish());
             ps.setInt(5, book.getCategoryId());
             ps.setInt(6, book.getQuantity());
-            ps.setString(7, book.getId());
+            ps.setInt(7, book.getId());
             
             result = ps.executeUpdate();
             
@@ -85,7 +85,7 @@ public class BookDAO {
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {                
-                String id = rs.getString("book_id");
+                int id = rs.getInt("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");
@@ -105,21 +105,21 @@ public class BookDAO {
         return list;
     }
     
-    public BookDTO getById(String id) {
+    public BookDTO getById(int id) {
         BookDTO book = null;
         
         try {
             Connection connection = Database.getConnection();
             
-            String query = "SELECT * FROM `book` WHERE book_id LIKE ?";
+            String query = "SELECT * FROM `book` WHERE book_id = ?";
             
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, id); 
+            ps.setInt(1, id); 
             
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                String book_id = rs.getString("book_id");
+                int book_id = rs.getInt("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");
@@ -145,7 +145,7 @@ public class BookDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "SELECT * FROM `book`, `bookitem` WHERE isbn LIKE ? AND book.book_id LIKE bookitem.book_id";
+            String query = "SELECT * FROM `book`, `bookitem` WHERE isbn LIKE ? AND book.book_id = bookitem.book_id";
             
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, isbn); 
@@ -153,7 +153,7 @@ public class BookDAO {
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                String book_id = rs.getString("book_id");
+                int book_id = rs.getInt("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");

@@ -31,7 +31,7 @@ public class BorrowTicketDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                String id = rs.getString("borrow_ticket_id");
+                int id = rs.getInt("borrow_ticket_id");
                 int staff_id = rs.getInt("staff_id");
                 int member_id = rs.getInt("member_id");
                 Timestamp borrow_date = rs.getTimestamp("borrow_date"); 
@@ -52,21 +52,21 @@ public class BorrowTicketDAO {
         return list;
     }
     
-    public BorrowTicketDTO getById(String id) {
+    public BorrowTicketDTO getById(int id) {
         BorrowTicketDTO borrowTicket = null;
         
         try {
             Connection connection = Database.getConnection();
             
-            String query = "SELECT * FROM `borrowticket` WHERE borrow_ticket_id LIKE ?";
+            String query = "SELECT * FROM `borrowticket` WHERE borrow_ticket_id = ?";
             
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, id); 
+            ps.setInt(1, id); 
             
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                String borrow_ticket_id = rs.getString("borrow_ticket_id");
+                int borrow_ticket_id = rs.getInt("borrow_ticket_id");
                 int staff_id = rs.getInt("staff_id");
                 int member_id = rs.getInt("member_id");
                 Timestamp borrow_date = rs.getTimestamp("borrow_date"); 

@@ -12,14 +12,22 @@ import java.sql.Timestamp;
  */
 public class BorrowTicketDTO {
     
-    String id;
-    int staff_id;
-    int member_id;
-    Timestamp borrow_date;
-    Timestamp due_date;
-    String status;
+    private int id;
+    private int staff_id;
+    private int member_id;
+    private Timestamp borrow_date;
+    private Timestamp due_date;
+    private String status;
 
-    public BorrowTicketDTO(String id, int staff_id, int member_id, Timestamp borrow_date, Timestamp due_date, String status) {
+    public BorrowTicketDTO(int staff_id, int member_id, Timestamp borrow_date, Timestamp due_date, String status) {
+        this.staff_id = staff_id;
+        this.member_id = member_id;
+        this.borrow_date = borrow_date;
+        this.due_date = due_date;
+        this.status = status;
+    }
+
+    public BorrowTicketDTO(int id, int staff_id, int member_id, Timestamp borrow_date, Timestamp due_date, String status) {
         this.id = id;
         this.staff_id = staff_id;
         this.member_id = member_id;
@@ -28,11 +36,11 @@ public class BorrowTicketDTO {
         this.status = status;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -75,7 +83,5 @@ public class BorrowTicketDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
     
 }

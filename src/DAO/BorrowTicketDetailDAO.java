@@ -18,22 +18,22 @@ import java.util.ArrayList;
  */
 public class BorrowTicketDetailDAO {
     
-    public ArrayList<BorrowTicketDetailDTO> getByBorrowTicketId(String id) {
+    public ArrayList<BorrowTicketDetailDTO> getByBorrowTicketId(int id) {
         ArrayList<BorrowTicketDetailDTO> list = new ArrayList<>();
 
         try {
             Connection connection = Database.getConnection();
 
-            String query = "SELECT * FROM borrowticket_details WHERE borrow_ticket_id LIKE ?";
+            String query = "SELECT * FROM borrowticket_details WHERE borrow_ticket_id = ?";
 
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, id);
+            ps.setInt(1, id);
             
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 int borrow_ticket_details_id = rs.getInt("borrow_ticket_details_id");
-                String borrow_ticket_id = rs.getString("borrow_ticket_id");
+                int borrow_ticket_id = rs.getInt("borrow_ticket_id");
                 String isbn = rs.getString("isbn");
 
                 BorrowTicketDetailDTO borrowticket_detail = new BorrowTicketDetailDTO(borrow_ticket_details_id, borrow_ticket_id, isbn);

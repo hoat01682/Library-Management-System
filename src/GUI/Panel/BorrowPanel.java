@@ -87,7 +87,7 @@ public class BorrowPanel extends javax.swing.JPanel {
     
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
-        String id = (String) tablePanel.table.getValueAt(index, 0);
+        int id = (int) tablePanel.table.getValueAt(index, 0);
         BorrowTicketDTO borrowTicket = borrowTicketBUS.getById(id);
         BorrowTicketDialog bD = new BorrowTicketDialog(null, true, borrowTicket, "view");
         bD.setVisible(true);

@@ -19,10 +19,6 @@ public class PurchaseTicketBUS {
     public boolean addPurchaseTicket(PurchaseTicketDTO purchaseTicket) {
         return purchaseTicketDAO.add(purchaseTicket) > 0;
     }
-
-    public boolean updateStatus(String id) {
-        return purchaseTicketDAO.updateStatus(id) > 0;
-    }
     
     public ArrayList<PurchaseTicketDTO> getAllPurchaseTicket() {
         return purchaseTicketDAO.getAll();

@@ -15,6 +15,10 @@ import java.util.ArrayList;
 public class SupplierBUS {
 
     private final SupplierDAO supplierDAO = new SupplierDAO();
+    
+    public static SupplierBUS getInstance() {
+        return new SupplierBUS();
+    }
 
     public boolean createsupplier(SupplierDTO supplier) {
         return supplierDAO.add(supplier) > 0;

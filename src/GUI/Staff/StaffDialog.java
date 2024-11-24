@@ -163,7 +163,6 @@ public class StaffDialog extends javax.swing.JDialog {
     
     public void addEvent() {
         staff = getNewStaff();
-        System.out.println(staff);
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
             dispose();

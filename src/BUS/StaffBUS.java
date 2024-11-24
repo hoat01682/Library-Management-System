@@ -15,6 +15,10 @@ import java.util.ArrayList;
 public class StaffBUS {
     
     private final StaffDAO staffDAO = new StaffDAO();
+    
+    public static StaffBUS getInstance() {
+        return new StaffBUS();
+    }
 
     public boolean createStaff(StaffDTO staff) {
         return staffDAO.add(staff) > 0;

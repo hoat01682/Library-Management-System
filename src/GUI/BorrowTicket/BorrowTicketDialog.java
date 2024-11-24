@@ -62,16 +62,10 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         });
         
         btn_member.addActionListener((ActionEvent e) -> {
-            GetMemberDialog mD = new GetMemberDialog(null, true);
-            mD.setVisible(true);
-            try {
-                if(mD.choosen == false) return;
-                int member_id = mD.getSelectedId();
-                member = memberBUS.getById(member_id);
-                txt_member.setText(member.getFull_name());
-            } catch (Exception ex) {
-                
-            }
+            member = GetMemberDialog.getMember();
+            if(member == null)
+                return;
+            txt_member.setText(member.getFull_name());
         });
         
         if(mode.equals("view"))
@@ -83,7 +77,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     public void initViewMode() {
         initData();
         loadDataToTable(borrowTicketDetailList);
-        txt_id.setText(borrowTicket.getId());
+        txt_id.setText(borrowTicket.getId() + "");
         txt_member.setText(member.getFull_name());
         txt_staff.setText(staff.getFullName());
         txt_borrowDate.setText(Formatter.getDate(borrowTicket.getBorrow_date()));
