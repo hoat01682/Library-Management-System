@@ -4,22 +4,35 @@
  */
 package GUI.Panel;
 
+import BUS.PublisherBUS;
+import DTO.PublisherDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
+import GUI.Publisher.PublisherDialog;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Duc3m
  */
-public class ImportPanel extends javax.swing.JPanel {
+public class PublisherPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
     
-    public ImportPanel() {
+    PublisherBUS publisherBUS = new PublisherBUS();
+    ArrayList<PublisherDTO> publisherList = publisherBUS.getAll();
+    
+    public PublisherPanel() {
         initComponents();
         customInit();
     }
@@ -32,16 +45,69 @@ public class ImportPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã phiếu nhập", "Nhà cung cấp", "Nhân viên", "Ngày nhập", "Trạng thái"};
+        String[] columnNames = {"Mã nhà xuất bản", "Tên", "Địa chỉ", "Số điện thoại"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-//        loadDataToTable(permissionList);
+        loadDataToTable(publisherList);
+        
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+        
+        menuBar.jToolBar1.add(addBtn);
+        
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
         
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                if(tablePanel.table.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn nhà xuất bản nào");
+                    return;
+                }
+                viewEvent();
             }
         });
+    }
+    
+    public void loadDataToTable(ArrayList<PublisherDTO> publisherList) {
+        DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
+        tableModel.setRowCount(0);
+        for (PublisherDTO i : publisherList) {
+            tableModel.addRow(new Object[] {
+                    i.getId(),
+                    i.getName(),
+                    i.getAddress(),
+                    i.getPhone()
+            });
+        }
+    }
+    
+    public void refreshTable() {
+        publisherList = publisherBUS.getAll();
+        loadDataToTable(publisherList);
+    }
+    
+    public void viewEvent() {
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        PublisherDTO publisher = publisherBUS.getById(id);
+        PublisherDialog pD = new PublisherDialog(null, true, publisher, "view");
+        pD.setVisible(true);
+        refreshTable();
+    }
+    
+    public void addEvent() {
+        PublisherDialog pD = new PublisherDialog(null, true, null, "add");
+        pD.setVisible(true);
+        refreshTable();
     }
     
     @SuppressWarnings("unchecked")

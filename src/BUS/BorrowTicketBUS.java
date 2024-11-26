@@ -5,7 +5,9 @@
 package BUS;
 
 import DAO.BorrowTicketDAO;
+import DAO.BorrowTicketDetailDAO;
 import DTO.BorrowTicketDTO;
+import DTO.BorrowTicketDetailDTO;
 import java.util.ArrayList;
 
 /**
@@ -14,13 +16,30 @@ import java.util.ArrayList;
  */
 public class BorrowTicketBUS {
     private final BorrowTicketDAO borrowTicketDAO = new BorrowTicketDAO();
+    private final BorrowTicketDetailDAO detailDAO = new BorrowTicketDetailDAO();
+    
+    public static BorrowTicketBUS getInstance() {
+        return new BorrowTicketBUS();
+    }   
+    
+    public int getLastID() {
+        return borrowTicketDAO.getLastID();
+    }
     
     public ArrayList<BorrowTicketDTO> getAll() {
         return borrowTicketDAO.getAll();
     }
     
-    public BorrowTicketDTO getById(String id) {
+    public BorrowTicketDTO getById(int id) {
         return borrowTicketDAO.getById(id);
+    }
+    
+    public boolean addWithDetail(BorrowTicketDTO borrowTicket, ArrayList<BorrowTicketDetailDTO> detailList) {
+        if(borrowTicketDAO.add(borrowTicket) != 0) {
+            detailDAO.borrowBooks(detailList);
+            return true;
+        }
+        return false;
     }
     
 }

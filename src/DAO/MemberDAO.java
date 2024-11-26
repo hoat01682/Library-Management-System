@@ -94,7 +94,7 @@ public class MemberDAO {
 
             }
             Database.closeConnection(conn);
-
+            
         } catch (SQLException e) {
             System.out.println(e);
         }

@@ -75,6 +75,21 @@ public class GetStaffDialog extends javax.swing.JDialog {
         }
     }
     
+    public static StaffDTO getStaff() {
+        GetStaffDialog gsD = new GetStaffDialog(null, true);
+        gsD.setVisible(true);
+        try {
+            if (gsD.choosen == false) {
+                return null;
+            }
+            int staff_id = gsD.getSelectedId();
+            return StaffBUS.getInstance().getById(staff_id);
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -101,13 +116,14 @@ public class GetStaffDialog extends javax.swing.JDialog {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setFocusable(false);
         jTable1.getTableHeader().setResizingAllowed(false);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);

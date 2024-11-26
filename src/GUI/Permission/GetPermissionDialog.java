@@ -75,6 +75,21 @@ public class GetPermissionDialog extends javax.swing.JDialog {
         }
     }
     
+    public static PermissionDTO getPermission() {
+        GetPermissionDialog pD = new GetPermissionDialog(null, true);
+        pD.setVisible(true);
+        try {
+            if (pD.choosen == false) {
+                return null;
+            }
+            int permission_id = pD.getSelectedId();
+            return PermissionBUS.getInstance().getById(permission_id);
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -108,6 +123,7 @@ public class GetPermissionDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setFocusable(false);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);

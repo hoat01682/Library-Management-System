@@ -76,6 +76,21 @@ public class GetMemberDialog extends javax.swing.JDialog {
         }
     }
     
+    public static MemberDTO getMember() {
+        GetMemberDialog mD = new GetMemberDialog(null, true);
+        mD.setVisible(true);
+        try {
+            if (mD.choosen == false) {
+                return null;
+            }
+            int member_id = mD.getSelectedId();
+            return MemberBUS.getInstance().getById(member_id);
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

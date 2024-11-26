@@ -18,8 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -53,6 +56,13 @@ public class BookPanel extends javax.swing.JPanel {
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
         loadDataToTable(bookList);
         
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+              
         menuBar.jToolBar1.add(addBtn);
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -89,17 +99,24 @@ public class BookPanel extends javax.swing.JPanel {
         }
     }
     
+    public void refreshTable() {
+        bookList = bookBUS.getAllBook();
+        loadDataToTable(bookList);
+    }
+    
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
-        String id = (String) tablePanel.table.getValueAt(index, 0);
+        int id = (int) tablePanel.table.getValueAt(index, 0);
         BookDTO book = bookBUS.getById(id);
         BookDialog bDialog = new BookDialog(null, true, book, "view");
         bDialog.setVisible(true);
+        refreshTable();
     }
     
     public void addEvent() {
         BookDialog bDialog = new BookDialog(null, true, null, "add");
         bDialog.setVisible(true);
+        refreshTable();
     }
 
     @SuppressWarnings("unchecked")

@@ -16,12 +16,24 @@ public class CategoryBUS {
     
     CategoryDAO categoryDAO = new CategoryDAO();
     
+    public static CategoryBUS getInstance() {
+        return new CategoryBUS();
+    }
+    
     public ArrayList<CategoryDTO> getAll() {
         return categoryDAO.getAll();
     }
     
     public CategoryDTO getById(int id) {
         return categoryDAO.getById(id);
+    }
+    
+    public boolean add(CategoryDTO category) {
+        return categoryDAO.add(category) > 0;
+    }
+    
+    public boolean update(CategoryDTO category) {
+        return categoryDAO.update(category) > 0;
     }
     
 }

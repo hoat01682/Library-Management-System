@@ -1,33 +1,45 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package DTO;
+
+import java.sql.Timestamp;
 
 /**
  *
  * @author hieun
  */
 public class PurchaseTicketDTO {
-    private String id;
+    private int id;
     private int supplier_id;
     private int staff_id;
-    private String purchase_date;
+    private Timestamp purchase_date;
     private String status;
+    private long total_price;
 
-    public PurchaseTicketDTO(String id, int supplier_id, int staff_id, String purchase_date, String status) {
+    public PurchaseTicketDTO(int supplier_id, int staff_id, Timestamp purchase_date, String status, long total_price) {
+        this.supplier_id = supplier_id;
+        this.staff_id = staff_id;
+        this.purchase_date = purchase_date;
+        this.status = status;
+        this.total_price = total_price;
+    }
+
+    public PurchaseTicketDTO(int id, int supplier_id, int staff_id, Timestamp purchase_date, String status, long total_price) {
         this.id = id;
         this.supplier_id = supplier_id;
         this.staff_id = staff_id;
         this.purchase_date = purchase_date;
         this.status = status;
+        this.total_price = total_price;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -47,11 +59,11 @@ public class PurchaseTicketDTO {
         this.staff_id = staff_id;
     }
 
-    public String getPurchase_date() {
+    public Timestamp getPurchase_date() {
         return purchase_date;
     }
 
-    public void setPurchase_date(String purchase_date) {
+    public void setPurchase_date(Timestamp purchase_date) {
         this.purchase_date = purchase_date;
     }
 
@@ -62,4 +74,18 @@ public class PurchaseTicketDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public long getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(long total_price) {
+        this.total_price = total_price;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseTicketDTO{" + "id=" + id + ", supplier_id=" + supplier_id + ", staff_id=" + staff_id + ", purchase_date=" + purchase_date + ", status=" + status + ", total_price=" + total_price + '}';
+    }
+    
 }

@@ -13,7 +13,11 @@ import java.util.ArrayList;
  * @author Dương
  */
 public class MemberBUS {
-      private final MemberDAO memberDAO = new MemberDAO();
+    private final MemberDAO memberDAO = new MemberDAO();
+      
+    public static MemberBUS getInstance() {
+        return new MemberBUS();
+    }
 
     public boolean createMember(MemberDTO member) {
         return memberDAO.add(member) > 0;

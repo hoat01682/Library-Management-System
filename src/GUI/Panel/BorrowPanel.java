@@ -5,6 +5,8 @@
 package GUI.Panel;
 
 import BUS.BorrowTicketBUS;
+import BUS.MemberBUS;
+import BUS.StaffBUS;
 import DTO.BorrowTicketDTO;
 import GUI.BorrowTicket.BorrowTicketDialog;
 import GUI.Component.ManagementTable;
@@ -71,8 +73,8 @@ public class BorrowPanel extends javax.swing.JPanel {
         for (BorrowTicketDTO i : borrowTicketList) {
             tableModel.addRow(new Object[] {
                     i.getId(),
-                    i.getStaff_id(),
-                    i.getMember_id(),
+                    StaffBUS.getInstance().getById(i.getStaff_id()).getFullName(),
+                    MemberBUS.getInstance().getById(i.getMember_id()).getFull_name(),
                     Formatter.getDate(i.getBorrow_date()),
                     Formatter.getDate(i.getDue_date()),
                     i.getStatus()
@@ -87,7 +89,7 @@ public class BorrowPanel extends javax.swing.JPanel {
     
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
-        String id = (String) tablePanel.table.getValueAt(index, 0);
+        int id = (int) tablePanel.table.getValueAt(index, 0);
         BorrowTicketDTO borrowTicket = borrowTicketBUS.getById(id);
         BorrowTicketDialog bD = new BorrowTicketDialog(null, true, borrowTicket, "view");
         bD.setVisible(true);
