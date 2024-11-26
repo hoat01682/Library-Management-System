@@ -19,6 +19,10 @@ import java.util.ArrayList;
  */
 public class ReturnTicketDAO {
     
+    public static ReturnTicketDAO getInstance() {
+        return new ReturnTicketDAO();
+    }
+    
     public ArrayList<ReturnTicketDTO> getAll() {
         ArrayList<ReturnTicketDTO> list = new ArrayList<>(); 
         
@@ -32,13 +36,12 @@ public class ReturnTicketDAO {
             
             while (rs.next()) {
                 int id = rs.getInt("return_ticket_id");
-                int borrow_ticket_id = rs.getInt("borrow_ticket_id");
                 int staff_id = rs.getInt("staff_id");
                 int member_id = rs.getInt("member_id");
                 Timestamp return_date = rs.getTimestamp("return_date");
                 String status = rs.getString("status");
                 
-                ReturnTicketDTO returnTicket = new ReturnTicketDTO(id, borrow_ticket_id, staff_id, member_id, return_date, status);
+                ReturnTicketDTO returnTicket = new ReturnTicketDTO(id, staff_id, member_id, return_date, status);
                 
                 list.add(returnTicket);
             }
@@ -50,6 +53,84 @@ public class ReturnTicketDAO {
         }
         
         return list;
+    }
+    
+    public ReturnTicketDTO getById(int id) {
+        ReturnTicketDTO returnTicket = null;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM returnticket WHERE return_ticket_id = ?";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id); 
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int id1 = rs.getInt("return_ticket_id");
+                int staff_id = rs.getInt("staff_id");
+                int member_id = rs.getInt("member_id");
+                Timestamp return_date = rs.getTimestamp("return_date");
+                String status = rs.getString("status");
+                
+                returnTicket = new ReturnTicketDTO(id1, staff_id, member_id, return_date, status);
+            }
+            
+            Database.closeConnection(connection); 
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return returnTicket;
+    }
+    
+    public int getLastID() {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "SELECT * FROM `returnticket` ORDER BY `return_ticket_id` DESC LIMIT 1";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                result = rs.getInt("return_ticket_id");
+            }
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+    
+    public int add(ReturnTicketDTO returnTicket) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "INSERT INTO returnticket (staff_id, member_id, return_date, status) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setInt(1, returnTicket.getStaff_id());
+            ps.setInt(2, returnTicket.getMember_id());
+            ps.setTimestamp(3, returnTicket.getReturn_date());
+            ps.setString(4, returnTicket.getStatus());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return result;
     }
     
 }

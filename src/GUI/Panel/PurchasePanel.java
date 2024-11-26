@@ -102,7 +102,12 @@ public class PurchasePanel extends javax.swing.JPanel {
     }
     
     public void viewEvent() {
-        
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        PurchaseTicketDTO purchaseTicket = purchaseTicketBUS.getById(id);
+        PurchaseTicketDialog ptD = new PurchaseTicketDialog(null, true, purchaseTicket, "view");
+        ptD.setVisible(true);
+        refreshTable();
     }
     
     public void addEvent() {

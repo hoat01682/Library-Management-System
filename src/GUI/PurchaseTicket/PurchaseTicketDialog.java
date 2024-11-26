@@ -4,9 +4,13 @@
  */
 package GUI.PurchaseTicket;
 
+import BUS.BookBUS;
+import BUS.PurchaseTicketBUS;
+import BUS.PurchaseTicketDetailBUS;
 import BUS.StaffBUS;
 import BUS.SupplierBUS;
 import DTO.BookDTO;
+import DTO.BookItemDTO;
 import DTO.PurchaseTicketDTO;
 import DTO.PurchaseTicketDetailDTO;
 import DTO.SessionManager;
@@ -14,14 +18,17 @@ import DTO.StaffDTO;
 import DTO.SupplierDTO;
 import GUI.Book.BookDialog;
 import GUI.Book.GetBookDialog;
-import GUI.Staff.GetStaffDialog;
 import GUI.Supplier.GetSupplierDialog;
 import helper.Formatter;
+import helper.InputGetter;
+import helper.Validator;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -36,8 +43,13 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
     
     StaffBUS staffBUS = new StaffBUS();
     SupplierBUS supplierBUS = new SupplierBUS();
+    PurchaseTicketBUS purchaseTicketBUS = new PurchaseTicketBUS();
+    PurchaseTicketDetailBUS purchaseTicketDetailBUS = new PurchaseTicketDetailBUS();
     
     ArrayList<PurchaseTicketDetailDTO> detailList;
+    ArrayList<BookItemDTO> bookItemList;
+    
+    private HashMap<Integer, String> isbnList = new HashMap<>();
     
     public PurchaseTicketDialog(java.awt.Frame parent, boolean modal, PurchaseTicketDTO purchaseTicket, String mode) {
         super(parent, modal);
@@ -50,7 +62,7 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
     public void customInit() {
         setLocationRelativeTo(null);
         
-        jButton1.addMouseListener(new MouseAdapter() {
+        btn_addBook.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 addBookEvent();
@@ -78,13 +90,32 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
             initAddMode();
     }
     
+    public void initData() {
+        supplier = supplierBUS.getById(purchaseTicket.getSupplier_id());
+        staff = staffBUS.getById(purchaseTicket.getStaff_id());
+        detailList = purchaseTicketDetailBUS.getByPurchaseTicketId(purchaseTicket.getId());
+    }
+    
     public void initViewMode() {
+        initData();
+        txt_id.setText(purchaseTicket.getId() + "");
+        txt_supplier.setText(supplier.getName());
+        txt_staff.setText(staff.getFullName());
+        txt_purchaseDate.setText(Formatter.getDate(purchaseTicket.getPurchase_date()));
+        txt_status.setText(purchaseTicket.getStatus());
+        txt_totalPrice.setText(Formatter.FormatVND(purchaseTicket.getTotal_price()));
         
+        btn_addBook.setVisible(false);
+        btn_save.setVisible(false);
+        btn_supplier.setEnabled(false);
+        
+        loadDataToTable(detailList);
     }
     
     public void initAddMode() {
         lbl_title.setText("TẠO PHIẾU NHẬP MỚI");
         detailList = new ArrayList<>();
+        bookItemList = new ArrayList<>();
         staff = SessionManager.getInstance().getLoggedInStaff();
         txt_staff.setText(staff.getFullName());
         
@@ -96,24 +127,81 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
         txt_status.setEnabled(false);
     }
     
+    public void loadDataToTable(ArrayList<PurchaseTicketDetailDTO> detailList) {
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0);
+        for (PurchaseTicketDetailDTO i : detailList) {
+            BookDTO book = BookBUS.getInstance().getById(i.getBook_id());
+            tableModel.addRow(new Object[] {
+                    i.getBook_id(),
+                    book.getTitle(),
+                    i.getQuantity(),
+                    Formatter.FormatVND(i.getPrice()),
+                    Formatter.FormatVND(i.getTotal_price())
+            });
+        }
+    }
+    
     public void addBookEvent() {
         String[] option = {"Tạo sách mới", "Chọn sách", "Hủy"};
         int selection = JOptionPane.showOptionDialog(null, "Bạn muốn nhập sản sách mới hay chọn sách có sẵn?", "", 0, 3, null, option, option[2]);
         //Tao sach moi
-        if(selection == 0) {
+        if (selection == 0) {
             BookDialog bDialog = new BookDialog(null, true, null, "add");
             bDialog.setVisible(true);
         }
-        if(selection == 1) {
+        if (selection == 1) {
             BookDTO book = GetBookDialog.getBook();
-            if(book == null)
+            if (book == null) {
                 return;
+            }
+
+            int ticket_id = purchaseTicketBUS.getLastID() + 1;
+            int book_id = book.getId();
+            int quantity = InputGetter.getNumberInput("Số lượng sách");
+            long price = InputGetter.getNumberInput("Đơn giá");
+
+            String isbn;
+            do {
+                isbn = InputGetter.getStringInput("ISBN");
+                if (isbn == null) {
+                    return;
+                }
+                if(!Validator.isValidISBN(isbn)) {
+                    JOptionPane.showMessageDialog(this, "ISBN phải là số có 11 chữ số và không bắt đầu bằng số 0");
+                }
+            } while (!Validator.isValidISBN(isbn));
             
+            isbnList.put(book.getId(), isbn);
+
+            PurchaseTicketDetailDTO detail = new PurchaseTicketDetailDTO(ticket_id, book_id, quantity, price, (long) (price * quantity));
+            detailList.add(detail);
+            loadDataToTable(detailList);
+            txt_totalPrice.setText(Formatter.FormatVND(getTotalPrice()));
         }
     }
     
+    public long getTotalPrice() {
+        long result = 0;
+        for (PurchaseTicketDetailDTO i : detailList) {
+            result += i.getTotal_price();
+        }
+        return result;
+    }
+    
     public void generateBookItemList() {
-        
+        for (PurchaseTicketDetailDTO i : detailList) {
+            String isbn = isbnList.get(i.getBook_id());
+            int book_id = i.getBook_id();
+            int purchaseticket_id = purchaseTicketBUS.getLastID() + 1;
+            String status = "1";
+            long price = i.getPrice();
+            for (int j = 0; j < i.getQuantity(); j++) {
+                String newISBN = String.valueOf(Long.parseLong(isbn) + j);
+                BookItemDTO bookItem = new BookItemDTO(newISBN, book_id, purchaseticket_id, status, price);
+                bookItemList.add(bookItem);
+            }
+        }
     }
     
     public PurchaseTicketDTO getNewPurchaseTicket() {
@@ -121,12 +209,33 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
         int staff_id = staff.getId();
         Timestamp purchase_date = new Timestamp(System.currentTimeMillis());
         String status = "1";
+        long total_price = getTotalPrice();
         
-        return new PurchaseTicketDTO(supplier_id, staff_id, purchase_date, status);
+        return new PurchaseTicketDTO(supplier_id, staff_id, purchase_date, status, total_price);
+    }
+    
+    public boolean validateInputs() {
+        if(Validator.isEmpty(txt_supplier.getText())) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn nhà cung cấp");
+            return false;
+        }
+        return true;
     }
     
     public void addEvent() {
+        if(!validateInputs()){
+            return;
+        }
+        if(jTable1.getRowCount() == 0){
+            JOptionPane.showMessageDialog(this, "Phải có ít nhất 1 sách để tạo phiếu nhập!");
+            return;
+        }
         purchaseTicket = getNewPurchaseTicket();
+        generateBookItemList();
+        if(purchaseTicketBUS.addWithLists(purchaseTicket, detailList, bookItemList)) {
+            JOptionPane.showMessageDialog(this, "Tạo phiếu nhập thành công!");
+            dispose();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -147,13 +256,15 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
         lbl_status = new javax.swing.JLabel();
         txt_status = new javax.swing.JTextField();
         btn_supplier = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txt_totalPrice = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         lbl_title = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         btn_save = new javax.swing.JButton();
         btn_exit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_addBook = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -198,6 +309,10 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel5.setText("Tổng giá");
+
+        txt_totalPrice.setFocusable(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -208,23 +323,26 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
                     .addComponent(lbl_id))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_staff, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_supplier, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_supplier, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_staff))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_status)
-                    .addComponent(txt_purchaseDate)
-                    .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txt_status, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_purchaseDate, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(7, 7, 7)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(txt_totalPrice))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -232,29 +350,33 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_id)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_id, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_supplier, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbl_id)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txt_id, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txt_supplier, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btn_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_purchaseDate, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_staff, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lbl_status)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_totalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lbl_status))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_staff, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -263,7 +385,7 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Mã sách", "Tên sách", "Tác giả", "Nhà xuất bản", "Số lượng"
+                "Mã sách", "Tên sách", "Số lượng", "Đơn giá", "Tổng giá"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -274,6 +396,7 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setFocusable(false);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -330,10 +453,10 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
         btn_exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_exit.setFocusPainted(false);
 
-        jButton1.setBackground(new java.awt.Color(88, 175, 232));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Thêm sách");
+        btn_addBook.setBackground(new java.awt.Color(88, 175, 232));
+        btn_addBook.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_addBook.setForeground(new java.awt.Color(255, 255, 255));
+        btn_addBook.setText("Thêm sách");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -341,7 +464,7 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jButton1)
+                .addComponent(btn_addBook)
                 .addGap(18, 18, 18)
                 .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -353,7 +476,7 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_addBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -391,13 +514,14 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_addBook;
     private javax.swing.JButton btn_exit;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_supplier;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -412,5 +536,6 @@ public class PurchaseTicketDialog extends javax.swing.JDialog {
     private javax.swing.JTextField txt_staff;
     private javax.swing.JTextField txt_status;
     private javax.swing.JTextField txt_supplier;
+    private javax.swing.JTextField txt_totalPrice;
     // End of variables declaration//GEN-END:variables
 }

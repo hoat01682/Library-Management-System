@@ -34,11 +34,12 @@ public class ReturnTicketDetailDAO {
             while (rs.next()) {
                 int id1 = rs.getInt("return_ticket_details_id");
                 int returnTicket_id = rs.getInt("return_ticket_id");
+                int borrowticket_id = rs.getInt("borrow_ticket_id");
                 String isbn = rs.getString("isbn");
                 String status = rs.getString("status");
                 
 
-                ReturnTicketDetailDTO returnticket_detail = new ReturnTicketDetailDTO(id1, returnTicket_id, isbn, status);
+                ReturnTicketDetailDTO returnticket_detail = new ReturnTicketDetailDTO(id1, returnTicket_id, borrowticket_id, isbn, status);
 
                 list.add(returnticket_detail);
             }
@@ -50,6 +51,33 @@ public class ReturnTicketDetailDAO {
         }
 
         return list;
+    }
+    
+    public int returnBooks(ArrayList<ReturnTicketDetailDTO> list) {
+        int result = 0;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            for (ReturnTicketDetailDTO i : list) {
+                String query = "INSERT INTO returnticket_details (return_ticket_id, borrow_ticket_id, isbn, status) VALUES (?, ?, ?, ?)";
+                PreparedStatement ps = connection.prepareStatement(query);
+                
+                ps.setInt(1, i.getReturnTicket_id());
+                ps.setInt(2, i.getBorrow_ticket_id());
+                ps.setString(3, i.getIsbn());
+                ps.setString(4, i.getStatus());
+                result = ps.executeUpdate();
+                
+                BookItemDAO.getInstance().changeStatus(BookItemDAO.getInstance().getByISBN(i.getIsbn()), "Có sẵn");
+            }
+
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
     }
     
 }

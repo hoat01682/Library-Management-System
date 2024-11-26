@@ -18,6 +18,10 @@ import java.util.ArrayList;
  */
 public class BookItemDAO {
     
+    public static BookItemDAO getInstance() {
+        return new BookItemDAO();
+    }
+    
     public ArrayList<BookItemDTO> getByBookId(int id) {
         ArrayList<BookItemDTO> list = new ArrayList<>();
 
@@ -34,11 +38,11 @@ public class BookItemDAO {
             while (rs.next()) {
                 String isbn = rs.getString("isbn");
                 int book_id = rs.getInt("book_id");
-                String purchaseticket_id = rs.getString("purchaseticket_id");
-                int bookshelf_id = rs.getInt("bookshelf_id");
+                int purchaseticket_id = rs.getInt("purchaseticket_id");
                 String status = rs.getString("status");
+                long price = rs.getLong("price");
                 
-                BookItemDTO bookItem = new BookItemDTO(isbn, book_id, purchaseticket_id, bookshelf_id, status);
+                BookItemDTO bookItem = new BookItemDTO(isbn, book_id, purchaseticket_id, status, price);
 
                 list.add(bookItem);
             }
@@ -50,6 +54,90 @@ public class BookItemDAO {
         }
 
         return list;
+    }
+    
+    public BookItemDTO getByISBN(String isbn) {
+        BookItemDTO bookItem = null;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "SELECT * FROM bookitem WHERE isbn LIKE ?";
+
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, isbn);
+            
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String isbn1 = rs.getString("isbn");
+                int book_id = rs.getInt("book_id");
+                int purchaseticket_id = rs.getInt("purchaseticket_id");
+                String status = rs.getString("status");
+                long price = rs.getLong("price");
+                
+                bookItem = new BookItemDTO(isbn1, book_id, purchaseticket_id, status, price);
+
+            }
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return bookItem;
+    }
+    
+    public int addList(ArrayList<BookItemDTO> list) {
+        int result = 0;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            for (BookItemDTO i : list) {
+                String query = "INSERT INTO bookitem (isbn, book_id, purchaseticket_id, status, price) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement ps = connection.prepareStatement(query);
+
+                ps.setString(1, i.getIsbn());
+                ps.setInt(2, i.getBook_id());
+                ps.setInt(3, i.getPurchaseticket_id());
+                ps.setString(4, i.getStatus());
+                ps.setLong(5, i.getPrice());
+
+                result = ps.executeUpdate();
+            }
+
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+    
+    public int changeStatus(BookItemDTO bookItem, String status) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE bookitem SET status = ? WHERE isbn LIKE ?";
+        
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, status);
+            ps.setString(2, bookItem.getIsbn());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+        
+        } catch (SQLException e) {
+            System.out.println(e); 
+        }
+        
+        return result;
     }
     
 }

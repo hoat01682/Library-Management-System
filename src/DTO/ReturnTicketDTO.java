@@ -5,23 +5,20 @@ import java.sql.Timestamp;
 public class ReturnTicketDTO {
     
     private int id;
-    private int borrowTicket_id;
     private int staff_id;
     private int member_id;
     private Timestamp return_date;
     private String status;
 
-    public ReturnTicketDTO(int borrowTicket_id, int staff_id, int member_id, Timestamp return_date, String status) {
-        this.borrowTicket_id = borrowTicket_id;
+    public ReturnTicketDTO(int staff_id, int member_id, Timestamp return_date, String status) {
         this.staff_id = staff_id;
         this.member_id = member_id;
         this.return_date = return_date;
         this.status = status;
     }
     
-    public ReturnTicketDTO(int id, int borrowTicket_id, int staff_id, int member_id, Timestamp return_date, String status) {
+    public ReturnTicketDTO(int id, int staff_id, int member_id, Timestamp return_date, String status) {
         this.id = id;
-        this.borrowTicket_id = borrowTicket_id;
         this.staff_id = staff_id;
         this.member_id = member_id;
         this.return_date = return_date;
@@ -34,14 +31,6 @@ public class ReturnTicketDTO {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getBorrowTicket_id() {
-        return borrowTicket_id;
-    }
-
-    public void setBorrowTicket_id(int borrowTicket_id) {
-        this.borrowTicket_id = borrowTicket_id;
     }
 
     public int getStaff_id() {
@@ -74,6 +63,11 @@ public class ReturnTicketDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "ReturnTicketDTO{" + "id=" + id  + ", staff_id=" + staff_id + ", member_id=" + member_id + ", return_date=" + return_date + ", status=" + status + '}';
     }
      
 }

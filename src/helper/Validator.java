@@ -76,7 +76,7 @@ public class Validator {
         if (input == null) {
             return false;
         }
-        String isbnRegex = "\"^[1-9]{1}[0-9]{10}$\"";
+        String isbnRegex = "^[1-9]{1}[0-9]{10}$";
         Pattern pattern = Pattern.compile(isbnRegex);
         return pattern.matcher(input).matches();
     }

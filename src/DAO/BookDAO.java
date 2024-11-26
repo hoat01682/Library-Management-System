@@ -18,6 +18,10 @@ import java.util.ArrayList;
  * @author hieun
  */
 public class BookDAO {
+   
+    public static BookDAO getInstance() {
+        return new BookDAO();
+    }
     
     public int add(BookDTO book) {
         int result = 0;
@@ -25,7 +29,7 @@ public class BookDAO {
         try {
             Connection connection = Database.getConnection();
            
-            String query = "INSERT INTO book (book_id, title, author, publisher_id, year_publish, category_id, quantity, book_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO book (book_id, title, author, publisher_id, year_publish, category_id, quantity, book_image, bookshelf_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setInt(1, book.getId());
@@ -36,6 +40,7 @@ public class BookDAO {
             ps.setInt(6, book.getCategoryId());
             ps.setInt(7, book.getQuantity());
             ps.setString(8, book.getImage());
+            ps.setInt(9, book.getBookshelf_id());
             result = ps.executeUpdate();
             
             Database.closeConnection(connection);
@@ -52,7 +57,7 @@ public class BookDAO {
         try {
             Connection connection = Database.getConnection();
             
-            String query = "UPDATE `book` SET title = ?, author = ?, publisher_id = ?, year_publish = ?, category_id = ?, quantity = ? WHERE book_id = ?";
+            String query = "UPDATE `book` SET title = ?, author = ?, publisher_id = ?, year_publish = ?, category_id = ?, quantity = ?, book_image = ?, bookshelf_id = ? WHERE book_id = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             
             ps.setString(1, book.getTitle()); 
@@ -61,7 +66,33 @@ public class BookDAO {
             ps.setInt(4, book.getYearPublish());
             ps.setInt(5, book.getCategoryId());
             ps.setInt(6, book.getQuantity());
-            ps.setInt(7, book.getId());
+            ps.setString(7, book.getImage());
+            ps.setInt(8, book.getBookshelf_id());
+            ps.setInt(9, book.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+            
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return result;
+    }
+    
+    public int increaseQuantity(int id, int quantity) {
+        BookDTO book = this.getById(id);
+        int newQuantity = book.getQuantity() + quantity;
+        int result = 0;
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE `book` SET quantity = ? WHERE book_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, book.getId());
             
             result = ps.executeUpdate();
             
@@ -93,7 +124,8 @@ public class BookDAO {
                 int category_id = rs.getInt("category_id");
                 int quantity = rs.getInt("quantity");
                 String image = rs.getString("book_image");
-                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, image);
+                int bookshelf_id = rs.getInt("bookshelf_id");
+                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, image, bookshelf_id);
                 list.add(book);
             }
             
@@ -119,16 +151,16 @@ public class BookDAO {
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                int book_id = rs.getInt("book_id");
+                int id1 = rs.getInt("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");
-                int year_publish = rs.getInt("year_publish");
+                int year = rs.getInt("year_publish");
                 int category_id = rs.getInt("category_id");
                 int quantity = rs.getInt("quantity");
                 String image = rs.getString("book_image");
-
-                book = new BookDTO(book_id, title, author, publisher_id, year_publish, category_id, quantity, image);
+                int bookshelf_id = rs.getInt("bookshelf_id");
+                book = new BookDTO(id1, title, author, publisher_id, year, category_id, quantity, image, bookshelf_id);
             }
             
             Database.closeConnection(connection);
@@ -153,16 +185,16 @@ public class BookDAO {
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
-                int book_id = rs.getInt("book_id");
+                int id = rs.getInt("book_id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int publisher_id = rs.getInt("publisher_id");
-                int year_publish = rs.getInt("year_publish");
+                int year = rs.getInt("year_publish");
                 int category_id = rs.getInt("category_id");
                 int quantity = rs.getInt("quantity");
                 String image = rs.getString("book_image");
-
-                book = new BookDTO(book_id, title, author, publisher_id, year_publish, category_id, quantity, image);
+                int bookshelf_id = rs.getInt("bookshelf_id");
+                book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, image, bookshelf_id);
             }
             
             Database.closeConnection(connection);

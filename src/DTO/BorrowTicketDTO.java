@@ -83,5 +83,10 @@ public class BorrowTicketDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "BorrowTicketDTO{" + "id=" + id + ", staff_id=" + staff_id + ", member_id=" + member_id + ", borrow_date=" + borrow_date + ", due_date=" + due_date + ", status=" + status + '}';
+    }
     
 }
