@@ -20,6 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import helper.Validator;
+
 
 /**
  *
@@ -141,12 +143,61 @@ public class AccountDialog extends javax.swing.JDialog {
         account.setStaff_id(staff.getId());
         account.setStatus(cbx_status.getSelectedItem().toString());
     }
-    
+    private boolean validateInput() {
+        String username = txt_username.getText().trim();
+        String password = String.valueOf(txt_password.getPassword()).trim();
+
+        // Check for empty fields
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập không được để trống.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_username.requestFocus();
+            return false;
+        }
+
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được để trống.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_password.requestFocus();
+            return false;
+        }
+
+        if (!Validator.isName(username)) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập không hợp lệ.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_username.requestFocus();
+            return false;
+        }
+
+        // Check if staff is selected
+        if (staff == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Check if permission is selected
+        if (permission == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhóm quyền.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Check for duplicate username when adding a new account
+        if (mode.equals("add") && accountBUS.searchAccount(username)) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_username.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
     public void updateEvent() {
+        if (!validateInput()) {
+            return;
+        }
         editAccount();
-        if(accountBUS.update(account)) {
-            JOptionPane.showMessageDialog(null, "Lưu thông tin tài khoản thành công");
+        if (accountBUS.update(account)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thông tin tài khoản thành công");
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật tài khoản thất bại. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -161,12 +212,18 @@ public class AccountDialog extends javax.swing.JDialog {
     }
     
     public void addEvent() {
+        if (!validateInput()) {
+            return;
+        }
         account = getNewAccount();
-        if(accountBUS.createAccount(account)) {
-            JOptionPane.showMessageDialog(null, "Thêm tài khoản mới thành công");
+        if (accountBUS.createAccount(account)) {
+            JOptionPane.showMessageDialog(this, "Thêm tài khoản mới thành công");
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm tài khoản thất bại. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

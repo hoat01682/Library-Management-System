@@ -71,7 +71,10 @@ public class Validator {
         Pattern pattern = Pattern.compile(emailRegex);
         return pattern.matcher(email).matches();
     }
-    
+    public static boolean isValidPassword(String password) {
+        // Password must be at least 8 characters, including letters and numbers, and no whitespace
+        return password.matches("^(?=\\S+$)(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
     public static boolean isValidISBN(String input) {
         if (input == null) {
             return false;

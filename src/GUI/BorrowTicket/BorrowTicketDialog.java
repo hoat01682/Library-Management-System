@@ -86,9 +86,9 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         
         btn_member.addActionListener((ActionEvent e) -> {
             member = GetMemberDialog.getMember();
-            if(member == null)
-                return;
-            txt_member.setText(member.getFull_name());
+            if (member != null) {
+                txt_member.setText(member.getFull_name());
+            }
         });
         
         if(mode.equals("view"))
@@ -171,11 +171,19 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         loadDataToTable(borrowTicketDetailList);
     }
     
-    public boolean validateInputs() {
-        if(Validator.isEmpty(txt_member.getText())) {
-            JOptionPane.showMessageDialog(this, "Bạn chưa chọn thành viên");
+    private boolean validateInputs() {
+        // Check if member is selected
+        if (member == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn thành viên.", "Thông báo", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+    
+        // Check if any books are added
+        if (borrowTicketDetailList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng thêm sách vào phiếu mượn.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+    
         return true;
     }
     

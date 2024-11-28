@@ -232,9 +232,65 @@ public class BookDialog extends javax.swing.JDialog {
         if(imageChanged)
             book.setImage(addImage(imageURL));
     }
-    
+    private boolean validateInput() {
+        String title = txt_title.getText().trim();
+        String author = txt_author.getText().trim();
+        String yearStr = txt_year.getText().trim();
+
+        // Check for empty fields
+        if (title.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tên sách không được để trống.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_title.requestFocus();
+            return false;
+        }
+
+        if (author.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tác giả không được để trống.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_author.requestFocus();
+            return false;
+        }
+
+        // Validate year
+        int year;
+        try {
+            year = Integer.parseInt(yearStr);
+            if (year < 1000 || year > 2100) {
+                JOptionPane.showMessageDialog(this, "Năm xuất bản không hợp lệ.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                txt_year.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Năm xuất bản phải là số nguyên.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_year.requestFocus();
+            return false;
+        }
+
+        // Check if publisher is selected
+        if (publisher == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhà xuất bản.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Check if category is selected
+        if (category == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn danh mục.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Optionally check if image is selected (if required)
+        if (mode.equals("add") && imageURL == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ảnh cho sách.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     public void updateEvent() {
         editBook();
+        if (!validateInput()) {
+            return;
+        }
         if(bookBUS.updateBook(book)) {
             JOptionPane.showMessageDialog(null, "Sửa thông tin sách thành công");
             dispose();
@@ -254,6 +310,9 @@ public class BookDialog extends javax.swing.JDialog {
     }
     
     public void addEvent() {
+        if (!validateInput()) {
+            return;
+        }
         book = getNewBook();
         if(bookBUS.addBook(book)) {
             JOptionPane.showMessageDialog(null, "Thêm sách mới thành công");

@@ -6,12 +6,7 @@ package GUI.Staff;
 
 import BUS.StaffBUS;
 import DTO.StaffDTO;
-<<<<<<< Updated upstream
-import config.Constants;
-import helper.Formatter;
-=======
 import java.text.SimpleDateFormat;
->>>>>>> Stashed changes
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -19,6 +14,10 @@ import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.sql.Timestamp;
 import javax.swing.JOptionPane;
+
+class Constants {
+    public static final String[] staff_status = {"Đang làm việc", "Đã nghỉ việc"};
+}
 
 /**
  *
@@ -35,8 +34,6 @@ public class StaffDialog extends javax.swing.JDialog {
     
     StaffDTO staff;
     String mode;
-<<<<<<< Updated upstream
-=======
     String[] statusList = new String[] {
         "Đang làm việc",
         "Đã nghỉ việc"
@@ -108,7 +105,6 @@ public class StaffDialog extends javax.swing.JDialog {
 
         return true;
     }  
->>>>>>> Stashed changes
     
     StaffBUS staffBUS = new StaffBUS();
     
@@ -171,13 +167,9 @@ public class StaffDialog extends javax.swing.JDialog {
             radio_male.setEnabled(false);
         }
         txt_address.setText(staff.getAddress());
-<<<<<<< Updated upstream
-        txt_date.setText(Formatter.getDate(staff.getHireDate()));
-=======
         txt_address.setFocusable(false);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         txt_date.setText(sdf.format(staff.getHireDate()));
->>>>>>> Stashed changes
         txt_phone.setText(staff.getPhone());
         txt_email.setText(staff.getEmail());
         cbx_status.setSelectedItem(staff.getStatus());
@@ -255,22 +247,13 @@ public class StaffDialog extends javax.swing.JDialog {
     public void addEvent() {
         if (!validateInput()) {
             return;
-        }
-        staff = getNewStaff();
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-        System.out.println(staff);
-=======
->>>>>>> c7f2b72e5ff066ea55246cc7d3f581d3b41bbf7a
-        if(staffBUS.createStaff(staff)) {
-            JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
-=======
-        if (staffBUS.createStaff(staff)) {
-            JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
->>>>>>> Stashed changes
-            dispose();
-        }
     }
+    staff = getNewStaff();
+    if (staffBUS.createStaff(staff)) {
+        JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
+        dispose();
+    }
+}
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
