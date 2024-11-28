@@ -257,8 +257,11 @@ public class StaffDialog extends javax.swing.JDialog {
             return;
         }
         staff = getNewStaff();
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         System.out.println(staff);
+=======
+>>>>>>> c7f2b72e5ff066ea55246cc7d3f581d3b41bbf7a
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
 =======

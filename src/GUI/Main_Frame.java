@@ -14,9 +14,11 @@ import GUI.Panel.StaffPanel;
 import GUI.Panel.HomePanel;
 import GUI.Panel.PermissionPanel;
 import GUI.Panel.BookPanel;
-import GUI.Panel.ImportPanel;
+import GUI.Panel.PurchasePanel;
 import GUI.Panel.PenaltyPanel;
+import GUI.Panel.PublisherPanel;
 import GUI.Panel.StatisticPanel;
+import GUI.Panel.SupplierPanel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -43,10 +45,12 @@ public class Main_Frame extends javax.swing.JFrame {
     public StaffPanel staffPanel = new StaffPanel();
     public MemberPanel memberPanel = new MemberPanel();
     public StatisticPanel statisticPanel = new StatisticPanel();
-    public ImportPanel importPanel = new ImportPanel();
+    public PurchasePanel purchasePanel = new PurchasePanel();
     public PenaltyPanel penaltyPanel = new PenaltyPanel();
     public AccountPanel accountPanel = new AccountPanel();
     public PermissionPanel permissionPanel = new PermissionPanel();
+    public PublisherPanel publisherPanel = new PublisherPanel();
+    public SupplierPanel supplierPanel = new SupplierPanel();
     
     public Main_Frame() {
         initComponents();
@@ -69,13 +73,15 @@ public class Main_Frame extends javax.swing.JFrame {
         content.add(bookPanel, "book");
         content.add(borrowPanel, "borrow");
         content.add(returnPanel, "return");
-        content.add(importPanel, "import");
+        content.add(purchasePanel, "purchase");
         content.add(staffPanel, "staff");
         content.add(memberPanel, "member");
         content.add(accountPanel, "account");
         content.add(penaltyPanel, "penalty");
         content.add(permissionPanel, "permission");
         content.add(statisticPanel, "statistic");
+        content.add(publisherPanel, "publisher");
+        content.add(supplierPanel, "supplier");
     }
 
     public void switchCard(String panelName) {

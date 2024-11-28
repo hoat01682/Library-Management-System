@@ -35,7 +35,6 @@ public final class PermissionDialog extends javax.swing.JDialog {
     ArrayList<PermissionDetailDTO> permissionDetailList;
     PermissionDetailBUS permissionDetailBUS = new PermissionDetailBUS();
     PermissionBUS permissionBUS = new PermissionBUS();
-    PermissionDAO permissionDAO = new PermissionDAO();
     PermissionDTO permission;
     
     public PermissionDialog(java.awt.Frame parent, boolean modal) {
@@ -239,7 +238,7 @@ public final class PermissionDialog extends javax.swing.JDialog {
         pnl_action.setLayout(new java.awt.BorderLayout());
 
         pnl_actionLabel.setBackground(new java.awt.Color(255, 255, 255));
-        pnl_actionLabel.setPreferredSize(new java.awt.Dimension(780, 40));
+        pnl_actionLabel.setPreferredSize(new java.awt.Dimension(780, 32));
         pnl_actionLabel.setLayout(new java.awt.GridLayout(1, 4));
         pnl_action.add(pnl_actionLabel, java.awt.BorderLayout.PAGE_START);
 

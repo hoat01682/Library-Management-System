@@ -16,7 +16,7 @@ public class BorrowTicketDetailBUS {
     
     private final BorrowTicketDetailDAO borrowTicketDetailDAO = new BorrowTicketDetailDAO();
     
-    public ArrayList<BorrowTicketDetailDTO> getByBorrowTicketDAO(String id) {
+    public ArrayList<BorrowTicketDetailDTO> getByBorrowTicketDAO(int id) {
         return borrowTicketDetailDAO.getByBorrowTicketId(id);
     }
     

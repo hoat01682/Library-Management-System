@@ -19,7 +19,7 @@ public class PurchaseTicketDetailBUS {
         return purchaseTicketDetailDAO.add(purchaseTicketDetail) > 0;
     }
     
-    public ArrayList<PurchaseTicketDetailDTO> getByPurchaseTicketId(String id) {
+    public ArrayList<PurchaseTicketDetailDTO> getByPurchaseTicketId(int id) {
         return purchaseTicketDetailDAO.getByPurchaseTicketId(id);
     }
 }

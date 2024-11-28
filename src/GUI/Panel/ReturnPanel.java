@@ -4,10 +4,21 @@
  */
 package GUI.Panel;
 
+import BUS.MemberBUS;
+import BUS.ReturnTicketBUS;
+import BUS.StaffBUS;
+import DTO.ReturnTicketDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Component.MenuBarButton;
+import GUI.ReturnTicket.ReturnTicketDialog;
+import helper.Formatter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,6 +29,13 @@ public class ReturnPanel extends javax.swing.JPanel {
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
+    MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
+    
+    ReturnTicketBUS returnTicketBUS = new ReturnTicketBUS();
+    StaffBUS staffBUS = new StaffBUS();
+    MemberBUS memberBUS = new MemberBUS();
+    
+    ArrayList<ReturnTicketDTO> ticketList = returnTicketBUS.getAll();
     
     public ReturnPanel() {
         initComponents();
@@ -32,16 +50,65 @@ public class ReturnPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã phiếu trả", "Mã phiếu mượn", "Nhân viên", "Ngày trả", "Trạng thái"};
+        String[] columnNames = {"Mã phiếu trả", "Nhân viên", "Thành viên", "Ngày trả", "Trạng thái"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-//        loadDataToTable(permissionList);
+        loadDataToTable(ticketList);
+
+        menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                refreshTable();
+            }
+        });
+        
+        menuBar.jToolBar1.add(addBtn);
+        addBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addEvent();
+            }
+        });
         
         tablePanel.viewOption.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                viewEvent();
+                viewEvent();
             }
         });
+    }
+    
+    public void loadDataToTable(ArrayList<ReturnTicketDTO> returnTicketList) {
+        DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
+        tableModel.setRowCount(0);
+        for (ReturnTicketDTO i : returnTicketList) {
+            tableModel.addRow(new Object[] {
+                    i.getId(),
+                    staffBUS.getById(i.getStaff_id()).getFullName(),
+                    memberBUS.getById(i.getMember_id()).getFull_name(),
+                    Formatter.getDate(i.getReturn_date()),
+                    i.getStatus()
+            });
+        }
+    }
+    
+    public void refreshTable() {
+        ticketList = returnTicketBUS.getAll();
+        loadDataToTable(ticketList);
+    }
+    
+    public void viewEvent() {
+        int index = tablePanel.table.getSelectedRow();
+        int id = (int) tablePanel.table.getValueAt(index, 0);
+        ReturnTicketDTO returnTicket = returnTicketBUS.getByID(id);
+        ReturnTicketDialog bD = new ReturnTicketDialog(null, true, returnTicket, "view");
+        bD.setVisible(true);
+        refreshTable();
+    }
+    
+    public void addEvent() {
+        ReturnTicketDialog rtD = new ReturnTicketDialog(null, true, null, "add");
+        rtD.setVisible(true);
+        refreshTable();
     }
     
     @SuppressWarnings("unchecked")

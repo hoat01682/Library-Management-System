@@ -9,40 +9,52 @@ package DTO;
  * @author hieun
  */
 public class PurchaseTicketDetailDTO {
-    private int purchaseTicketDetail_id;
-    private String purchaseTicket_id;
-    private String isbn;
+    private int id;
+    private int purchaseTicket_id;
+    private int book_id;
     private int quantity;
+    private long price;
+    private long total_price;
 
-    public PurchaseTicketDetailDTO(int purchaseTicketDetail_id, String purchaseTicket_id, String isbn, int quantity) {
-        this.purchaseTicketDetail_id = purchaseTicketDetail_id;
+    public PurchaseTicketDetailDTO(int purchaseTicket_id, int book_id, int quantity, long price, long total_price) {
         this.purchaseTicket_id = purchaseTicket_id;
-        this.isbn = isbn;
+        this.book_id = book_id;
         this.quantity = quantity;
+        this.price = price;
+        this.total_price = total_price;
     }
 
-    public int getPurchaseTicketDetail_id() {
-        return purchaseTicketDetail_id;
+    public PurchaseTicketDetailDTO(int id, int purchaseTicket_id, int book_id, int quantity, long price, long total_price) {
+        this.id = id;
+        this.purchaseTicket_id = purchaseTicket_id;
+        this.book_id = book_id;
+        this.quantity = quantity;
+        this.price = price;
+        this.total_price = total_price;
     }
 
-    public void setPurchaseTicketDetail_id(int purchaseTicketDetail_id) {
-        this.purchaseTicketDetail_id = purchaseTicketDetail_id;
+    public int getId() {
+        return id;
     }
 
-    public String getPurchaseTicket_id() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getPurchaseTicket_id() {
         return purchaseTicket_id;
     }
 
-    public void setPurchaseTicket_id(String purchaseTicket_id) {
+    public void setPurchaseTicket_id(int purchaseTicket_id) {
         this.purchaseTicket_id = purchaseTicket_id;
     }
 
-    public String getIsbn() {
-        return isbn;
+    public int getBook_id() {
+        return book_id;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public void setBook_id(int book_id) {
+        this.book_id = book_id;
     }
 
     public int getQuantity() {
@@ -52,4 +64,26 @@ public class PurchaseTicketDetailDTO {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public long getPrice() {
+        return price;
+    }
+
+    public void setPrice(long price) {
+        this.price = price;
+    }
+
+    public long getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(long total_price) {
+        this.total_price = total_price;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseTicketDetailDTO{" + "id=" + id + ", purchaseTicket_id=" + purchaseTicket_id + ", book_id=" + book_id + ", quantity=" + quantity + ", price=" + price + ", total_price=" + total_price + '}';
+    }
+    
 }

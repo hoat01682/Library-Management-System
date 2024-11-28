@@ -16,12 +16,24 @@ public class PublisherBUS {
     
     PublisherDAO publisherDAO = new PublisherDAO();
     
+    public static PublisherBUS getInstance() {
+        return new PublisherBUS();
+    }
+    
     public ArrayList<PublisherDTO> getAll() {
         return publisherDAO.getAll();
     }
     
     public PublisherDTO getById(int id) {
         return publisherDAO.getById(id);
+    }
+    
+    public boolean add(PublisherDTO publisher) {
+        return publisherDAO.add(publisher) > 0;
+    }
+    
+    public boolean update(PublisherDTO publisher) {
+        return publisherDAO.update(publisher) > 0;
     }
     
 }

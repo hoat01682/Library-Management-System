@@ -55,10 +55,10 @@ public class PenaltyPanel extends javax.swing.JPanel {
         for (PenaltyTicketDTO i : penaltyTicketList) {
             tableModel.addRow(new Object[] {
                     i.getId(),
-                    i.getMemberId(),
-                    i.getStaffId(),
-                    i.getPenaltyId(),
-                    i.getPenaltyDate(),
+                    i.getMember_id(),
+                    i.getStaff_id(),
+                    i.getPenalty_id(),
+                    i.getPenalty_date(),
                     i.getNote()
             });
         }

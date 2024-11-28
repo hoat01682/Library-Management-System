@@ -75,4 +75,45 @@ public class CategoryDAO {
         return category;
     }
     
+    public int add(CategoryDTO category) {
+        int result = 0;
+        try {
+            Connection conn = Database.getConnection();
+            String query = "INSERT INTO category (name) VALUES (?)";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, category.getName());
+
+            result = ps.executeUpdate();
+            Database.closeConnection(conn);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return result;
+    }
+    
+    public int update(CategoryDTO category) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE category SET name = ? WHERE category_id = ?";
+        
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, category.getName());
+            ps.setInt(2, category.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+        
+        } catch (SQLException e) {
+            System.out.println(e); 
+        }
+        
+        return result;
+    }
+    
 }

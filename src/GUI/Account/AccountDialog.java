@@ -78,29 +78,17 @@ public class AccountDialog extends javax.swing.JDialog {
         });
         
         btn_staff.addActionListener((ActionEvent e) -> {
-            GetStaffDialog gsD = new GetStaffDialog(null, true);
-            gsD.setVisible(true);
-            try {
-                if(gsD.choosen == false) return;
-                int staff_id = gsD.getSelectedId();
-                staff = staffBUS.getById(staff_id);
-                txt_staff.setText(staff.getFullName());
-            } catch (Exception ex) {
-                
-            }
+            staff = GetStaffDialog.getStaff();
+            if(staff == null)
+                return;
+            txt_staff.setText(staff.getFullName());
         });
         
         btn_permission.addActionListener((ActionEvent e) -> {
-            GetPermissionDialog pD = new GetPermissionDialog(null, true);
-            pD.setVisible(true);
-            try {
-                if(pD.choosen == false) return;
-                int permission_id = pD.getSelectedId();
-                permission = permissionBUS.getById(permission_id);
-                txt_permission.setText(permission.getName());
-            } catch (Exception ex) {
-                
-            }
+            permission = GetPermissionDialog.getPermission();
+            if(permission == null)
+                return;
+            txt_permission.setText(permission.getName());
         });
         
         if(mode.equals("view"))

@@ -19,6 +19,10 @@ public class PermissionBUS {
     private final PermissionDAO permissionDAO = new PermissionDAO();
     private final PermissionDetailDAO permissionDetailDAO = new PermissionDetailDAO();
     
+    public static PermissionBUS getInstance() {
+        return new PermissionBUS();
+    }
+    
     public ArrayList<PermissionDTO> getAll() {
         return permissionDAO.getAll();
     }

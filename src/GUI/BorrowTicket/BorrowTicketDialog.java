@@ -8,20 +8,26 @@ import BUS.BookBUS;
 import BUS.BorrowTicketBUS;
 import BUS.BorrowTicketDetailBUS;
 import BUS.MemberBUS;
+import BUS.PublisherBUS;
 import BUS.StaffBUS;
 import DTO.BookDTO;
+import DTO.BookItemDTO;
 import DTO.BorrowTicketDTO;
 import DTO.BorrowTicketDetailDTO;
 import DTO.MemberDTO;
 import DTO.SessionManager;
 import DTO.StaffDTO;
+import GUI.Book.GetBookItemDialog;
 import GUI.Member.GetMemberDialog;
 import helper.Formatter;
+import helper.Validator;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -33,6 +39,8 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     String mode;
     MemberDTO member;
     StaffDTO staff;
+    Timestamp borrow_date;
+    Timestamp due_date;
     
     BorrowTicketBUS borrowTicketBUS =  new BorrowTicketBUS();
     BorrowTicketDetailBUS borrowTicketDetailBUS = new BorrowTicketDetailBUS();
@@ -54,6 +62,21 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     public void customInit() {
         setLocationRelativeTo(null);
         
+        btn_addBook.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                addBookEvent();
+            }
+        });
+        
+        btn_save.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(mode.equals("add"))
+                    addEvent();
+            }
+        });
+        
         btn_exit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -62,16 +85,10 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         });
         
         btn_member.addActionListener((ActionEvent e) -> {
-            GetMemberDialog mD = new GetMemberDialog(null, true);
-            mD.setVisible(true);
-            try {
-                if(mD.choosen == false) return;
-                int member_id = mD.getSelectedId();
-                member = memberBUS.getById(member_id);
-                txt_member.setText(member.getFull_name());
-            } catch (Exception ex) {
-                
-            }
+            member = GetMemberDialog.getMember();
+            if(member == null)
+                return;
+            txt_member.setText(member.getFull_name());
         });
         
         if(mode.equals("view"))
@@ -83,7 +100,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     public void initViewMode() {
         initData();
         loadDataToTable(borrowTicketDetailList);
-        txt_id.setText(borrowTicket.getId());
+        txt_id.setText(borrowTicket.getId() + "");
         txt_member.setText(member.getFull_name());
         txt_staff.setText(staff.getFullName());
         txt_borrowDate.setText(Formatter.getDate(borrowTicket.getBorrow_date()));
@@ -91,6 +108,8 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         txt_status.setText(borrowTicket.getStatus());
         
         btn_member.setEnabled(false);
+        btn_addBook.setVisible(false);
+        btn_save.setVisible(false);
     }
     
     public void initData() {
@@ -101,9 +120,26 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     
     public void initAddMode() {
         staff = SessionManager.getInstance().getLoggedInStaff();
+        borrowTicketDetailList = new ArrayList<>();
         
+        jLabel7.setText("TẠO PHIẾU MƯỢN MỚI");
         txt_staff.setText(staff.getFullName());
-        txt_borrowDate.setText(Formatter.getDate(new Timestamp(System.currentTimeMillis())));
+        
+        lbl_id.setEnabled(false);
+        txt_id.setEnabled(false);
+        lbl_status.setEnabled(false);
+        txt_status.setEnabled(false);
+        
+        borrow_date = new Timestamp(System.currentTimeMillis());
+        //Lay ngay hien tai cong them 7 ngay
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(borrow_date);
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
+        due_date = new Timestamp(calendar.getTimeInMillis());
+        
+        txt_borrowDate.setText(Formatter.getDate(borrow_date));
+        txt_dueDate.setText(Formatter.getDate(due_date));
+        
     }
     
     public void loadDataToTable(ArrayList<BorrowTicketDetailDTO> borrowTicketDetailList) {
@@ -116,8 +152,53 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
                 i.getIsbn(),
                 book.getTitle(),
                 book.getAuthor(),
-                book.getPublisherId()
+                PublisherBUS.getInstance().getById(book.getPublisherId()).getName()
             });
+        }
+    }
+    
+    public void addBookEvent() {
+        BookItemDTO bookItem = GetBookItemDialog.getBookItem();
+        if(bookItem == null) return;
+        
+        int borrow_ticket_id = BorrowTicketBUS.getInstance().getLastID() + 1;
+        String isbn = bookItem.getIsbn();
+        String status = "1";
+        
+        BorrowTicketDetailDTO newDetail = new BorrowTicketDetailDTO(borrow_ticket_id, isbn, status);
+        
+        borrowTicketDetailList.add(newDetail);
+        loadDataToTable(borrowTicketDetailList);
+    }
+    
+    public boolean validateInputs() {
+        if(Validator.isEmpty(txt_member.getText())) {
+            JOptionPane.showMessageDialog(this, "Bạn chưa chọn thành viên");
+            return false;
+        }
+        return true;
+    }
+    
+    public BorrowTicketDTO getNewBorrowTicket() {
+        int staff_id = staff.getId();
+        int member_id = member.getMember_id();
+        String status = "1";
+        
+        return new BorrowTicketDTO(staff_id, member_id, borrow_date, due_date, status);
+    }
+    
+    public void addEvent() {
+        if(!validateInputs()){
+            return;
+        }
+        if(jTable1.getRowCount() == 0){
+            JOptionPane.showMessageDialog(this, "Phải có ít nhất 1 sách để tạo phiếu mượn!");
+            return;
+        }
+        borrowTicket = getNewBorrowTicket();
+        if(borrowTicketBUS.addWithDetail(borrowTicket, borrowTicketDetailList)) {
+            JOptionPane.showMessageDialog(this, "Tạo phiếu mượn thành công!");
+            dispose();
         }
     }
     
@@ -128,7 +209,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lbl_id = new javax.swing.JLabel();
         txt_id = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         txt_member = new javax.swing.JTextField();
@@ -138,7 +219,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         txt_borrowDate = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txt_dueDate = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
+        lbl_status = new javax.swing.JLabel();
         txt_status = new javax.swing.JTextField();
         btn_member = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -147,7 +228,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         jPanel4 = new javax.swing.JPanel();
         btn_save = new javax.swing.JButton();
         btn_exit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_addBook = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -157,7 +238,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(212, 209, 216)));
         jPanel2.setPreferredSize(new java.awt.Dimension(686, 80));
 
-        jLabel1.setText("Mã");
+        lbl_id.setText("Mã");
 
         txt_id.setFocusable(false);
 
@@ -178,7 +259,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
 
         txt_dueDate.setFocusable(false);
 
-        jLabel6.setText("Trạng thái");
+        lbl_status.setText("Trạng thái");
 
         txt_status.setFocusable(false);
 
@@ -198,7 +279,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(lbl_id))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -221,7 +302,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
                     .addComponent(txt_borrowDate))
                 .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
+                    .addComponent(lbl_status)
                     .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
@@ -231,7 +312,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
+                            .addComponent(lbl_id)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -240,7 +321,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
                             .addComponent(btn_member, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
+                            .addComponent(lbl_status)
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -267,8 +348,24 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
             new String [] {
                 "Mã sách", "ISBN", "Tên sách", "Tác giả", "Nhà xuất bản"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setFocusable(false);
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -317,10 +414,10 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
         btn_exit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btn_exit.setFocusPainted(false);
 
-        jButton1.setBackground(new java.awt.Color(88, 175, 232));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Thêm sách");
+        btn_addBook.setBackground(new java.awt.Color(88, 175, 232));
+        btn_addBook.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_addBook.setForeground(new java.awt.Color(255, 255, 255));
+        btn_addBook.setText("Thêm sách");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -328,7 +425,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jButton1)
+                .addComponent(btn_addBook)
                 .addGap(18, 18, 18)
                 .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -340,7 +437,7 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_addBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -373,16 +470,14 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_addBook;
     private javax.swing.JButton btn_exit;
     private javax.swing.JButton btn_member;
     private javax.swing.JButton btn_save;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -390,6 +485,8 @@ public class BorrowTicketDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lbl_id;
+    private javax.swing.JLabel lbl_status;
     private javax.swing.JTextField txt_borrowDate;
     private javax.swing.JTextField txt_dueDate;
     private javax.swing.JTextField txt_id;
