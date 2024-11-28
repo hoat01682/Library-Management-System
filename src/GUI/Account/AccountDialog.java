@@ -165,6 +165,11 @@ public class AccountDialog extends javax.swing.JDialog {
             txt_username.requestFocus();
             return false;
         }
+        if (!Validator.isValidPassword(password)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            txt_password.requestFocus();
+            return false;
+        }
 
         // Check if staff is selected
         if (staff == null) {
