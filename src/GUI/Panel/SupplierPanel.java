@@ -9,6 +9,7 @@ import DTO.SupplierDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.Supplier.SupplierDialog;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class SupplierPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -32,7 +35,8 @@ public class SupplierPanel extends javax.swing.JPanel {
     SupplierBUS supplierBUS = new SupplierBUS();
     ArrayList<SupplierDTO> supplierList = supplierBUS.getAllsupplier();
     
-    public SupplierPanel() {
+    public SupplierPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

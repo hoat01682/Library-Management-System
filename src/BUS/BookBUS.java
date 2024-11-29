@@ -32,6 +32,10 @@ public class BookBUS {
         return bookDAO.getAll();
     }
     
+    public ArrayList<BookDTO> getByBookshelfID(int id) {
+        return bookDAO.getByBookshelfID(id);
+    }
+    
     public BookDTO getById(int id) {
         return bookDAO.getById(id);
     }

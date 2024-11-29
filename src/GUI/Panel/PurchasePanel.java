@@ -11,6 +11,7 @@ import DTO.PurchaseTicketDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.PurchaseTicket.PurchaseTicketDialog;
 import helper.Formatter;
 import java.awt.Color;
@@ -27,6 +28,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class PurchasePanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -38,7 +41,8 @@ public class PurchasePanel extends javax.swing.JPanel {
     
     ArrayList<PurchaseTicketDTO> purchaseTicketList = purchaseTicketBUS.getAllPurchaseTicket();
     
-    public PurchasePanel() {
+    public PurchasePanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

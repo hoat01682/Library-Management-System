@@ -4,6 +4,8 @@
  */
 package DAO;
 
+import DTO.BorrowTicketDTO;
+import DTO.BorrowTicketDetailDTO;
 import DTO.ReturnTicketDetailDTO;
 import config.Database;
 import java.sql.Connection;
@@ -70,6 +72,12 @@ public class ReturnTicketDetailDAO {
                 result = ps.executeUpdate();
                 
                 BookItemDAO.getInstance().changeStatus(BookItemDAO.getInstance().getByISBN(i.getIsbn()), "Có sẵn");
+                BorrowTicketDetailDTO borrowDetail = BorrowTicketDetailDAO.getInstance().getByTicketIdAndISBN(i.getBorrow_ticket_id(), i.getIsbn());
+                BorrowTicketDetailDAO.getInstance().changeStatus(borrowDetail, "Đã trả");
+                if(BorrowTicketDetailDAO.getInstance().getStatusCount(i.getBorrow_ticket_id(), "Chưa trả") == 0) {
+                    BorrowTicketDTO borrowTicket = BorrowTicketDAO.getInstance().getById(i.getBorrow_ticket_id());
+                    BorrowTicketDAO.getInstance().changeStatus(borrowTicket, "Đã trả hết");
+                }
             }
 
             Database.closeConnection(connection);

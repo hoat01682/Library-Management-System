@@ -4,6 +4,7 @@
  */
 package GUI.BorrowTicket;
 
+import BUS.BorrowTicketDetailBUS;
 import DAO.BookDAO;
 import DAO.BorrowTicketDAO;
 import DAO.BorrowTicketDetailDAO;
@@ -22,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Duc3m
  */
-public class GetBorrowedBook extends javax.swing.JDialog {
+public class GetBorrowedBookDialog extends javax.swing.JDialog {
 
     MemberDTO member;
     ArrayList<BorrowTicketDTO> ticketList;
@@ -30,9 +31,18 @@ public class GetBorrowedBook extends javax.swing.JDialog {
     
     public boolean choosen = false;
     
-    public GetBorrowedBook(java.awt.Frame parent, boolean modal, MemberDTO member) {
+    public GetBorrowedBookDialog(java.awt.Frame parent, boolean modal, MemberDTO member) {
         super(parent, modal);
         this.member = member;
+        initComponents();
+        customInit();
+    }
+    
+    public GetBorrowedBookDialog(java.awt.Frame parent, boolean modal, MemberDTO member, ArrayList<BorrowTicketDTO> ticketList, ArrayList<BorrowTicketDetailDTO> detailList) {
+        super(parent, modal);
+        this.member = member;
+        this.ticketList = ticketList;
+        this.detailList = detailList;
         initComponents();
         customInit();
     }
@@ -60,7 +70,6 @@ public class GetBorrowedBook extends javax.swing.JDialog {
             }
         });
         
-        ticketList = BorrowTicketDAO.getInstance().getByMemberID(member.getMember_id());
         loadTicketToTable(ticketList);
     }
     
@@ -240,7 +249,10 @@ public class GetBorrowedBook extends javax.swing.JDialog {
     private void tbl_ticketMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ticketMousePressed
         int row = tbl_ticket.getSelectedRow();
         int id = (int) tbl_ticket.getValueAt(row, 0);
-        detailList = BorrowTicketDetailDAO.getInstance().getByBorrowTicketId(id);
+        detailList = BorrowTicketDetailBUS.getInstance().getByTicketID(detailList, id);
+//        for(BorrowTicketDetailDTO i : detailList) {
+//            System.out.println(i);
+//        }
         loadBookToTable(detailList);
     }//GEN-LAST:event_tbl_ticketMousePressed
 

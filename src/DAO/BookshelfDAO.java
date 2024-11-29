@@ -45,4 +45,78 @@ public class BookshelfDAO {
 
         return list;
     }
+    
+    public BookshelfDTO getById(int id) {
+        BookshelfDTO bookshelf = null;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM `bookshelf` WHERE bookshelf_id = ?";
+            
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id); 
+            
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int bookshelf_id = rs.getInt("bookshelf_id");
+                String name = rs.getString("name");
+
+                bookshelf = new BookshelfDTO(bookshelf_id, name);
+            }
+            
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return bookshelf;
+    }
+    
+    public int update(BookshelfDTO bookshelf) {
+        int result = 0;
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "UPDATE `bookshelf` SET name = ? WHERE bookshelf_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            
+            ps.setString(1, bookshelf.getName());
+            ps.setInt(2, bookshelf.getId());
+            
+            result = ps.executeUpdate();
+            
+            Database.closeConnection(connection);
+            
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return result;
+    }
+    
+    public int add(BookshelfDTO bookshelf) {
+        int result = 0;
+
+        try {
+            Connection connection = Database.getConnection();
+
+            String query = "INSERT INTO `bookshelf` (name) VALUES (?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setString(1, bookshelf.getName());
+
+            result = ps.executeUpdate();
+
+            Database.closeConnection(connection);
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return result;
+    }
+    
 }

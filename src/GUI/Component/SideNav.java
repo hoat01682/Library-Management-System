@@ -43,7 +43,7 @@ public class SideNav extends javax.swing.JPanel {
         {"Vi phạm", "penalty", "namecard.svg"},
         {"Phân quyền", "permission", "permission.svg"},
         {"Thống kê", "statistic", "statistic.svg"},
-        {"Kệ sách", "shelf", "bookshelf.svg"},
+        {"Kệ sách", "bookshelf", "bookshelf.svg"},
         {"Nhà xuất bản", "publisher", "publisher.svg"},
         {"Nhà cung cấp", "supplier", "supplier.svg"},
         {"Đăng xuất", "logout", "door.svg"}

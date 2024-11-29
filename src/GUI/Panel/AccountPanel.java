@@ -11,6 +11,7 @@ import GUI.Account.AccountDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AccountPanel extends javax.swing.JPanel {
 
+    Main_Frame main;
+    
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
     MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
@@ -34,7 +37,8 @@ public class AccountPanel extends javax.swing.JPanel {
     PermissionBUS permissionBUS = new PermissionBUS();
     ArrayList<AccountDTO> accountList = accountBUS.getAllAccount();
     
-    public AccountPanel() {
+    public AccountPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

@@ -9,6 +9,7 @@ import DTO.StaffDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.Staff.StaffDialog;
 import helper.Formatter;
 import java.awt.Color;
@@ -25,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class StaffPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -33,7 +36,8 @@ public class StaffPanel extends javax.swing.JPanel {
     StaffBUS staffBUS = new StaffBUS();
     ArrayList<StaffDTO> staffList = staffBUS.getAllStaff();
     
-    public StaffPanel() {
+    public StaffPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

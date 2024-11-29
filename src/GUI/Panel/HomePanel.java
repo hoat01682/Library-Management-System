@@ -4,16 +4,18 @@
  */
 package GUI.Panel;
 
+import GUI.Main_Frame;
+
 /**
  *
  * @author Duc3m
  */
 public class HomePanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Home
-     */
-    public HomePanel() {
+    Main_Frame main;
+    
+    public HomePanel(Main_Frame main) {
+        this.main = main;
         initComponents();
     }
 

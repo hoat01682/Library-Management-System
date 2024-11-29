@@ -14,6 +14,7 @@ import GUI.Panel.StaffPanel;
 import GUI.Panel.HomePanel;
 import GUI.Panel.PermissionPanel;
 import GUI.Panel.BookPanel;
+import GUI.Panel.BookshelfPanel;
 import GUI.Panel.PurchasePanel;
 import GUI.Panel.PenaltyPanel;
 import GUI.Panel.PublisherPanel;
@@ -38,19 +39,20 @@ public class Main_Frame extends javax.swing.JFrame {
     private Color MainColor = new Color(255, 255, 255);
     public CardLayout cardLayout;
     
-    public HomePanel homePanel = new HomePanel();
-    public BookPanel bookPanel = new BookPanel();
-    public BorrowPanel borrowPanel = new BorrowPanel();
-    public ReturnPanel returnPanel = new ReturnPanel();
-    public StaffPanel staffPanel = new StaffPanel();
-    public MemberPanel memberPanel = new MemberPanel();
-    public StatisticPanel statisticPanel = new StatisticPanel();
-    public PurchasePanel purchasePanel = new PurchasePanel();
-    public PenaltyPanel penaltyPanel = new PenaltyPanel();
-    public AccountPanel accountPanel = new AccountPanel();
-    public PermissionPanel permissionPanel = new PermissionPanel();
-    public PublisherPanel publisherPanel = new PublisherPanel();
-    public SupplierPanel supplierPanel = new SupplierPanel();
+    public HomePanel homePanel = new HomePanel(this);
+    public BookPanel bookPanel = new BookPanel(this);
+    public BorrowPanel borrowPanel = new BorrowPanel(this);
+    public ReturnPanel returnPanel = new ReturnPanel(this);
+    public StaffPanel staffPanel = new StaffPanel(this);
+    public MemberPanel memberPanel = new MemberPanel(this);
+    public StatisticPanel statisticPanel = new StatisticPanel(this);
+    public PurchasePanel purchasePanel = new PurchasePanel(this);
+    public PenaltyPanel penaltyPanel = new PenaltyPanel(this);
+    public AccountPanel accountPanel = new AccountPanel(this);
+    public PermissionPanel permissionPanel = new PermissionPanel(this);
+    public BookshelfPanel bookshelfPanel = new BookshelfPanel(this);
+    public PublisherPanel publisherPanel = new PublisherPanel(this);
+    public SupplierPanel supplierPanel = new SupplierPanel(this);
     
     public Main_Frame() {
         initComponents();
@@ -80,6 +82,7 @@ public class Main_Frame extends javax.swing.JFrame {
         content.add(penaltyPanel, "penalty");
         content.add(permissionPanel, "permission");
         content.add(statisticPanel, "statistic");
+        content.add(bookshelfPanel,  "bookshelf");
         content.add(publisherPanel, "publisher");
         content.add(supplierPanel, "supplier");
     }

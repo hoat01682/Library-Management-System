@@ -16,8 +16,21 @@ public class BorrowTicketDetailBUS {
     
     private final BorrowTicketDetailDAO borrowTicketDetailDAO = new BorrowTicketDetailDAO();
     
+    public static BorrowTicketDetailBUS getInstance() {
+        return new BorrowTicketDetailBUS();
+    }
+    
     public ArrayList<BorrowTicketDetailDTO> getByBorrowTicketDAO(int id) {
         return borrowTicketDetailDAO.getByBorrowTicketId(id);
+    }
+    
+    public ArrayList<BorrowTicketDetailDTO> getByTicketID(ArrayList<BorrowTicketDetailDTO>list, int id) {
+        ArrayList<BorrowTicketDetailDTO> result = new ArrayList<>();
+        for(BorrowTicketDetailDTO i : list) {
+            if(i.getBorrow_ticket_id() == id)
+                result.add(i);
+        }
+        return result;
     }
     
 }

@@ -98,27 +98,7 @@ public class PermissionDAO {
         
         return result;
     }
-    
-    public int getAutoIncrement(){
-        int result = -1;
-        try {
-            Connection con = (Connection) Database.getConnection();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'library_management' AND TABLE_NAME = 'permission";
-            PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
-            ResultSet rs = pst.executeQuery(sql);
-            if (!rs.isBeforeFirst()) {
-                System.out.println("No data");
-            } else {
-                while (rs.next()) {
-                    result = rs.getInt("AUTO_INCREMENT");
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-        return result;
-    }
-    
+      
     public int add(PermissionDTO permission) {
         int result = 0;
 

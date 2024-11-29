@@ -16,12 +16,24 @@ public class BookshelfBUS {
     
     private final BookshelfDAO bookshelfDAO = new BookshelfDAO();
     
-    public BookshelfBUS getInstance() {
+    public static BookshelfBUS getInstance() {
         return new BookshelfBUS();
     }
     
     public ArrayList<BookshelfDTO> getAll() {
         return bookshelfDAO.getAll();
+    }
+    
+    public BookshelfDTO getById(int id) {
+        return bookshelfDAO.getById(id);
+    }
+    
+    public boolean add(BookshelfDTO bookshelf) {
+        return bookshelfDAO.add(bookshelf) != 0;
+    }
+    
+    public boolean update(BookshelfDTO bookshelf) {
+        return bookshelfDAO.update(bookshelf) != 0;
     }
     
 }

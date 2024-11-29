@@ -12,6 +12,7 @@ import GUI.BorrowTicket.BorrowTicketDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import helper.Formatter;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class BorrowPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -34,11 +37,12 @@ public class BorrowPanel extends javax.swing.JPanel {
     BorrowTicketBUS borrowTicketBUS = new BorrowTicketBUS();
     ArrayList<BorrowTicketDTO> borrowTicketList = borrowTicketBUS.getAll();
     
-    public BorrowPanel() {
+    public BorrowPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }
-
+    
     public void customInit() {
         //Đặt menuBar và table lên layer 100
         menuBar.setBounds(14, 20, 940, 150);
