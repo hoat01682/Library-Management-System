@@ -116,7 +116,7 @@ public class AccountDialog extends javax.swing.JDialog {
     }
 
     public void initAddMode() {
-        jLabel1.setText("THÊM TÀI KHOẢN MỚI");
+        jLabel1.setText("TẠO TÀI KHOẢN");
         btn_save.setText("Thêm");
         //Giấu nút sửa
         btn_edit.setEnabled(false);

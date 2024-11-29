@@ -2,13 +2,13 @@ package DTO;
 
 public class PenaltyDTO {
     private int id;
-    private String penalty_name;
-    private Double amount;
+    private String name;
+    private int fine;
 
-    public PenaltyDTO(int id, String penalty_name, Double amount) {
+    public PenaltyDTO(int id, String penalty_name, int fine) {
         this.id = id;
-        this.penalty_name = penalty_name;
-        this.amount = amount;
+        this.name = penalty_name;
+        this.fine = fine;
     }
 
     public int getId() {
@@ -20,18 +20,19 @@ public class PenaltyDTO {
     }
 
     public String getPenaltyName() {
-        return penalty_name;
+        return name;
     }
 
     public void setPenaltyName(String penalty_name) {
-        this.penalty_name =  penalty_name;
+        this.name =  penalty_name;
     }
 
-    public Double getAmount() {
-        return amount;
+    public int getAmount() {
+        return fine;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setAmount(int amount) {
+        this.fine = amount;
     }
+    
 }
