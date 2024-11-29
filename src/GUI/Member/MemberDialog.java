@@ -118,13 +118,59 @@ public class MemberDialog extends javax.swing.JDialog {
     }
     
     public void updateEvent() {
+        if (!validateInput()) {
+            return;
+        }
         editMember();
         if(memberBUS.updateMember(member)) {
             JOptionPane.showMessageDialog(null, "Lưu thông tin thành viên thành công");
             dispose();
         }
     }
+    private boolean validateInput() {
+        String fullName = txt_name.getText().trim();
+        String phone = txt_phone.getText().trim();
+        String email = txt_email.getText().trim();
+        String address = txt_address.getText().trim();
+        String status = (String) cbx_status.getSelectedItem();
     
+        // Validate Full Name
+        if (fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Họ tên không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txt_name.requestFocus();
+            return false;
+        }
+    
+        // Validate Phone Number
+        if (!phone.matches("\\d{10,15}")) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải gồm từ 10 đến 15 chữ số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txt_phone.requestFocus();
+            return false;
+        }
+    
+        // Validate Email
+        if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            JOptionPane.showMessageDialog(this, "Email không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txt_email.requestFocus();
+            return false;
+        }
+    
+        // Validate Address
+        if (address.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Địa chỉ không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            txt_address.requestFocus();
+            return false;
+        }
+    
+        // Validate Status
+        if (status == null || status.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Trạng thái không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            cbx_status.requestFocus();
+            return false;
+        }
+    
+        return true;
+    }
     public MemberDTO getNewMember() {
         String fullName = txt_name.getText();
         String phone = txt_phone.getText();
@@ -138,6 +184,9 @@ public class MemberDialog extends javax.swing.JDialog {
     }
     
     public void addEvent() {
+        if (!validateInput()) {
+            return;
+        }
         member = getNewMember();
         if(memberBUS.createMember(member)) {
             JOptionPane.showMessageDialog(null, "Thêm thành viên thành công");
