@@ -25,6 +25,7 @@ public class GetBookshelfDialog extends javax.swing.JDialog {
     public GetBookshelfDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        customInit();
     }
     
     public void customInit() {

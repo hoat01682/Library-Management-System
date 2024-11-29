@@ -41,7 +41,7 @@ public class PenaltyPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã phiếu phạt", "Thành viên", "Nhân viên", "Lý do", "Ngày phạt", "Ghi chú"};
+        String[] columnNames = {"Mã phiếu phạt", "Thành viên", "Nhân viên", "Ngày phạt", "Tổng phí"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
 //        loadDataToTable(permissionList);
         
@@ -61,9 +61,8 @@ public class PenaltyPanel extends javax.swing.JPanel {
                     i.getId(),
                     i.getMember_id(),
                     i.getStaff_id(),
-                    i.getPenalty_id(),
                     i.getPenalty_date(),
-                    i.getNote()
+                    i.getTotal_fine()
             });
         }
     }

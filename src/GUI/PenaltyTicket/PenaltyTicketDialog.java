@@ -2,239 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package GUI.ReturnTicket;
-
-import BUS.BookBUS;
-import BUS.BorrowTicketBUS;
-import BUS.MemberBUS;
-import BUS.ReturnTicketBUS;
-import BUS.ReturnTicketDetailBUS;
-import BUS.StaffBUS;
-import DAO.BorrowTicketDAO;
-import DAO.BorrowTicketDetailDAO;
-import DAO.ReturnTicketDAO;
-import DTO.BookDTO;
-import DTO.BorrowTicketDTO;
-import DTO.BorrowTicketDetailDTO;
-import DTO.MemberDTO;
-import DTO.ReturnTicketDTO;
-import DTO.ReturnTicketDetailDTO;
-import DTO.SessionManager;
-import DTO.StaffDTO;
-import GUI.BorrowTicket.GetBorrowedBookDialog;
-import GUI.Member.GetMemberDialog;
-import helper.Formatter;
-import helper.Validator;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+package GUI.PenaltyTicket;
 
 /**
  *
  * @author Duc3m
  */
-public class ReturnTicketDialog extends javax.swing.JDialog {
+public class PenaltyTicketDialog extends javax.swing.JDialog {
 
     String mode;
-    ReturnTicketDTO returnTicket;
-    ArrayList<ReturnTicketDetailDTO> detailList;
-    MemberDTO member;
-    StaffDTO staff;
-    Timestamp returnDate;
     
-    ReturnTicketBUS returnTicketBUS = new ReturnTicketBUS();
-    ReturnTicketDetailBUS detailBUS = new ReturnTicketDetailBUS();
     
-    ArrayList<BorrowTicketDTO> borrowTicketList;
-    ArrayList<BorrowTicketDetailDTO> borrowDetailList;
-    
-    String[] statuses = {"Nguyên vẹn", "Hư hỏng", "Mất"};
-    
-    public ReturnTicketDialog(java.awt.Frame parent, boolean modal, ReturnTicketDTO returnTicket, String mode) {
+    public PenaltyTicketDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.returnTicket = returnTicket;
-        this.mode = mode;
         initComponents();
-        customInit();
-    }
-    
-    public void customInit() {
-        setLocationRelativeTo(null);
-        
-        btn_addBook.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addBookEvent();
-            }
-        });
-        
-        btn_save.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if(mode.equals("add"))
-                    addEvent();
-            }
-        });
-        
-        btn_exit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                dispose();
-            }
-        });
-        
-        btn_member.addActionListener((ActionEvent e) -> {
-            if (jTable1.getRowCount() > 0) {
-                JOptionPane.showMessageDialog(this, "Không thể đổi thành viên bây giờ!");
-                return;
-            }
-            member = GetMemberDialog.getMember();
-            if(member == null)
-                return;
-            txt_member.setText(member.getFull_name());
-            
-            borrowTicketList = BorrowTicketDAO.getInstance().getNotReturnedByMemberID(member.getMember_id());
-            borrowDetailList = BorrowTicketDetailDAO.getInstance().getNotReturnedByMemberId(member.getMember_id());
-        });
-
-        if(mode.equals("view"))
-            initViewMode();
-        if(mode.equals("add"))
-            initAddMode();
-    }
-    
-    public void initData() {
-        member = MemberBUS.getInstance().getById(returnTicket.getMember_id());
-        staff = StaffBUS.getInstance().getById(returnTicket.getStaff_id());
-        returnDate = returnTicket.getReturn_date();
-        detailList = detailBUS.getByReturnTicketId(returnTicket.getId());
     }
 
-    public void initViewMode() {
-        initData();
-        btn_addBook.setVisible(false);
-        btn_save.setVisible(false);
-        btn_member.setEnabled(false);
-        
-        txt_id.setText(returnTicket.getId() + "");
-        txt_staff.setText(staff.getFullName());
-        txt_member.setText(member.getFull_name());
-        txt_returnDate.setText(Formatter.getDate(returnDate));
-        txt_status.setText(returnTicket.getStatus());
-        
-        //Khong cho sua cot tinh trang
-        DefaultTableModel tableModel = new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ISBN", "Tên sách", "Mã phiếu mượn", "Tình trạng"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        };
-        jTable1.setModel(tableModel);
-        
-        loadDataToTable(detailList);
-    }
-
-    public void initAddMode() {
-        detailList = new ArrayList<>();
-        staff = SessionManager.getInstance().getLoggedInStaff();
-        returnDate = new Timestamp(System.currentTimeMillis());
-        
-        jLabel7.setText("TẠO PHIẾU TRẢ MỚI");
-        lbl_id.setEnabled(false);
-        txt_id.setEnabled(false);
-        lbl_status.setEnabled(false);
-        txt_status.setEnabled(false);
-        
-        txt_staff.setText(staff.getFullName());
-        
-        JComboBox comboBox = new JComboBox(statuses);
-        TableColumn statusColumn = jTable1.getColumnModel().getColumn(3);
-        statusColumn.setCellEditor(new DefaultCellEditor(comboBox));
-        
-    }
-    
-    public void loadDataToTable(ArrayList<ReturnTicketDetailDTO> detailList) {
-        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-        tableModel.setRowCount(0);
-        for (ReturnTicketDetailDTO i : detailList) {
-            BookDTO book = BookBUS.getInstance().getByISBN(i.getIsbn());
-            tableModel.addRow(new Object[] {
-                    i.getIsbn(),
-                    book.getTitle(),
-                    i.getBorrow_ticket_id(),
-                    i.getStatus()
-            });
-        }
-    }
-    
-    public void addBookEvent() {
-        if(Validator.isEmpty(txt_member.getText())) {
-            JOptionPane.showMessageDialog(this, "Bạn chưa chọn thành viên");
-            return;
-        }
-        int borrowticket_id = 0;
-        String isbn = "";
-        GetBorrowedBookDialog gbbDialog = new GetBorrowedBookDialog(null, true, member, borrowTicketList, borrowDetailList);
-        gbbDialog.setVisible(true);
-        try {
-            if (gbbDialog.choosen == false) {
-                return;
-            }
-            borrowticket_id = gbbDialog.getSelectedId();
-            isbn = gbbDialog.getSelectedISBN();
-            BorrowTicketDetailDTO detail = BorrowTicketDetailDAO.getInstance().getByTicketIdAndISBN(borrowticket_id, isbn);
-            borrowDetailList.remove(detail);
-
-        } catch (Exception ex) {
-            
-        }
-        int returnticket_id = ReturnTicketDAO.getInstance().getLastID() + 1;
-        ReturnTicketDetailDTO detail = new ReturnTicketDetailDTO(returnticket_id, borrowticket_id, isbn, "Nguyên vẹn");
-        detailList.add(detail);
-        loadDataToTable(detailList);
-    }
-    
-    public ReturnTicketDTO getNewReturnTicket() {
-        return new ReturnTicketDTO(staff.getId(), member.getMember_id(), returnDate, "1");
-    }
-    
-    public void getStatuses() {
-        for(int i=0; i<detailList.size(); i++) {
-            String status = (String) jTable1.getValueAt(i, 3);
-            detailList.get(i).setStatus(status);
-        }
-    }
-    
-    public void addEvent() {
-        if(jTable1.getRowCount() == 0){
-            JOptionPane.showMessageDialog(this, "Phải có ít nhất 1 sách để tạo phiếu trả!");
-            return;
-        }
-        getStatuses();
-        returnTicket = getNewReturnTicket();
-        if(returnTicketBUS.addWithDetail(returnTicket, detailList)) {
-            JOptionPane.showMessageDialog(this, "Tạo phiếu trả thành công!");
-            dispose();
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -282,7 +65,7 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
 
         txt_staff.setFocusable(false);
 
-        jLabel4.setText("Ngày trả");
+        jLabel4.setText("Ngày phạt");
 
         txt_returnDate.setFocusable(false);
 
@@ -318,7 +101,7 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel2)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txt_staff)
-                            .addComponent(txt_member, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txt_member, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_member, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(64, 64, 64)))
@@ -380,16 +163,10 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
         jTable1.getTableHeader().setResizingAllowed(false);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-        }
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("CHI TIẾT PHIẾU TRẢ");
+        jLabel7.setText("CHI TIẾT PHIẾU PHẠT");
         jLabel7.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(212, 209, 216)));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -397,14 +174,16 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(207, 207, 207)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(

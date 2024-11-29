@@ -236,6 +236,7 @@ public class BookDialog extends javax.swing.JDialog {
         btn_img.setEnabled(true);
         btn_publisher.setEnabled(true);
         btn_category.setEnabled(true);
+        btn_bookshelf.setEnabled(true);
     }
     
     public void editBook() {

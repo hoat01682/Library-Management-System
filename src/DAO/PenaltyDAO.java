@@ -99,7 +99,7 @@ public class PenaltyDAO {
             while (rs.next()) {
                 int id = rs.getInt("penalty_id");
                 String penalty_name = rs.getString("penalty_name");
-                Double amount = rs.getDouble("amount");
+                int amount = rs.getInt("amount");
 
                 PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
 
@@ -131,7 +131,7 @@ public class PenaltyDAO {
             while (rs.next()) {
                 int id = rs.getInt("penalty_id");
                 String penalty_name = rs.getString("penalty_name");
-                Double amount = rs.getDouble("amount");
+                int amount = rs.getInt("amount");
 
                 PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
 
@@ -163,7 +163,7 @@ public class PenaltyDAO {
             while (rs.next()) {
                 int id = rs.getInt("penalty_id");
                 String penalty_name = rs.getString("penalty_name");
-                Double amount = rs.getDouble("amount");
+                int amount = rs.getInt("amount");
 
                 PenaltyDTO penalty = new PenaltyDTO(id, penalty_name, amount);
 
@@ -196,7 +196,7 @@ public class PenaltyDAO {
             while (rs.next()) {
                 int penaltyId = rs.getInt("penalty_id"); 
                 String penaltyName = rs.getString("penalty_name");
-                double amount = rs.getDouble("amount");
+                int amount = rs.getInt("amount");
 
                 PenaltyDTO penalty = new PenaltyDTO(penaltyId, penaltyName, amount);
                 list.add(penalty);
@@ -210,4 +210,5 @@ public class PenaltyDAO {
 
         return list; 
     }
+    
 }
