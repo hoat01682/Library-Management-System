@@ -5,18 +5,23 @@
 package GUI.ReturnTicket;
 
 import BUS.BookBUS;
+import BUS.BorrowTicketBUS;
 import BUS.MemberBUS;
 import BUS.ReturnTicketBUS;
 import BUS.ReturnTicketDetailBUS;
 import BUS.StaffBUS;
+import DAO.BorrowTicketDAO;
+import DAO.BorrowTicketDetailDAO;
 import DAO.ReturnTicketDAO;
 import DTO.BookDTO;
+import DTO.BorrowTicketDTO;
+import DTO.BorrowTicketDetailDTO;
 import DTO.MemberDTO;
 import DTO.ReturnTicketDTO;
 import DTO.ReturnTicketDetailDTO;
 import DTO.SessionManager;
 import DTO.StaffDTO;
-import GUI.BorrowTicket.GetBorrowedBook;
+import GUI.BorrowTicket.GetBorrowedBookDialog;
 import GUI.Member.GetMemberDialog;
 import helper.Formatter;
 import helper.Validator;
@@ -43,6 +48,9 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
     
     ReturnTicketBUS returnTicketBUS = new ReturnTicketBUS();
     ReturnTicketDetailBUS detailBUS = new ReturnTicketDetailBUS();
+    
+    ArrayList<BorrowTicketDTO> borrowTicketList;
+    ArrayList<BorrowTicketDetailDTO> borrowDetailList;
     
     public ReturnTicketDialog(java.awt.Frame parent, boolean modal, ReturnTicketDTO returnTicket, String mode) {
         super(parent, modal);
@@ -86,6 +94,9 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
             if(member == null)
                 return;
             txt_member.setText(member.getFull_name());
+            
+            borrowTicketList = BorrowTicketDAO.getInstance().getNotReturnedByMemberID(member.getMember_id());
+            borrowDetailList = BorrowTicketDetailDAO.getInstance().getNotReturnedByMemberId(member.getMember_id());
         });
         
         if(mode.equals("view"))
@@ -150,7 +161,7 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
         }
         int borrowticket_id = 0;
         String isbn = "";
-        GetBorrowedBook gbbDialog = new GetBorrowedBook(null, true, member);
+        GetBorrowedBookDialog gbbDialog = new GetBorrowedBookDialog(null, true, member, borrowTicketList, borrowDetailList);
         gbbDialog.setVisible(true);
         try {
             if (gbbDialog.choosen == false) {
@@ -158,6 +169,9 @@ public class ReturnTicketDialog extends javax.swing.JDialog {
             }
             borrowticket_id = gbbDialog.getSelectedId();
             isbn = gbbDialog.getSelectedISBN();
+            BorrowTicketDetailDTO detail = BorrowTicketDetailDAO.getInstance().getByTicketIdAndISBN(borrowticket_id, isbn);
+            borrowDetailList.remove(detail);
+
         } catch (Exception ex) {
             
         }

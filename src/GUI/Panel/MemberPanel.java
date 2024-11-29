@@ -9,6 +9,7 @@ import DTO.MemberDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.Member.MemberDialog;
 import helper.Formatter;
 import java.awt.Color;
@@ -26,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MemberPanel extends javax.swing.JPanel {
 
+    Main_Frame main;
+    
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
     MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
@@ -33,7 +36,8 @@ public class MemberPanel extends javax.swing.JPanel {
     MemberBUS memberBUS = new MemberBUS();
     ArrayList<MemberDTO> memberList = memberBUS.getAllMember();
     
-    public MemberPanel() {
+    public MemberPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

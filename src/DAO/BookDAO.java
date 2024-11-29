@@ -137,6 +137,39 @@ public class BookDAO {
         return list;
     }
     
+    public ArrayList<BookDTO> getByBookshelfID(int bookshelfID) {
+        ArrayList<BookDTO> list = new ArrayList<>();
+        
+        try {
+            Connection connection = Database.getConnection();
+            
+            String query = "SELECT * FROM book WHERE bookshelf_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, bookshelfID);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {                
+                int id = rs.getInt("book_id");
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                int publisher_id = rs.getInt("publisher_id");
+                int year = rs.getInt("year_publish");
+                int category_id = rs.getInt("category_id");
+                int quantity = rs.getInt("quantity");
+                String image = rs.getString("book_image");
+                int bookshelf_id = rs.getInt("bookshelf_id");
+                BookDTO book = new BookDTO(id, title, author, publisher_id, year, category_id, quantity, image, bookshelf_id);
+                list.add(book);
+            }
+            
+            Database.closeConnection(connection);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        
+        return list;
+    }
+    
     public BookDTO getById(int id) {
         BookDTO book = null;
         

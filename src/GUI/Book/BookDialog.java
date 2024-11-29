@@ -6,12 +6,15 @@ package GUI.Book;
 
 import BUS.BookBUS;
 import BUS.BookItemBUS;
+import BUS.BookshelfBUS;
 import BUS.CategoryBUS;
 import BUS.PublisherBUS;
 import DTO.BookDTO;
 import DTO.BookItemDTO;
+import DTO.BookshelfDTO;
 import DTO.CategoryDTO;
 import DTO.PublisherDTO;
+import GUI.Bookshelf.GetBookshelfDialog;
 import GUI.Category.CategoryDialog;
 import GUI.Publisher.GetPublisherDialog;
 import java.awt.CardLayout;
@@ -46,10 +49,12 @@ public class BookDialog extends javax.swing.JDialog {
     BookDTO book;
     CategoryDTO category;
     PublisherDTO publisher;
+    BookshelfDTO bookshelf;
     String mode;
     
     CategoryBUS categoryBUS = new CategoryBUS();
     PublisherBUS publisherBUS = new PublisherBUS();
+    BookshelfBUS bookshelfBUS = new BookshelfBUS();
     BookBUS bookBUS = new BookBUS();
     BookItemBUS bookItemBUS = new BookItemBUS();
     
@@ -111,6 +116,13 @@ public class BookDialog extends javax.swing.JDialog {
             txt_category.setText(category.getName());
         });
         
+        btn_bookshelf.addActionListener((ActionEvent e) -> {
+            bookshelf = GetBookshelfDialog.getBookshelf();
+            if(bookshelf == null)
+                return;
+            txt_bookshelf.setText(bookshelf.getName());
+        });
+        
         if(mode.equals("view"))
             initViewMode();
         if(mode.equals("add"))
@@ -120,6 +132,7 @@ public class BookDialog extends javax.swing.JDialog {
     public void initViewMode() {
         category = categoryBUS.getById(book.getCategoryId());
         publisher = publisherBUS.getById(book.getPublisherId());
+        bookshelf = bookshelfBUS.getById(book.getBookshelf_id());
         
         lbl_image.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/book/" + book.getImage())).getImage().getScaledInstance(200, 267, Image.SCALE_SMOOTH)));
         txt_title.setText(book.getTitle());
@@ -127,6 +140,7 @@ public class BookDialog extends javax.swing.JDialog {
         txt_year.setText(book.getYearPublish() + "");
         txt_quantity.setText(book.getQuantity() + "");
         txt_publisher.setText(publisher.getName());
+        txt_bookshelf.setText(bookshelf.getName());
         txt_category.setText(category.getName());
         
         txt_title.setFocusable(false);
@@ -135,6 +149,7 @@ public class BookDialog extends javax.swing.JDialog {
         btn_img.setEnabled(false);
         btn_publisher.setEnabled(false);
         btn_category.setEnabled(false);
+        btn_bookshelf.setEnabled(false);
         
         bookItemList = bookItemBUS.getByBookId(book.getId());
         txt_quantity1.setText(calculateAvailableQuantity(bookItemList) + "");
@@ -229,6 +244,7 @@ public class BookDialog extends javax.swing.JDialog {
         book.setYearPublish(Integer.parseInt(txt_year.getText()));
         book.setPublisherId(publisher.getId());
         book.setCategoryId(category.getId());
+        book.setBookshelf_id(bookshelf.getId());
         if(imageChanged)
             book.setImage(addImage(imageURL));
     }
@@ -248,7 +264,7 @@ public class BookDialog extends javax.swing.JDialog {
         int publish_year = Integer.parseInt(txt_year.getText());
         int category_id = category.getId();
         String image = addImage(imageURL);
-        int bookshelf_id = 1;
+        int bookshelf_id = bookshelf.getId();
         
         return new BookDTO(title, author, publisher_id, publish_year, category_id, 0, image, bookshelf_id);
     }
@@ -291,6 +307,9 @@ public class BookDialog extends javax.swing.JDialog {
         btn_category = new javax.swing.JButton();
         lbl_quantity1 = new javax.swing.JLabel();
         txt_quantity1 = new javax.swing.JTextField();
+        lbl_publisher1 = new javax.swing.JLabel();
+        txt_bookshelf = new javax.swing.JTextField();
+        btn_bookshelf = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -388,6 +407,19 @@ public class BookDialog extends javax.swing.JDialog {
 
         txt_quantity1.setFocusable(false);
 
+        lbl_publisher1.setText("Kệ sách");
+
+        txt_bookshelf.setFocusable(false);
+
+        btn_bookshelf.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_bookshelf.setText("...");
+        btn_bookshelf.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_bookshelf.setFocusPainted(false);
+        btn_bookshelf.setMaximumSize(new java.awt.Dimension(40, 40));
+        btn_bookshelf.setPreferredSize(new java.awt.Dimension(40, 40));
+        btn_bookshelf.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        btn_bookshelf.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -403,12 +435,6 @@ public class BookDialog extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_title)
                     .addComponent(lbl_author)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_publisher)
-                            .addComponent(txt_publisher, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_publisher, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                             .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -441,10 +467,23 @@ public class BookDialog extends javax.swing.JDialog {
                                     .addComponent(lbl_quantity)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txt_quantity1)
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(lbl_quantity1)
-                                    .addGap(7, 7, 7))
-                                .addComponent(txt_quantity1)))))
+                                    .addGap(7, 7, 7))))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbl_publisher)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(txt_publisher)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btn_publisher, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbl_publisher1)
+                                .addComponent(txt_bookshelf, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btn_bookshelf, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -459,13 +498,21 @@ public class BookDialog extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(lbl_author)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_author, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbl_publisher)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btn_publisher, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(txt_publisher, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txt_author, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbl_publisher)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btn_publisher, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(txt_publisher, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(lbl_publisher1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btn_bookshelf, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(txt_bookshelf, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -602,6 +649,7 @@ public class BookDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_bookshelf;
     private javax.swing.JButton btn_card1;
     private javax.swing.JButton btn_card2;
     private javax.swing.JButton btn_category;
@@ -621,11 +669,13 @@ public class BookDialog extends javax.swing.JDialog {
     private javax.swing.JLabel lbl_category;
     private javax.swing.JLabel lbl_image;
     private javax.swing.JLabel lbl_publisher;
+    private javax.swing.JLabel lbl_publisher1;
     private javax.swing.JLabel lbl_quantity;
     private javax.swing.JLabel lbl_quantity1;
     private javax.swing.JLabel lbl_title;
     private javax.swing.JLabel lbl_year;
     private javax.swing.JTextField txt_author;
+    private javax.swing.JTextField txt_bookshelf;
     private javax.swing.JTextField txt_category;
     private javax.swing.JTextField txt_publisher;
     private javax.swing.JTextField txt_quantity;

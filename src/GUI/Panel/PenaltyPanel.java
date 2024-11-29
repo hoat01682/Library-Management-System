@@ -8,6 +8,7 @@ import BUS.PenaltyTicketBUS;
 import DTO.PenaltyTicketDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
+import GUI.Main_Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,13 +19,16 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class PenaltyPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
     PenaltyTicketBUS penaltyTicketBUS = new PenaltyTicketBUS();
     ArrayList<PenaltyTicketDTO> penaltyTicketList;
     
-    public PenaltyPanel() {
+    public PenaltyPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

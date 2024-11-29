@@ -4,11 +4,9 @@
  */
 package GUI.Panel;
 
-import BUS.BookBUS;
-import BUS.CategoryBUS;
-import BUS.PublisherBUS;
-import DTO.BookDTO;
-import GUI.Book.BookDialog;
+import BUS.BookshelfBUS;
+import DTO.BookshelfDTO;
+import GUI.Bookshelf.BookshelfDialog;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
@@ -19,30 +17,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
  *
  * @author Duc3m
  */
-public class BookPanel extends javax.swing.JPanel {
-    
-    Main_Frame main;
+public class BookshelfPanel extends javax.swing.JPanel {
 
+    Main_Frame main;
+    
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
     MenuBarButton addBtn = new MenuBarButton("Thêm", "add.svg", new Color(173, 169, 178), "add");
     
-    BookBUS bookBUS = new BookBUS();
-    CategoryBUS categoryBUS = new CategoryBUS();
-    PublisherBUS publisherBUS = new PublisherBUS();
-    ArrayList<BookDTO> bookList = new BookBUS().getAllBook();
+    BookshelfBUS bookshelfBUS = new BookshelfBUS();
+    ArrayList<BookshelfDTO> bookshelfList = bookshelfBUS.getAll();
     
-    public BookPanel(Main_Frame main) {
+    public BookshelfPanel(Main_Frame main) {
         this.main = main;
         initComponents();
         customInit();
@@ -56,9 +49,9 @@ public class BookPanel extends javax.swing.JPanel {
         jLayeredPane1.add(tablePanel, Integer.valueOf(100));
         
         //Quy định các cột
-        String[] columnNames = {"Mã sách", "Tên sách", "Tác giả", "Nhà xuất bản", "Năm xuất bản", "Thể loại", "Số lượng"};
+        String[] columnNames = {"Mã kệ sách", "Tên kệ sách"};
         tablePanel.table.setModel(new DefaultTableModel(null, columnNames));
-        loadDataToTable(bookList);
+        loadDataToTable(bookshelfList);
         
         menuBar.btn_refresh.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,7 +59,7 @@ public class BookPanel extends javax.swing.JPanel {
                 refreshTable();
             }
         });
-              
+        
         menuBar.jToolBar1.add(addBtn);
         addBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -79,7 +72,7 @@ public class BookPanel extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(tablePanel.table.getSelectedRow() == -1) {
-                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn sách nào");
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn quyền nào");
                     return;
                 }
                 viewEvent();
@@ -87,42 +80,38 @@ public class BookPanel extends javax.swing.JPanel {
         });
     }
     
-    public void loadDataToTable(ArrayList<BookDTO> bookList) {
+    public void loadDataToTable(ArrayList<BookshelfDTO> bookshelfList) {
         DefaultTableModel tableModel = (DefaultTableModel) tablePanel.table.getModel();
         tableModel.setRowCount(0);
-        for (BookDTO i : bookList) {
+        for (BookshelfDTO i : bookshelfList) {
             tableModel.addRow(new Object[] {
                     i.getId(),
-                    i.getTitle(),
-                    i.getAuthor(),
-                    publisherBUS.getById(i.getPublisherId()).getName(),
-                    i.getYearPublish(),
-                    categoryBUS.getById(i.getCategoryId()).getName(),
-                    i.getQuantity()
+                    i.getName()
             });
         }
     }
     
     public void refreshTable() {
-        bookList = bookBUS.getAllBook();
-        loadDataToTable(bookList);
+        bookshelfList = bookshelfBUS.getAll();
+        loadDataToTable(bookshelfList);
     }
     
     public void viewEvent() {
         int index = tablePanel.table.getSelectedRow();
         int id = (int) tablePanel.table.getValueAt(index, 0);
-        BookDTO book = bookBUS.getById(id);
-        BookDialog bDialog = new BookDialog(null, true, book, "view");
-        bDialog.setVisible(true);
+        BookshelfDTO b = bookshelfBUS.getById(id);
+        BookshelfDialog bD = new BookshelfDialog(null, true, b, "view");
+        bD.setVisible(true);
         refreshTable();
     }
     
     public void addEvent() {
-        BookDialog bDialog = new BookDialog(null, true, null, "add");
-        bDialog.setVisible(true);
+        BookshelfDialog bD = new BookshelfDialog(null, true, null, "add");
+        bD.setVisible(true);
         refreshTable();
     }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -130,7 +119,7 @@ public class BookPanel extends javax.swing.JPanel {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         jLabel1 = new javax.swing.JLabel();
 
-        setLayout(new java.awt.BorderLayout());
+        jLayeredPane1.setPreferredSize(new java.awt.Dimension(980, 830));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background/product_background1.jpg"))); // NOI18N
 
@@ -151,7 +140,20 @@ public class BookPanel extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        add(jLayeredPane1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
 

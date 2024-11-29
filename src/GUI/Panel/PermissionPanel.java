@@ -9,6 +9,7 @@ import DTO.PermissionDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.Permission.PermissionDialog;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class PermissionPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -32,7 +35,8 @@ public class PermissionPanel extends javax.swing.JPanel {
     PermissionBUS permissionBUS = new PermissionBUS();
     ArrayList<PermissionDTO> permissionList = permissionBUS.getAll();
     
-    public PermissionPanel() {
+    public PermissionPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }

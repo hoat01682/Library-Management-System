@@ -11,6 +11,7 @@ import DTO.ReturnTicketDTO;
 import GUI.Component.ManagementTable;
 import GUI.Component.MenuBar;
 import GUI.Component.MenuBarButton;
+import GUI.Main_Frame;
 import GUI.ReturnTicket.ReturnTicketDialog;
 import helper.Formatter;
 import java.awt.Color;
@@ -26,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
  * @author Duc3m
  */
 public class ReturnPanel extends javax.swing.JPanel {
+    
+    Main_Frame main;
 
     ManagementTable tablePanel = new ManagementTable();
     MenuBar menuBar = new MenuBar();
@@ -37,7 +40,8 @@ public class ReturnPanel extends javax.swing.JPanel {
     
     ArrayList<ReturnTicketDTO> ticketList = returnTicketBUS.getAll();
     
-    public ReturnPanel() {
+    public ReturnPanel(Main_Frame main) {
+        this.main = main;
         initComponents();
         customInit();
     }
@@ -109,6 +113,7 @@ public class ReturnPanel extends javax.swing.JPanel {
         ReturnTicketDialog rtD = new ReturnTicketDialog(null, true, null, "add");
         rtD.setVisible(true);
         refreshTable();
+        main.borrowPanel.refreshTable();
     }
     
     @SuppressWarnings("unchecked")

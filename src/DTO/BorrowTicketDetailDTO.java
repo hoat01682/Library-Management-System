@@ -4,6 +4,8 @@
  */
 package DTO;
 
+import java.util.Objects;
+
 /**
  *
  * @author Duc3m
@@ -60,4 +62,27 @@ public class BorrowTicketDetailDTO {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "BorrowTicketDetailDTO{" + "id=" + id + ", borrow_ticket_id=" + borrow_ticket_id + ", isbn=" + isbn + ", status=" + status + '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        BorrowTicketDetailDTO that = (BorrowTicketDetailDTO) obj;
+        return Objects.equals(borrow_ticket_id, that.borrow_ticket_id)
+                && Objects.equals(isbn, that.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(borrow_ticket_id, isbn);
+    }
+   
 }
