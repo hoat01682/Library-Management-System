@@ -121,6 +121,7 @@ public class SupplierDialog extends javax.swing.JDialog {
 }
     
     public void updateEvent() {
+        if (!validateInput()) return;
         editSupplier();
         if(supplierBUS.updateSupplier(supplier)) {
             JOptionPane.showMessageDialog(null, "Lưu thông tin nhà cung cấp thành công");

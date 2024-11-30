@@ -139,11 +139,12 @@ public class StaffDialog extends javax.swing.JDialog {
     }
     
     public void updateEvent() {
-        editStaff();
-        if(staffBUS.updateStaff(staff)) {
-            JOptionPane.showMessageDialog(null, "Lưu thông tin nhân viên thành công");
-            dispose();
-        }
+    if (!validateInput()) return;  // Kiểm tra trước khi thực hiện chỉnh sửa
+    editStaff();  // Thực hiện chỉnh sửa sau khi kiểm tra hợp lệ
+    if (staffBUS.updateStaff(staff)) {
+        JOptionPane.showMessageDialog(null, "Lưu thông tin nhân viên thành công");
+        dispose();
+    }
     }
     
     public StaffDTO getNewStaff() {
@@ -221,7 +222,7 @@ public class StaffDialog extends javax.swing.JDialog {
 }
 
     public void addEvent() {
-         if (!validateInput()) return; // Kiểm tra dữ liệu đầu vào trước
+        if (!validateInput()) return; // Kiểm tra dữ liệu đầu vào trước
         staff = getNewStaff();
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
