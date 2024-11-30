@@ -46,6 +46,10 @@ public class SupplierBUS {
     public ArrayList<SupplierDTO> searchSupplier(String keyword){
         return supplierDAO.searchSupplier(keyword);
     }
+
+    public boolean createSupplier(SupplierDTO supplier) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 
 

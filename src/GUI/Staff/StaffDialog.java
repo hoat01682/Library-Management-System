@@ -160,8 +160,68 @@ public class StaffDialog extends javax.swing.JDialog {
         Timestamp hireDate = new Timestamp(System.currentTimeMillis());
         return new StaffDTO(fullName, email, phone, gender, birthday, address, hireDate, email);
     }
-    
+    private boolean validateInput() {
+        
+    // Kiểm tra tên
+    String fullName = txt_name.getText().trim();
+    if (fullName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Họ tên không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_name.requestFocus();
+        return false;
+    }
+
+    // Kiểm tra ngày sinh
+    if (jDateChooser1.getDate() == null) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày sinh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        jDateChooser1.requestFocus();
+        return false;
+    }
+
+    // Kiểm tra giới tính
+    if (!radio_male.isSelected() && !radio_female.isSelected()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn giới tính.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        radio_male.requestFocus();
+        return false;
+    }
+
+    // Kiểm tra địa chỉ
+    String address = txt_address.getText().trim();
+    if (address.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Địa chỉ không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_address.requestFocus();
+        return false;
+    }
+
+    // Kiểm tra số điện thoại
+    String phone = txt_phone.getText().trim();
+    if (!phone.matches("^0\\d{9}$")) { // Bắt đầu bằng 0 và có đúng 10 chữ số
+    JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0 và gồm đúng 10 chữ số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    txt_phone.requestFocus();
+    return false;
+
+}
+
+    // Kiểm tra email
+    String email = txt_email.getText().trim();
+    if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+        JOptionPane.showMessageDialog(this, "Email không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_email.requestFocus();
+        return false;
+    }
+
+    // Kiểm tra trạng thái
+    String status = (String) cbx_status.getSelectedItem();
+    if (status == null || status.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Vui lòng chọn trạng thái.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        cbx_status.requestFocus();
+        return false;
+    }
+
+    return true; // Đầu vào hợp lệ
+}
+
     public void addEvent() {
+         if (!validateInput()) return; // Kiểm tra dữ liệu đầu vào trước
         staff = getNewStaff();
         if(staffBUS.createStaff(staff)) {
             JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");

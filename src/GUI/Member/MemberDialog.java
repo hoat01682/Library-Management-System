@@ -132,11 +132,11 @@ public class MemberDialog extends javax.swing.JDialog {
         }
 
         // Validate Phone Number
-        if (!phone.matches("\\d{10,15}")) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại phải gồm từ 10 đến 15 chữ số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (!phone.matches("^0\\d{9}$")) { // Bắt đầu bằng 0 và có đúng 10 chữ số
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu bằng số 0 và gồm đúng 10 chữ số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             txt_phone.requestFocus();
             return false;
-        }
+         }
 
         // Validate Email
         if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
