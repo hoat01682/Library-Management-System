@@ -90,8 +90,37 @@ public class SupplierDialog extends javax.swing.JDialog {
         supplier.setAddress(txt_address.getText());
         supplier.setPhone(txt_phone.getText());
     }
-    
+    private boolean validateInput() {
+    String name = txt_name.getText().trim();
+    String phone = txt_phone.getText().trim();
+    String address = txt_address.getText().trim();
+
+    // Validate Name
+    if (name.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Tên nhà cung cấp không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_name.requestFocus();
+        return false;
+    }
+
+    // Validate Phone
+    if (!phone.matches("^0\\d{9}$")) { // Định dạng SĐT bắt đầu bằng 0 và có đúng 10 chữ số
+        JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_phone.requestFocus();
+        return false;
+    }
+
+    // Validate Address
+    if (address.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Địa chỉ không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        txt_address.requestFocus();
+        return false;
+    }
+
+    return true;
+}
+
     public void updateEvent() {
+        if(!validateInput()) return;
         editSupplier();
         if(supplierBUS.updateSupplier(supplier)) {
             JOptionPane.showMessageDialog(null, "Lưu thông tin nhà cung cấp thành công");
@@ -108,6 +137,7 @@ public class SupplierDialog extends javax.swing.JDialog {
     }
     
     public void addEvent() {
+        if(!validateInput()) return;
         supplier = getNewSupplier();
         if(supplierBUS.createsupplier(supplier)) {
             JOptionPane.showMessageDialog(null, "Thêm nhà cung cấp thành công");
